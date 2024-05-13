@@ -1,0 +1,128 @@
+<%- include('../layouts/header') %>
+	<!-- END nav -->
+
+	<section class="hero-wrap hero-wrap-2" style="background-image: url('/styles/img/bg_2.jpg');"
+		data-stellar-background-ratio="0.5">
+		<!-- <div class="overlay"></div> -->
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-end justify-content-center">
+				<div class="col-md-9 ftco-animate mb-5 text-center">
+					<p class="breadcrumbs mb-0"><span class="mr-2"><a href="/client">Trang chủ <i
+									class="fa fa-chevron-right"></i></a></span> <span>Cart <i
+								class="fa fa-chevron-right"></i></span></p>
+					<h2 class="mb-0 bread">Giỏ hàng</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-wrap">
+						<table class="table">
+							<thead class="thead-primary">
+								<tr>
+									<!-- <th>&nbsp;</th> -->
+									<th>&nbsp;</th>
+									<th>Sản phẩm</th>
+									<th>Giá</th>
+									<th>Số lượng</th>
+									<th>Tổng tiền</th>
+									<th>&nbsp;</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<% if (typeof cart_products !=='undefined' ) { %>
+
+									<% cart_products.forEach(element=> { %>
+										<tr class="alert" role="alert">
+											
+											<td>
+												<img src="<%= element.img %>" width="50px" alt="">
+											</td>
+											<td>
+												<div class="email">
+													<span>
+														<%= element.name  %>
+													</span>
+
+												</div>
+											</td>
+											<td>
+												<%=parseFloat(element.price ).toLocaleString('vi-VN', {
+													style: 'currency' , currency: 'VND' })%>
+											</td>
+
+											<td class="quantity">
+												<div class="input-group">
+													<input type="text" name="quantity"
+														class="quantity form-control input-number" value="1" min="1"
+														max="100">
+												</div>
+											</td>
+											<td>
+												<%=parseFloat(element.price ).toLocaleString('vi-VN', {
+													style: 'currency' , currency: 'VND' })  %>
+											</td>
+											<td>
+												<a href="/client/delete-cart/<%= element.id %>">
+													<span aria-hidden="true"><i class="fa fa-close"></i></span>
+												</a>
+											</td>
+										</tr>
+										<% }); %>
+
+											<% }%>
+
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="row justify-content-end">
+				<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
+					<div class="cart-total mb-3">
+						<h3>Build</h3>
+						<p class="d-flex">
+							<span>Sản Phẩm</span>
+							<span><% cart_products.forEach(element => { %>
+								<%= element.name + ',' %>
+						<%	}); %></span>
+						</p>
+						<p class="d-flex">
+							<span>Mã giảm giá</span>
+							<span>0</span>
+						</p>
+
+						<hr>
+						<p class="d-flex total-price">
+							<span>Tổng tiền</span>
+							<span><%=totalPrice.toLocaleString('vi-VN', {
+								style: 'currency' , currency: 'VND' })%></span>
+						</p>
+					</div>
+					<p class="text-center">
+						<% if(typeof id !== 'undefined' ){%>
+						<a href="/client/checkout" class="btn btn-primary py-3 px-4">Thanh toán</a>
+
+						<% }else{ %>
+							<a href="/client/form/login" class="btn btn-primary py-3 px-4">Đăng nhập để thanh toán</a>
+
+							<% } %>
+					</p>
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+	<%- include('../layouts/footer') %>
+
+		</body>
+
+		</html>

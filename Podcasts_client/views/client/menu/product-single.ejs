@@ -1,0 +1,408 @@
+<%- include('../layouts/header') %>
+	<!-- END nav -->
+	<style>
+		.rate {
+
+			border-bottom-right-radius: 12px;
+			border-bottom-left-radius: 12px;
+
+		}
+
+
+
+		.ratings {
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: center
+		}
+
+		.ratings>input {
+			display: none
+		}
+
+		.ratings>label {
+			position: relative;
+			width: 1em;
+			font-size: 30px;
+			font-weight: 300;
+			color: #FFD600;
+			cursor: pointer
+		}
+
+		.ratings>label::before {
+			content: "\2605";
+			position: absolute;
+			opacity: 0
+		}
+
+		.ratings>label:hover:before,
+		.ratings>label:hover~label:before {
+			opacity: 1 !important
+		}
+
+		.ratings>input:checked~label:before {
+			opacity: 1
+		}
+
+		.ratings:hover>input:checked~label:before {
+			opacity: 0.4
+		}
+
+
+		.buttons {
+			top: 36px;
+			position: relative;
+		}
+
+
+		.rating-submit {
+			border-radius: 15px;
+			color: #fff;
+			height: 49px;
+		}
+
+
+		.rating-submit:hover {
+
+			color: #fff;
+		}
+
+		.anime__review__item__pic {
+			float: left;
+			margin-right: 20px;
+			position: relative;
+		}
+
+		.anime__review__item__pic img {
+			height: 50px;
+			/* width: 50px; */
+			border-radius: 50%;
+		}
+
+		.anime__review__item__pic:before {
+			position: absolute;
+			right: -30px;
+			top: 15px;
+			border-top: 15px solid transparent;
+			border-left: 15px solid rgb(248, 244, 244);
+			content: "";
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
+
+		.anime__review__item__text {
+			width: 500px;
+			overflow: hidden;
+			background: rgb(237, 234, 234);
+			border: 1px solid rgb(255, 255, 255);
+			box-shadow: inset -2px -2px 4px rgb(109, 109, 109);
+			padding: 18px 30px 16px 20px;
+			border-radius: 10px;
+			color: black;
+		}
+	</style>
+	<style>
+		.rating-1 {
+			width: 120px;
+			height: 24px;
+			position: relative;
+			background-color: white;
+		}
+
+		progress.rating-bg {
+			-webkit-appearance: none;
+			appearance: none;
+			border: none;
+			display: inline-block;
+			height: 24px;
+			width: 100%;
+			color: #FBD947;
+		}
+
+		progress.rating-bg::-webkit-progress-value {
+			background-color: #FBD947;
+		}
+
+		progress.rating-bg::-moz-progress-bar {
+			background-color: #FBD947;
+		}
+
+		.rating-1 svg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		#fivestars-1 path {
+			border: none !important;
+		}
+	</style>
+	<section class="hero-wrap hero-wrap-2" style="background-image: url('/styles/img/bg_2.jpg');"
+		data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-end justify-content-center">
+				<div class="col-md-9 ftco-animate mb-5 text-center">
+					<p class="breadcrumbs mb-0"><span class="mr-2"><a href="/client">Trang chủ <i
+									class="fa fa-chevron-right"></i></a></span> <span><a href="/client/products">Sản
+								phẩm <i class="fa fa-chevron-right"></i></a></span>Chi tiết sản phẩm <span> <i
+								class="fa fa-chevron-right"></i></span></p>
+					<h2 class="mb-0 bread">Chi tiết sản phẩm</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 mb-5 ftco-animate">
+					<a href="/uploads/<%=product_id.img %>" class="image-popup prod-img-bg"><img
+							src="/uploads/<%=product_id.img %>" class="img-fluid" alt="Colorlib Template"></a>
+				</div>
+				<div class="col-lg-6 product-details pl-md-5 ftco-animate">
+					<h3>
+						<%= product_id.name %>
+					</h3>
+					<div class="rating d-flex">
+						<p class="text-left mr-4">
+							<a href="#" class="mr-2">5.0</a>
+							<a href="#"><span class="fa fa-star"></span></a>
+							<a href="#"><span class="fa fa-star"></span></a>
+							<a href="#"><span class="fa fa-star"></span></a>
+							<a href="#"><span class="fa fa-star"></span></a>
+							<a href="#"><span class="fa fa-star"></span></a>
+						</p>
+
+					</div>
+					<p class="price "><span class="text-danger fw-bold"><%=product_id.price.toLocaleString('vi-VN', {
+								style: 'currency' , currency: 'VND' }) %></span></p>
+					<p>
+						<%=product_id.description %>
+					</p>
+					<div class="row mt-4">
+						<div class="input-group col-md-6 d-flex mb-3">
+							<span class="input-group-btn mr-2">
+								<button type="button" onclick="decreaseQuantity()" class="quantity-left-minus btn"
+									data-type="minus" data-field="">
+									<i class="fa fa-minus"></i>
+								</button>
+							</span>
+							<input type="text" id="quantity" name="quantity" class="quantity form-control input-number"
+								value="1" min="1" max="100">
+							<span class="input-group-btn ml-2">
+								<button type="button" onclick="increaseQuantity()" class="quantity-right-plus btn"
+									data-type="plus" data-field="">
+									<i class="fa fa-plus"></i>
+								</button>
+							</span>
+						</div>
+						<div class="w-100"></div>
+
+					</div>
+					<p>	<a href="#" id="add"
+						class="add_cart btn btn-primary py-3 px-5"
+						data-product-id="<%= product_id.id %>" 
+						data-product-name="<%= product_id.name %>"
+						data-product-price="<%= product_id.price %>"
+						data-product-img="/uploads/<%= product_id.img %>">
+						Thêm vào giỏ hàng
+					</a>
+						<a href="" class="btn btn-primary py-3 px-5">Mua ngay</a>
+					</p>
+				</div>
+			</div>
+
+
+
+
+			<div class="row mt-5">
+				<div class="anime__details__form mt-5">
+					<div class="section-title mb-3">
+						<h5 style="border-left: 3px solid red;"> BÌNH LUẬN</h5>
+					</div>
+					<% comments_List.forEach(element=> { %>
+						<div class="anime__review__item ">
+							<div class="anime__review__item__pic">
+								<img src="/uploads/<%=element.image %> " class="" alt="">
+							</div>
+
+							<div class="anime__review__item__text mb-2">
+								<div class="d-flex justify-content-between">
+									<label class="font-weight-bold">
+										<%= element.username %>
+									</label>
+									<span class="ml-3">
+										<%= new Date(element.date ).toLocaleDateString() %>
+									</span>
+								</div>
+								<h6 class="mb-3">
+									<div class="rate d-flex justify-content-center mr-5 ">
+										<svg style="display:none;">
+											<defs>
+												<symbol id="fivestars-1" class="border-none">
+													<path
+														d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+														fill="rgb(237, 234, 234)" fill-rule="evenodd" />
+													<path
+														d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+														fill="rgb(237, 234, 234)" fill-rule="evenodd"
+														transform="translate(24)" />
+													<path
+														d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+														fill="rgb(237, 234, 234)" fill-rule="evenodd"
+														transform="translate(48)" />
+													<path
+														d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+														fill="rgb(237, 234, 234)" fill-rule="evenodd"
+														transform="translate(72)" />
+													<path
+														d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+														fill="rgb(237, 234, 234)" fill-rule="evenodd"
+														transform="translate(96)" />
+												</symbol>
+											</defs>
+										</svg>
+										<div class="rating-1 ml-md-5">
+											<progress class="rating-bg " value="<%= element.raiting %>"
+												max="5"></progress>
+											<svg>
+												<use xlink:href="#fivestars-1" />
+											</svg>
+										</div>
+									</div>
+								</h6>
+								<!-- <i class="bi bi-star-fill text-warning"></i> -->
+								<!-- ngôi sao quý hiếm  -->
+
+								<!--end ngôi sao quý hiếm  -->
+								<!-- <br> -->
+								<p class="mt-2">
+									<%=element.message %>
+								</p>
+
+							</div>
+						</div>
+						<% }); %>
+							<% if (typeof id !=='undefined' ) { %>
+								<div class="section-title">
+									<h5 class=" " style="border-left: 3px solid red;">BÌNH LUẬN CỦA BẠN</h5>
+								</div>
+								<form action="/client/comments_sp" method="post" id="comment-form" name="comment-form"
+									class="comment-form">
+									<div class="ratings">
+										<input type="radio" class="ratings" name="ratings" value="5" id="5"><label
+											for="5">☆</label>
+										<input type="radio" class="ratings" name="ratings" value="4" id="4"><label
+											for="4">☆</label>
+										<input type="radio" class="ratings" name="ratings" value="3" id="3"><label
+											for="3">☆</label>
+										<input type="radio" class="ratings" name="ratings" value="2" id="2"><label
+											for="2">☆</label>
+										<input type="radio" class="ratings" name="ratings" value="1" id="1"><label
+											for="1">☆</label>
+									</div>
+
+									<span class="error text-danger"></span> <br>
+									<input type="hidden" name="product_id">
+									<input type="hidden" name="user_id">
+									<input type="hidden" name="date">
+									<textarea name="message" id="message" cols="60" rows="3"
+										placeholder="Bình luận của bạn"></textarea> <br>
+									<span class="error text-danger"></span><br> <br>
+									<button class="btn btn-danger px-4 py-2" type="submit"><i
+											class="fa fa-location-arrow" name="pull_comment"></i>ĐĂNG</button>
+								</form>
+								<% }else{ %>
+									<a href="/client/form/login" class="btn btn-outline-danger mt-3">Đăng nhập để bình
+										luận</a>
+
+									<% } %>
+				</div>
+			</div>
+
+	</section>
+	<%- include('../layouts/footer') %>
+		<script>
+			function increaseQuantity() {
+				let quantityInput = document.getElementById("quantity");
+				let currentQuantity = parseInt(quantityInput.value);
+				quantityInput.value = currentQuantity + 1;
+			}
+
+			// Function to decrease quantity
+			function decreaseQuantity() {
+				let quantityInput = document.getElementById("quantity");
+				let currentQuantity = parseInt(quantityInput.value);
+				if (currentQuantity > 1) {
+					quantityInput.value = currentQuantity - 1;
+				}
+			}
+
+			document.addEventListener('DOMContentLoaded', function () {
+				'use strict';
+				var has_error = true;
+				let form = document.getElementById('comment-form');
+				let message = form.querySelector('#message');
+				let error = form.getElementsByClassName('error');
+				let ratings = form.querySelectorAll('.ratings')
+				form.addEventListener('submit', function (event) {
+					var has_error = true;
+					error[0].innerHTML = '';
+					error[1].innerHTML = '';
+					if (!ratings[0].checked && !ratings[1].checked && !ratings[2].checked && !ratings[3].checked && !ratings[4].checked) {
+						error[0].innerHTML = 'Vui lòng chọn đánh giá của bạn';
+						has_error = false;
+					}
+					if (message.value.trim() == "") {
+						error[1].innerHTML = 'Vui lòng nhập bình luận của bạn.';
+						has_error = false;
+					}
+					if (has_error == false) {
+						event.preventDefault();
+					}
+				});
+			});
+
+			
+				document.querySelector('.add_cart').addEventListener('click', function(event) {
+					event.preventDefault();
+			
+					const productId = this.getAttribute('data-product-id');
+					const productName = this.getAttribute('data-product-name');
+					const productPrice = this.getAttribute('data-product-price');
+					const productImg = this.getAttribute('data-product-img');
+			
+					fetch('/client/add-to-cart', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							productId,
+							productName,
+							productPrice,
+							productImg
+						})
+					})
+					.then(response => {
+						if (response.ok) {
+							alert('Sản phẩm đã được thêm vào giỏ hàng!');
+						} else {
+							alert('Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!');
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert('Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!');
+					});
+				});
+			
+
+		</script>
+		</body>
+
+		</html>

@@ -1,0 +1,137 @@
+<%- include('../layouts/header') %>
+	<!-- END nav -->
+
+	<section class="hero-wrap hero-wrap-2" style="background-image: url('/styles/img/bg_2.jpg');"
+		data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row no-gutters slider-text align-items-end justify-content-center">
+				<div class="col-md-9 ftco-animate mb-5 text-center">
+					<p class="breadcrumbs mb-0"><span class="mr-2"><a href="index.html">Trang chủ <i
+									class="fa fa-chevron-right"></i></a></span> <span>Sản phẩm <i
+								class="fa fa-chevron-right"></i></span></p>
+					<h2 class="mb-0 bread">Sản phẩm</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<div class="row mb-4">
+						<div class="col-md-12 d-flex justify-content-between align-items-center">
+							<h4 class="product-select">Tất cả sản phẩm</h4>
+
+						</div>
+					</div>
+					<div class="row">
+						<% products.forEach(element=> { %>
+							<div class="col-md-4 d-flex">
+								<div class="product ftco-animate">
+									<div class="img d-flex align-items-center justify-content-center">
+										<img src="/uploads/<%=element.img %>">
+										<div class="desc">
+											<p class="meta-prod d-flex">
+												<a href="#" id="add-to-cart-btn"
+												class="add-to-cart-btn d-flex align-items-center justify-content-center"
+												data-product-id="<%= element.id %>" 
+												data-product-name="<%= element.name %>"
+												data-product-price="<%= element.price %>"
+												data-product-img="/uploads/<%= element.img %>">
+												<i class="bi bi-cart-plus text-white fa-1x"></i>
+											</a>
+		
+												<a href="/client/products_details/<%= element.id %>"
+													class="d-flex align-items-center justify-content-center"><i
+														class="bi bi-eye text-white fa-1x"></i></a>
+											</p>
+										</div>
+									</div>
+									<div class="text text-center">
+		
+										<span class="category">
+											<% categories_list.forEach(e=> { %>
+												<% if(element.categorie_id === e.id){%>
+													<%= e.name %>
+												<% } %>
+												<% }); %>
+										</span>
+										<h2>
+											<%=element.name %>
+										</h2>
+										<p class="mb-0"><span
+												class="price font-weight-bold text-danger "><%=element.price.toLocaleString('vi-VN',
+													{ style: 'currency' , currency: 'VND' }) %></span></p>
+									</div>
+								</div>
+							</div>
+		
+							<% }); %>
+		
+		
+					</div>
+
+
+				</div>
+
+				<div class="col-md-3">
+					<div class="sidebar-box ftco-animate">
+
+					</div>
+
+					<div class="sidebar-box ftco-animate">
+						<h3>Tin tức</h3>
+						<div class="block-21 mb-4 d-flex">
+							<a class="blog-img mr-4" style="background-image: url(/styles/img/image_1.jpg);"></a>
+							<div class="text">
+								<h3 class="heading"><a href="#">Sự đa dạng trong thế giới rượu vang</a></h3>
+								<div class="meta">
+									<div><a href="#"><span class="fa fa-calendar"></span> 23 Tháng 4, 2022</a></div>
+									<div><a href="#"><span class="fa fa-comment"></span> 19</a></div>
+								</div>
+							</div>
+						</div>
+						<div class="block-21 mb-4 d-flex">
+							<a class="blog-img mr-4" style="background-image: url(/styles/img/image_2.jpg);"></a>
+							<div class="text">
+								<h3 class="heading"><a href="#">Bí quyết chọn lựa rượu phù hợp cho bữa tiệc</a></h3>
+								<div class="meta">
+									<div><a href="#"><span class="fa fa-calendar"></span> 23 Tháng 4, 2020</a></div>
+									<div><a href="#"><span class="fa fa-comment"></span> 19</a></div>
+								</div>
+							</div>
+						</div>
+						<div class="block-21 mb-4 d-flex">
+							<a class="blog-img mr-4" style="background-image: url(/styles/img/image_3.jpg);"></a>
+							<div class="text">
+								<h3 class="heading"><a href="#">Hành trình khám phá văn hóa rượu đặc biệt</a></h3>
+								<div class="meta">
+									<div><a href="#"><span class="fa fa-calendar"></span> 10 Tháng 3, 2023</a></div>
+									<div><a href="#"><span class="fa fa-comment"></span> 19</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-12">
+				<div class="col text-center">
+					<div class="block-27">
+						<ul>
+							<li><a href="?page=1">&lt;</a></li>
+							<% for (let i = 1; i <= totalPages; i++) { %>
+								<li><a class="<%= ('?page=' + currentPage) == ('?page=' + i) ? 'bg-danger text-white' : '' %>" href="?page=<%= i %>"><%=i%></a></li>
+							<% } %>
+							<li><a href="?page=<%= totalPages %>">&gt;</a></li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<%- include('../layouts/footer') %>	
+		</body>
+		</html>
