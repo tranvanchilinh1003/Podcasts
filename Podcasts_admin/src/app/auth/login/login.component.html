@@ -8,17 +8,8 @@
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" aria-labelledby="title">
             <div class="form-control-group mb-3">
               <label class="label" for="email">Email:</label>
-              <input nbInput
-                     fullWidth
-                     name="email"
-                     formControlName="email"
-                     required
-                     id="email"
-                     pattern=".+@.+\..+"
-                     placeholder="Email address"
-                     class="form-control"
-                     status="success"
-                     autofocus>
+              <input nbInput fullWidth name="email" formControlName="email" required id="email" pattern=".+@.+\..+"
+                placeholder="Email address" class="form-control" status="success" autofocus>
               <div
                 *ngIf="loginForm.get('email').invalid && (loginForm.get('email').dirty || loginForm.get('email').touched)">
                 <small *ngIf="loginForm.get('email').hasError('required')">
@@ -32,16 +23,8 @@
 
             <div class="form-control-group mb-3">
               <label class="label" for="password">Mật khẩu:</label>
-              <input nbInput
-                     formControlName="password"
-                     required
-                     name="password"
-                     fullWidth
-                     status="success"
-                     id="password"
-                     placeholder="Mật khẩu"
-                     type="password"
-                     class="form-control">
+              <input nbInput formControlName="password" required name="password" fullWidth status="success"
+                id="password" placeholder="Mật khẩu" type="password" class="form-control">
               <div
                 *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
                 <small *ngIf="loginForm.get('password').hasError('required')">

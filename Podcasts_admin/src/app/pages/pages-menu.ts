@@ -46,4 +46,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
+  {
+    title: 'Khách Hàng',
+    icon: 'person-outline',
+    children: [
+      {
+        title: 'Thêm khách hàng',
+        link: '/pages/customers/create',
+      },
+      {
+        title: 'Danh sách',
+        link: '/pages/customers/list',
+      },
+    ],
+  },
+  
 ];
