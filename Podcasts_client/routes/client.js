@@ -13,9 +13,9 @@ app.use((req, res, next) => {
     next();
 });
 router.get('/', home.homeClient);
-// router.get('/about', home.getAbout);
+router.get('/about', home.getAbout);
 // router.get('/blog', home.getBlog);
-// router.get('/contact', home.getContact);
+router.get('/contact', home.getContact);
 // //login
 // router.get('/form/login', form_login.login);
 // //signup
@@ -30,7 +30,7 @@ router.get('/', home.homeClient);
 // router.get('/search', form_info.getsearch);
 // router.post('/update/:id', form_info.update);
 // // products
-// router.get('/products', Products.getMenu)
+router.get('/menu/product-single', home.getMenu)
 // router.get('/products_details/:id', Products.getProductDetails)
 // router.post('/comments_sp', Products.addComment);
 // router.get('/products_cate/:id', Products.getProductCate)
