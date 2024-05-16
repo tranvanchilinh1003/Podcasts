@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./footer.component.scss'],
   template: `
     <span class="created-by">
-      2023 © Fpoly Admin brought to you by <a href="https://caodang.fpt.edu.vn/" target="_blank">https://caodang.fpt.edu.vn</a>
+      2023 © Fpoly Admin brought to you by <b>FOODCAST FORUMS </b>
     </span>
     <div class="socials">
       <a href="#" target="_blank" class="ion ion-social-github"></a>

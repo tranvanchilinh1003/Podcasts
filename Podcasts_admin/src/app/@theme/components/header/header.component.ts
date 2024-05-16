@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
+import { Router } from '@angular/router';
+
 
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -19,19 +21,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
   themes = [
     {
       value: 'default',
-      name: 'Light',
+      name: 'Sáng',
     },
     {
       value: 'dark',
-      name: 'Dark',
+      name: 'Tối',
     },
   ];
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [ { title: 'Profile',icon: 'person-outline' }, { title: 'Log out', icon: 'power' } ];
 
   constructor(
+    private router: Router,
     private sidebarService: NbSidebarService,
     private menuService: NbMenuService,
     private themeService: NbThemeService,
@@ -74,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   navigateHome() {
-    this.menuService.navigateHome();
+    this.router.navigateByUrl('/pages');
     return false;
   }
 }

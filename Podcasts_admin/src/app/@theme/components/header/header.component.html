@@ -3,7 +3,7 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <a class="logo" href="#" (click)="navigateHome()"><img src="./assets/images/FPT_Polytechnic.png" class="logo-img" alt="Frontend Framework Angular"></a>
+    <a class="logo" href="#" (click)="navigateHome()"><img src="./assets/images/icon.png" class="logo-img" alt="Frontend Framework Angular"></a>
   </div>
   <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
@@ -16,7 +16,7 @@
       <input type="text" class="search" nbInput fullWidth placeholder="Tìm kiếm....">
     </nb-action>
     <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
-      <nb-user [nbContextMenu]="userMenu"
+      <nb-user [nbContextMenu]="userMenu" 
                [onlyPicture]="userPictureOnly"
                [picture]="user?.picture"
                [name]="user?.name">

@@ -3,6 +3,9 @@ import {NgModule} from '@angular/core';
 
 import {PagesComponent} from './pages.component';
 import {DashboardComponent} from "./dashboard/dashboard.component";
+import { CategoriesComponent } from './categories/categories.component';
+
+
 
 const routes: Routes = [{
   path: '',
@@ -11,8 +14,20 @@ const routes: Routes = [{
     {
       path: 'dashboard',
       component: DashboardComponent,
-      data: {breadcrumb: 'Dashboard'},
+      data: {breadcrumb: 'Giới thiệu'},
     },
+    {
+      path: 'categories',
+      loadChildren: () => import('./categories/categories.module')
+      .then(m => m.CategoriesModule),
+      data: {breadcrumb: 'Loại'},
+    },
+    {
+      path: 'comment',
+      loadChildren: () => import('./comment/comment.module')
+      .then(m => m.CommentModule),
+      data: {breadcrumb: 'Bình luận'},
+    }
   ],
 }];
 
