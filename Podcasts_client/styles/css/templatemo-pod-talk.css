@@ -116,6 +116,7 @@ a,
 button {
   touch-action: manipulation;
   transition: all 0.3s;
+  
 }
 
 a {
