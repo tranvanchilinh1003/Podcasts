@@ -1,58 +1,58 @@
 <%-  include('../layouts/header') %>
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url('/styles/img/bg_2.jpg');" data-stellar-background-ratio="0.5">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row no-gutters slider-text align-items-end justify-content-center">
-        <div class="col-md-9 ftco-animate mb-5 text-center">
-            <p class="breadcrumbs mb-0"><span class="mr-2"><a href="/client">Trang chủ <i class="fa fa-chevron-right"></i></a></span> <span>Đăng nhập <i class="fa fa-chevron-right"></i></span></p>
-          <h2 class="mb-0 bread">Đăng nhập</h2>
-        </div>
-      </div>
-    </div>
-  </section>
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+  <div class="container">
+      <div class="row">
 
-  <section id="bg-login" class="ftco-section ">
-    <div class="container">
-        
-        <div class="login-box m-auto ">
-            <h2>Đăng nhập</h2>
-            <form class="form needs-validation" novalidate method="post" action="/api/custumers_login" >
-              <div class="user-box">
-                <input type="text" name="username" id="username" required>
-                <label>Tài khoản</label>
-                <div id="usernameFeedback" class="text-danger messageerr" style="font-size: 13px;"></div>
-              </div>
-              <div class="user-box">
-                <input type="password" name="password" id="password" required>
-                <label>Mật khẩu</label>
-                <div id="passwordFeedback" class="text-danger messageerr" style="font-size: 13px;"></div>
-                <span class="text-danger">
-                  <% if (typeof error !== 'undefined') { %>
-                      <p><%= error %></p>
-                  <% } %>
-              </span>
-              </div>
-              <div class="text-right">
-              <button class="btn_submit bg-transparent">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                Đăng nhập
-              </button>
-            </div>
-            <div class="text-center mt-5">
-                <p class="text-white">Bạn đã có tài khoản chưa? <a class="text-info" href="/client/form/signup">Đăng ký</a></p>
-            </div>
-            </form>
+          <div class="col-lg-12 col-12 text-center">
+
+              <h2 class="mb-2">Đăng nhập</h2>
           </div>
-        
+
+      </div>
+  </div>
+</header>
+<section  class="about-section section-padding" id="section_2">
+  <div class="container">
+    <div class="login-box m-auto" id="bg-login">
+      <h2 class="mb-5">Đăng nhập</h2>
+      <form class="form needs-validation" novalidate method="post" action="" >
+        <div class="user-box">
+          <input type="text" name="username" id="username" required>
+          <label>Tài khoản</label>
+          <div id="usernameFeedback" class="text-danger messageerr" style="font-size: 13px;"></div>
+        </div>
+        <div class="user-box">
+          <input type="password" name="password" id="password" required>
+          <label>Mật khẩu</label>
+          <div id="passwordFeedback" class="text-danger messageerr" style="font-size: 13px;"></div>
+          <span class="text-danger">
+            <% if (typeof error !== 'undefined') { %>
+                <p><%= error %></p>
+            <% } %>
+        </span>
+        </div>
+        <div class="text-right d-flex justify-content-sm-end">
+        <button class="btn_submit bg-transparent">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Đăng nhập
+        </button>
+      </div>
+      <div class="text-center mt-5">
+          <p class="text-white">Bạn đã có tài khoản chưa? <a class="text-sm-start" href="/client/form/signup">Đăng ký</a></p>
+      </div>
+      </form>
     </div>
-        </section>
+  </div>
+</section>
+
+
         <%- include('../layouts/footer') %>
 
-        <script>
+        <!-- <script>
           document.addEventListener('DOMContentLoaded', function () {
                         'use strict';
                         var is_hidden = false;
@@ -77,14 +77,6 @@
 
                             }
 
-                        });
-
-            
-                      
-                      
-                    
-
+                        })
                     });
-        </script>
-</body>
-</html>
+        </script> -->

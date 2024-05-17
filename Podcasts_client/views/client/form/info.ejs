@@ -1,75 +1,18 @@
 <%- include('../layouts/header') %>
-	<style>
-		.account-settings .user-profile {
-			margin: 0 0 1rem 0;
-			padding-bottom: 1rem;
-			text-align: center;
-		}
+<link rel="stylesheet" href="/styles/css/info.css">
 
-		.account-settings .user-profile .user-avatar {
-			margin: 0 0 1rem 0;
-		}
-
-		.account-settings .user-profile .user-avatar img {
-			width: 90px;
-			height: 90px;
-			-webkit-border-radius: 100px;
-			-moz-border-radius: 100px;
-			border-radius: 100px;
-		}
-
-		.account-settings .user-profile h5.user-name {
-			margin: 0 0 0.5rem 0;
-		}
-
-		.account-settings .user-profile h6.user-email {
-			margin: 0;
-			font-size: 0.8rem;
-			font-weight: 400;
-		}
-
-		.account-settings .about {
-			margin: 1rem 0 0 0;
-			font-size: 0.8rem;
-			text-align: center;
-		}
-
-		.card {
-			background: #e7e5e5;
-
-			-webkit-border-radius: 5px;
-			-moz-border-radius: 5px;
-			border-radius: 5px;
-			border: 0;
-			margin-bottom: 1rem;
-		}
-
-		.form-control {
-			border: 1px solid #596280;
-			-webkit-border-radius: 2px;
-			-moz-border-radius: 2px;
-			border-radius: 2px;
-			font-size: .825rem;
-			background: #003bd0;
-			color: #000000;
-
-		}
-	</style>
-
-	<section class="hero-wrap hero-wrap-2" style="background-image: url('/styles/img/bg_2.jpg');"
-		data-stellar-background-ratio="0.5">
-		<div class="overlay"></div>
-		<div class="container">
-			<div class="row no-gutters slider-text align-items-end justify-content-center">
-				<div class="col-md-9 ftco-animate mb-5 text-center">
-					<p class="breadcrumbs mb-0"><span class="mr-2"><a href="/client">Trang chủ <i
-									class="fa fa-chevron-right"></i></a></span> <span>Thông tin <i
-								class="fa fa-chevron-right"></i></span></p>
-					<h2 class="mb-0 bread">Tài khoản</h2>
-				</div>
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+	<div class="container">
+		<div class="row">
+  
+			<div class="col-lg-12 col-12 text-center">
+  
+				<h2 class="mb-2">Tài Khoản</h2>
 			</div>
+  
 		</div>
-	</section>
+	</div>
+  </header>
 	<div class="container-fluid mt-5" id="container-wrapper">
 
 		<div class="row gutters">
@@ -79,15 +22,15 @@
 						<div class="account-settings ">
 							<div class="user-profile">
 								<div class="user-avatar">
-									<a href="#" data-toggle="modal" data-target="#informationModal">
-										<img src="/uploads/<%= userInfo.data[0].image %>">
+									<a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+										<img src="/styles/images/profile/chef-9.jpg">
 
 										<p class="text-center text-body text-muted">Phóng to ảnh</p>
 										</img>
 									</a>
 								</div>
 								<h5 class="text-primary">
-									<%= userInfo.data[0].username %>
+									
 										</5>
 										<h5 class="user-name text-warning"></h5>
 										<!-- <h6 class="user-email">yuki@Maxwell.com</h6> -->
@@ -103,97 +46,7 @@
 			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
 				<div class="card h-100">
 					<div class="card-body ">
-						<form method="POST" action="/client/update/<%= userInfo.data[0].id  %>" enctype="multipart/form-data" id='form_update' class="form needs-validation"
-							novalidate>
-							<div class="row gutters">
-								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-									<h4 class="mb-3 text-warning font-weight-bold">Thông Tin Tài
-										Khoản</h4>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<label for="username">Tài Khoản</label>
-										<input type="text" class="form-control bg-transparent" name="username"
-											id="username" readonly value="<%= userInfo.data[0].username %>" required>
-
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<label for="full_name">Họ và tên</label>
-										<input type="text" class="form-control bg-transparent" id="full_name"
-											name="full_name" value="<%= userInfo.data[0].full_name %>" required>
-										<div id="full_nameFeedback" class="invalid-feedback">Tên phải ít
-											nhất 5 kí tự</div>
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<label for="phone_number">Số điện thoại</label>
-										<input type="text" class="form-control bg-transparent" id="phone_number"
-											name="phone_number" value="<%= userInfo.data[0].phone_number %>" required>
-										<span class='err text-danger'></span>
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<label for="password">Mật khẩu mới</label>
-										<input type="password" class="form-control bg-transparent" name="password"
-											id="password" value="" required>
-										<div id="passwordFeedback" class="invalid-feedback">Mật khẩu trên 5
-											kí tự</div>
-
-									</div>
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group">
-										<label class=" col-form-label ">Giới tính </label>
-										<div class=' form-group p-2 bg-white  border border-dark d-flex'>
-											<div class="custom-control custom-radio">
-												<input type="radio" id="customRadio3" value="Nam" name="gender"
-													class="custom-control-input form-check-input" <%
-													if(userInfo.data[0].gender=='Nam' ){ %>checked <%}%>>
-													<label class="custom-control-label" for="customRadio3">Nam</label>
-											</div>
-											<div class="custom-control custom-radio ml-3">
-												<input type="radio" id="customRadio4" value="Nữ" name="gender"
-													class="custom-control-input form-check-input" <%
-													if(userInfo.data[0]=='Nữ' ){ %>checked <%}%>>
-													<label class="custom-control-label" for="customRadio4">Nữ</label>
-											</div>
-
-										</div>
-									</div>
-									<span class="err text-danger"></span>
-
-								</div>
-								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-									<div class="form-group ">
-										<label for="image">Ảnh đại diện</label>
-										<input type="file" class="form-control bg-transparent" name="image" id="image"
-											value="">
-										<input type="hidden" class="form-control p-1" name="image_old" value="<%=userInfo.data[0].image %>">
-									</div>
-
-								</div>
-
-
-							</div>
-
-							<hr class="tabl-light border-top">
-
-
-							<div class="row gutters ">
-								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-									<div class="text-right">
-
-										<button type="submit" id="submit" name="update_admin" class="btn btn-danger">Cập
-											nhập</button>
-									</div>
-								</div>
-							</div>
-
-						</form>
+						
 					</div>
 
 
@@ -203,170 +56,30 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal fade" id="informationModal" tabindex="-1" role="dialog" aria-labelledby="informationModal"
-			aria-hidden="true">
-			<div class="modal-dialog " role="document">
-				<div class="modal-content">
-					<div class="modal-header text-center">
-						<h5 class="modal-title" id="informationModalLabel"></h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body text-center">
-						<img class="img-fluid" src="/uploads/<%= userInfo.data[0].image %>" />
-					</div>
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-					</div>
+		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			<div class="modal-dialog">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
+				<div class="modal-body">
+				  ...
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				  <button type="button" class="btn btn-primary">Understood</button>
+				</div>
+			  </div>
 			</div>
-		</div>
+		  </div>
 		<!--Row-->
 
 
-		<!-- Modal Logout -->
-		<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
-			aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabelLogout">Xác Nhận!</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<p>Bạn muốn thoát?</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-outline-primary" data-dismiss="modal">Quay lại</button>
-						<a href="/client/logout" class="btn btn-primary">Đăng xuất</a>
-					</div>
-				</div>
-			</div>
-		</div>
+
 
 	</div>
 
 
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			'use strict';
-			var is_hidden = false;
-			var form = document.querySelector('.needs-validation');
-			var usernameInput = form.querySelector('#username');
-			var full_name = form.querySelector('#full_name');
-			console.log(full_name);
-			console.log(form);
-			console.log(usernameInput);
-			var password = form.querySelector('#password');
-
-			var phone_number = form.querySelector('#phone_number');
-			var gender = form.querySelectorAll('.form-check-input');
-			const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.(com|vn|org|gov|co)|fpt\.edu\.vn)$/;
-			const sdtRegex = /^\b(03|05|07|08|09)\d{8}\b/;
-			form.addEventListener('submit', function (event) {
-				is_hidden = false;
-				if (usernameInput.value.length < 5 || usernameInput.value.trim() == '') {
-					is_hidden = true;
-					usernameInput.classList.add('is-invalid');
-				} else {
-					usernameInput.classList.remove('is-invalid');
-					usernameInput.classList.add('is-valid');
-				}
-				// name
-				if (full_name.value.length < 5) {
-					is_hidden = true;
-					full_name.classList.add('is-invalid');
-				}
-				else {
-
-					full_name.classList.remove('is-invalid');
-					full_name.classList.add('is-valid');
-				}
-				// pass
-				if (password.value.length < 5) {
-					is_hidden = true;
-					password.classList.add('is-invalid');
-				}
-				else {
-					password.classList.remove('is-invalid');
-					password.classList.add('is-valid');
-
-				}
-
-
-				// phone 
-				if (!sdtRegex.test(phone_number.value)) {
-					is_hidden = true;
-					phone_number.classList.add('is-invalid');
-				} else {
-					phone_number.classList.remove('is-invalid');
-					phone_number.classList.add('is-valid');
-				}
-				// radio gender
-				gender[0].classList.add('is-valid');
-				gender[1].classList.add('is-valid');
-
-
-				if (is_hidden) {
-					event.preventDefault();
-
-				} 
-
-			});
-
-
-
-			full_name.addEventListener('input', function () {
-				if (full_name.value.length >= 5 && isNaN(full_name.value)) {
-					full_name.classList.remove('is-invalid');
-					full_name.classList.add('is-valid');
-				} else {
-					full_name.classList.remove('is-valid');
-					full_name.classList.add('is-invalid');
-				}
-			});
-
-
-			// password.addEventListener('input', function () {
-			//     let confirm_password = document.getElementById('comfirm_password');
-			//     if (password.value.length < 5 && (password.value.trim() != ' ')) {
-			//         password.classList.add('is-invalid');
-			//         password.classList.remove('is-valid');
-			//         confirm_password.classList.remove('is-valid');
-			//         confirm_password.classList.remove('is-invalid');
-			//     } else {
-			//         password.classList.remove('is-invalid');
-			//         password.classList.add('is-valid');
-
-			//         if (confirm_password.value === password.value) {
-			//             confirm_password.classList.remove('is-invalid');
-			//             confirm_password.classList.add('is-valid');
-			//         } else {
-			//             confirm_password.classList.add('is-invalid');
-			//             confirm_password.classList.remove('is-valid');
-
-			//         }
-			//     }
-			// });
-
-			// email
-
-			// phone
-			phone_number.addEventListener('input', function () {
-				if (!sdtRegex.test(phone_number.value)) {
-					phone_number.classList.remove('is-valid');
-					phone_number.classList.add('is-invalid');
-				} else {
-					phone_number.classList.remove('is-invalid');
-					phone_number.classList.add('is-valid');
-				}
-			});
-
-		});
-
-	</script>
-
+	
 	<%- include('../layouts/footer') %>

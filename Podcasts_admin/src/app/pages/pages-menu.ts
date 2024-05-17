@@ -47,6 +47,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
+    title: 'Quản lý',
+    group: true,
+  },
+  {
     title: 'Khách Hàng',
     icon: 'person-outline',
     children: [
@@ -59,6 +63,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/pages/customers/list',
       },
     ],
+  },
+  
+  {
+    title: 'Thống kê',
+    group: true,
   },
   
 ];
