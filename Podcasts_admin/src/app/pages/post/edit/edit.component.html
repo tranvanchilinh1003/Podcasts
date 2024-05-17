@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-lg-12">
+        <nb-card>
+            <nb-card-header>Thêm bài viết</nb-card-header>
+            <nb-card-body>
+                <form class="form" method="post" enctype="multipart/form-data" action="#">
+                    <div class='row'>
+                        <div class="col-sm-4">
+                            <label for="title" class="fw-bold col-form-label ">Tiêu đề</label>
+                            <input type="text"
+                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                                fullWidth id="title" name="title" placeholder="Ẩm thực">
+                            <span class="err text-danger"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
+                            <input type="file"
+                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                                fullWidth id="img" accept="image/*" name="image">
+                            <span class="err text-danger"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="audio" class="fw-bold col-form-label">Audio</label>
+                            <input type="file"
+                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                                fullWidth id="audio" accept="image/*" name="audio">
+                            <span class="err text-danger"></span>
+                        </div>
+                    </div>
+                    <div class='row mt-3'>
+                        <div class="col-sm-12">
+                            <label for="decriptions" class="fw-bold col-form-label">Mô tả</label>
+                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="decriptions" name="decriptions"
+                                fullwidth="" shape="round" placeholder="Audio ẩm thực"
+                                class="input-full-width size-medium status-basic shape-rectangle nb-transition"></textarea>
+                            <span class="err text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" id="btn" nbButton
+                            class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5"><i
+                                class="nb-plus"></i>Thêm mới</button>
+                    </div>
+
+                    <br>
+                </form>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

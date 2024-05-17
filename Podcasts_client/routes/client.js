@@ -32,7 +32,7 @@ router.get('/form/info', form.getform);
 // router.get('/search', form_info.getsearch);
 // router.post('/update/:id', form_info.update);
 // // products
-// router.get('/products', Products.getMenu)
+router.get('/menu/product', home.getMenu)
 router.get('/post_details', post.getPostDetail)
 // router.post('/comments_sp', Products.addComment);
 // router.get('/products_cate/:id', Products.getProductCate)

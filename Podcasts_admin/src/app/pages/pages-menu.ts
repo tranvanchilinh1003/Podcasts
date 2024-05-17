@@ -32,42 +32,48 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
+    title: 'Khách hàng',
+    icon: 'person-outline',
+    children: [
+      {
+        title: 'Thêm',
+        icon: 'plus-circle',
+        link: '/pages/customers/create',
+      },
+      {
+        title: 'Danh sách',
+        icon: 'grid',
+        link: '/pages/customers/list',
+        
+      },
+    ],
+    
+  },
+  {
+    title: 'Bài đăng',
+    icon: 'book-outline',
+    children: [
+      {
+        title: 'Thêm',
+        icon: 'plus-circle',
+        link: '/pages/post/create',
+      },
+      {
+        title: 'Danh sách',
+        icon: 'grid',
+        link: '/pages/post/list',
+      },
+    ],
+  },
+  {
     title: 'Thống Kê',
     group: true,
   },
   {
     title: 'Bình luận',
     icon: 'message-circle-outline',
-    children: [
-      {
-        title: 'Danh sách',
-        icon: 'grid',
-        link: '/pages/comment/list',
-      },
-    ],
+    link: '/pages/comment/list',
   },
-  {
-    title: 'Quản lý',
-    group: true,
-  },
-  {
-    title: 'Khách Hàng',
-    icon: 'person-outline',
-    children: [
-      {
-        title: 'Thêm khách hàng',
-        link: '/pages/customers/create',
-      },
-      {
-        title: 'Danh sách',
-        link: '/pages/customers/list',
-      },
-    ],
-  },
-  
-  {
-    title: 'Thống kê',
-    group: true,
-  },
+
   
 ];

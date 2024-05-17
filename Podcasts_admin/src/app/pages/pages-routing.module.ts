@@ -23,6 +23,18 @@ const routes: Routes = [{
       data: {breadcrumb: 'Loại'},
     },
     {
+      path: 'customers',
+      loadChildren: () => import('./customers/customers.module')
+        .then(m => m.CustomersModule),
+        data: {breadcrumb: 'Khách hàng'},
+    },
+    {
+      path: 'post',
+      loadChildren: () => import('./post/post.module')
+        .then(m => m.PostModule),
+        data: {breadcrumb: 'Bài đăng'},
+    },
+    {
       path: 'comment',
       loadChildren: () => import('./comment/comment.module')
       .then(m => m.CommentModule),

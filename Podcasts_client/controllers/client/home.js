@@ -43,7 +43,7 @@ exports.getContact = async (req, res, next) => {
 };
 exports.getMenu = async (req, res, next) => {
   try {
-    res.render("client/menu/product-single", {
+    res.render("client/menu/product", {
 
         
         });
