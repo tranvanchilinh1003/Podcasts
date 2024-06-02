@@ -7,7 +7,7 @@ import { LocalStorageService } from "../../@core/services/common";
 import { LOCALSTORAGE_KEY, ROUTER_CONFIG } from "../../@core/config";
 import { IAlertMessage } from "../../@theme/components/alert/ngx-alerts.component";
 import { finalize } from "rxjs";
-
+import { DialogService } from '../../@core/services/common/dialog.service'
 @Component({
   selector: 'ngx-login',
   styleUrls: ['./login.component.scss'],
@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
     private spinner: SpinnerService,
     private auth: AuthService,
     private storageService: LocalStorageService,
+    private dialog: DialogService
   ) {
   }
 
@@ -52,6 +53,7 @@ export class LoginComponent implements OnInit {
 
           console.log('Đăng nhập thành công', response);
           this.handleLoginSuccess(response);
+          // this.dialog.success('Đăng nhập thành công')
         },
         error: (error) => {
           // console.error('Đăng nhập thất bại', error);

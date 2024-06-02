@@ -11,12 +11,21 @@ import { API_BASE_URL } from '../../config/api-endpoint.config';
 export class DialogService {
 
   constructor(private httpService: HttpClient) { }
+  success(title: string) {
+    Swal.fire({
+      position: 'center',
+      icon: 'success',
+      title: title,
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
 
-  showConfirmationDialog(item: string, id: string) {
+  showConfirmationDialog(item: string, id: string): Promise<boolean> {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success ms-2',
-        cancelButton: 'btn btn-danger '
+        cancelButton: 'btn btn-danger'
       },
       buttonsStyling: false
     });
@@ -31,34 +40,31 @@ export class DialogService {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this.deleteItem(item, id).subscribe(
+        return this.deleteItem(item, id).toPromise().then(
           () => {
-            
             swalWithBootstrapButtons.fire({
-                title: 'Đã Xóa!',
-                text: 'Bạn đã xóa thành công.',
-                icon: 'success'
-              });
+              title: 'Đã Xóa!',
+              text: 'Bạn đã xóa thành công.',
+              icon: 'success'
+            });
+            return true;
           },
           (error) => {
             console.error('Lỗi khi xóa:', error);
             swalWithBootstrapButtons.fire({
-                title: 'Lỗi!',
-                text: 'Xóa không thành công. Vui lòng thử lại sau.',
-                icon: 'error'
-              });
+              title: 'Lỗi!',
+              text: 'Xóa không thành công. Vui lòng thử lại sau.',
+              icon: 'error'
+            });
+            return false;
           }
         );
-        setTimeout(() => {
-          Swal.close();
-        }, 2500);
+      } else {
+        return false;
       }
-    
     });
   }
-
-
-
+  
   
   deleteItem(item: string, id: string): Observable<any> {
     return this.httpService.delete<any>(`${API_BASE_URL}${item}/${id}`);

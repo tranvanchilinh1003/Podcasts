@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 import {IAlertMessage} from "../../../@theme/components/alert/ngx-alerts.component";
@@ -105,21 +105,38 @@ export class AuthService extends ApiService {
     return null;
   }
 
-  logout() {
-    return this.post<any>(API_BASE_URL + API_ENDPOINT.auth.logout, this.getToken());
+  logout(): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this._http.post<any>(API_BASE_URL + API_ENDPOINT.auth.logout, null, { headers }).pipe(
+      tap(
+        () => {
+          this.localStorageService.removeItem(LOCALSTORAGE_KEY.token);
+          this.localStorageService.removeItem(LOCALSTORAGE_KEY.userInfo);
+          this.router.navigate(['/auth/login']);
+        },
+        error => {
+          console.error('Đăng xuất thất bại:', error);
+          this.localStorageService.removeItem(LOCALSTORAGE_KEY.token);
+          this.localStorageService.removeItem(LOCALSTORAGE_KEY.userInfo);
+          this.router.navigate(['/auth/login']);
+        }
+      )
+    );
   }
-
   isLoggedIn(): boolean {
-    if (this.getToken()) {
-      const expired = this.jwtHelperService.isTokenExpired(this.getToken());
+    const token = this.getToken();
+    if (token) {
+      const expired = this.jwtHelperService.isTokenExpired(token);
       if (expired) {
-        localStorage.clear();
+        this.localStorageService.clear();
         return false;
       }
       return !expired;
     }
     return false;
   }
+
 
   override getToken() {
     return this.localStorageService.getItem<any>(LOCALSTORAGE_KEY.token);

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 import { Router } from '@angular/router';
 
-
+import { DialogService  } from '../../../@core/services/common/dialog.service'
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import {LayoutService} from "../../../@core/services/common/layout.service";
@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile',icon: 'person-outline' }, { title: 'Log out', icon: 'power', link: API_BASE_URL + API_ENDPOINT.auth.logout  } ];
+  userMenu = [ { title: 'Profile',icon: 'person-outline' }, { title: 'Log out', icon: 'power' } ];
 
 
   constructor(
@@ -42,7 +42,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private menuService: NbMenuService,
     private themeService: NbThemeService,
     private layoutService: LayoutService,
-    private breakpointService: NbMediaBreakpointsService
+    private breakpointService: NbMediaBreakpointsService,
+    private dialog: DialogService
   ) { }
 
   ngOnInit() {
@@ -62,8 +63,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
             takeUntil(this.destroy$),
         )
         .subscribe(themeName => this.currentTheme = themeName);
+        this.menuService.onItemClick()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((event) => {
+          if (event.item.title === 'Log out') {
+                    
+          this.onLogout();
+          }
+        });
+        
   }
-
+  onLogout(){
+    this.authService.logout().subscribe(
+      ()=> {
+        this.dialog.success('Đăng xuất thành công')
+      },
+        err =>{
+          console.log(err);
+          
+        }
+    )
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
