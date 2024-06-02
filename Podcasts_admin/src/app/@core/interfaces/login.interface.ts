@@ -1,8 +1,10 @@
 export class ILogin {
-  idLogin: string;
+  id: string;
+  username: string;
   email: string;
   password: string;
   newPassword: string;
   confirmPassword: string;
   verificationCode: string;
+  role: string;
 }

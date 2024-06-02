@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   alertMessages: IAlertMessage[] = [];
-
+  loading = false;
+  errorMessage: string = '';
   constructor(
     private router: Router,
     private spinner: SpinnerService,
@@ -29,7 +30,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
 
     this.loginForm = new FormGroup({
-      email: new FormControl('', Validators.required),
+      username: new FormControl('', [Validators.required, Validators.minLength(6)]),
       password: new FormControl('', [Validators.required, Validators.minLength(8)])
 
     });
@@ -37,23 +38,31 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigate([ROUTER_CONFIG.pages]).then();
+    // this.router.navigate([ROUTER_CONFIG.pages]).then();
     if (this.loginForm.valid) {
       this.spinner.show();
+      this.loading = true;
       this.auth.login(this.loginForm.value).pipe(
         finalize(() => {
+          this.loading = false;
           this.spinner.hide();
         })
       ).subscribe({
-        next: this.handleLoginSuccess.bind(this),
-        error: this.handleLoginFailed.bind(this),
-      })
+        next: (response) => {
 
+          console.log('Đăng nhập thành công', response);
+          this.handleLoginSuccess(response);
+        },
+        error: (error) => {
+          // console.error('Đăng nhập thất bại', error);
+          this.handleLoginFailed();
+        }
+      });
     }
   }
 
   protected handleLoginSuccess(res) {
-    this.storageService.setItem(LOCALSTORAGE_KEY.userInfo, res.name);
+    this.storageService.setItem(LOCALSTORAGE_KEY.userInfo, res.data);
     this.storageService.setItem(LOCALSTORAGE_KEY.token, res.token);
     this.router.navigate([ROUTER_CONFIG.pages]).then();
     this.spinner.hide();

@@ -3,7 +3,7 @@
         <nb-card>
             <nb-card-header>Thêm bài viết</nb-card-header>
             <nb-card-body>
-                <form class="form" method="post" enctype="multipart/form-data" action="#">
+                <form >
                     <div class='row'>
                         <div class="col-sm-4">
                             <label for="title" class="fw-bold col-form-label ">Tiêu đề</label>
@@ -16,15 +16,17 @@
                             <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
                             <input type="file"
                                 class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="img" accept="image/*" name="image">
-                            <span class="err text-danger"></span>
+                                fullWidth id="img" accept="image/*" (change)="onFileChange($event, 'image')" name="image">
+                                <progress class="w-100" *ngIf="isUploading"   value="{{uploadProgressImage}}" max="100"></progress>
+                                <span class="err text-danger"></span>
                         </div>
                         <div class="col-sm-4">
                             <label for="audio" class="fw-bold col-form-label">Audio</label>
                             <input type="file"
                                 class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="audio" accept="image/*" name="audio">
-                            <span class="err text-danger"></span>
+                                fullWidth id="audio" accept="audio/*" (change)="onFileChange($event, 'audio')"  name="audio">
+                                <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressAudio}}" max="100"></progress>
+                                <span class="err text-danger"></span>
                         </div>
                     </div>
                     <div class='row mt-3'>
@@ -37,7 +39,7 @@
                         </div>
                     </div>
                     <div class="text-end">
-                        <button type="submit" id="btn" nbButton
+                        <button type="button" (click)="  upload()" id="btn" nbButton
                             class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5"><i
                                 class="nb-plus"></i>Thêm mới</button>
                     </div>

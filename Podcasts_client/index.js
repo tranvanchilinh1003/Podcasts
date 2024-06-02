@@ -1,4 +1,5 @@
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
 const multer = require("multer");
 let path = require("path");
 const app = express();
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 let cart = [];
-
+app.use(cors());
 app.use(express.json());
 app.use(session({
   secret: 'your_secret_key',
@@ -29,10 +30,7 @@ function md5(password) {
 }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.set("view engine", "ejs");
-// cannot GET là chưa khai báo /
-
 app.use("/styles", express.static(path.join(__dirname, "styles")));
 app.use("/styles", express.static("styles"));
 app.use("/uploads", express.static("uploads"));

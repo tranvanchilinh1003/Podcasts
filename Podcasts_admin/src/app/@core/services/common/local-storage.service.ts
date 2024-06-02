@@ -10,12 +10,18 @@ export class LocalStorageService extends AbstractStorageAdapter {
    * Custom localStorage.getItem
    */
   getItem<T>(key: string): T {
-    const data = JSON.parse(localStorage.getItem(key));
-    if (data === 'undefined' || data === 'null') {
-      return null;
+    const dataString = localStorage.getItem(key);
+    if (!dataString) {
+        return null;
     }
-    return data;
-  }
+    try {
+        const data = JSON.parse(dataString);
+        return data;
+    } catch (error) {
+        console.error('Error parsing JSON from Local Storage:', error);
+        return null;
+    }
+}
 
   /**
    * Custom localStorage.setItem

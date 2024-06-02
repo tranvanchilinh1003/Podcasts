@@ -8,8 +8,5 @@ import { Router } from '@angular/router';
 export class ListComponent implements OnInit {
   constructor(private router: Router){}
   ngOnInit() {}
-  detailCmt() {
-    this.router.navigateByUrl('/pages/comment/detail');
-    return false;
-  }
+
 }

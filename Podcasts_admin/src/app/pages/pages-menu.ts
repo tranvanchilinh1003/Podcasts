@@ -2,13 +2,13 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'Giới Thiệu',
+    title: 'Trang chủ',
     group: true,
   },
   {
-    title: 'Giới Thiệu',
+    title: 'Trang chủ',
     icon: 'home-outline',
-    link: '/pages/dashboard',
+    link: '/pages',
    
   },
   {
@@ -73,6 +73,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Bình luận',
     icon: 'message-circle-outline',
     link: '/pages/comment/list',
+  },
+  {
+    title: 'Chia sẻ',
+    icon: 'share',
+    link: '/pages/shares/list',
+  },
+  {
+    title: 'Yêu thích',
+    icon: 'heart-outline',
+    link: '/pages/favourite/list',
   },
 
   

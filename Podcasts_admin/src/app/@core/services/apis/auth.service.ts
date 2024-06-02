@@ -31,15 +31,17 @@ export class AuthService extends ApiService {
 
   login(form: ILogin): Observable<any>  {
     return this.post<any>(API_BASE_URL + API_ENDPOINT.auth.login, {
-      idLogin: form.email.trim(),
+      role: form.role,
+      username: form.username.trim(),
       password: form.password,
+      
     });
   }
 
 
   requirePassword(form: ILogin): Observable<any> {
     return this.post(API_BASE_URL + API_ENDPOINT.auth.login, {
-      idLogin: this.getIdLogin(),
+      id: this.getid(),
       password: form.password,
       newPassword: form.newPassword,
       confirmPassword: form.confirmPassword,
@@ -57,13 +59,13 @@ export class AuthService extends ApiService {
 
   forgotPassword(form: ILogin): Observable<any> {
     return this.post(API_BASE_URL + API_ENDPOINT.auth.forgotPassword, {
-      idLogin: form.idLogin,
+      id: form.id,
     });
   }
 
   confirmPassword(form: ILogin): Observable<any> {
     return this.post(API_BASE_URL + API_ENDPOINT.auth.confirmPassword, {
-      idLogin: this.getIdLogin(),
+      id: this.getid(),
       newPassword: form.newPassword,
       verificationCode: form.verificationCode,
     });
@@ -77,9 +79,9 @@ export class AuthService extends ApiService {
     });
   }
 
-  getIdLogin() {
+  getid() {
     if (this.loginInfo) {
-      return this.loginInfo.idLogin;
+      return this.loginInfo.id;
     }
     return null;
   }
@@ -112,6 +114,7 @@ export class AuthService extends ApiService {
       const expired = this.jwtHelperService.isTokenExpired(this.getToken());
       if (expired) {
         localStorage.clear();
+        return false;
       }
       return !expired;
     }

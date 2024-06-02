@@ -7,12 +7,7 @@ import { Component } from '@angular/core';
     <span class="created-by">
       2023 © Fpoly Admin brought to you by <b>FOODCAST FORUMS </b>
     </span>
-    <div class="socials">
-      <a href="#" target="_blank" class="ion ion-social-github"></a>
-      <a href="#" target="_blank" class="ion ion-social-facebook"></a>
-      <a href="#" target="_blank" class="ion ion-social-twitter"></a>
-      <a href="#" target="_blank" class="ion ion-social-linkedin"></a>
-    </div>
+
   `,
 })
 export class FooterComponent {

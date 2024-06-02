@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import {DashboardComponent} from './dashboard.component';
 import {BreadcrumbModule} from "xng-breadcrumb";
-import { NbCardModule ,NbIconModule} from '@nebular/theme';
+import { NbCardModule ,NbIconModule, NbActionsModule} from '@nebular/theme';
 @NgModule({
   imports: [
     BreadcrumbModule,
-    NbCardModule
+    NbCardModule,
+    NbIconModule,
+    NbActionsModule
   ],
   declarations: [
     DashboardComponent

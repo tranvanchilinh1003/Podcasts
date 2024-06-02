@@ -15,7 +15,8 @@ import { EditComponent } from './edit/edit.component';
     BreadcrumbModule,
     FormsRoutingModule,
     NbEvaIconsModule,
-    NbIconModule
+    NbIconModule,
+    
   ],
   declarations: [
    ...routedComponents,

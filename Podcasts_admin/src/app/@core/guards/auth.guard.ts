@@ -6,7 +6,7 @@ import {ROUTER_CONFIG} from "../config";
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate  {
 
   constructor(
     private readonly authService: AuthService,
@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     if (this.authService.isLoggedIn()) {
       return true;
     } else {
-      this.router.navigate([ROUTER_CONFIG.auth.pages]).then();
+      this.router.navigate([ROUTER_CONFIG.auth.login]).then();
       return false;
     }
   }

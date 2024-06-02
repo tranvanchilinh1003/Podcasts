@@ -5,8 +5,15 @@ export const API_BASE_URL = APP_CONFIG.apiBaseUrl;
 
 export const API_ENDPOINT: IAPIEndpoint = {
   auth: {
-    base: API_BASE_URL + '/' + 'auth',
-    login: '/auth/login',
-    logout: '/auth/logout',
+    base: API_BASE_URL + '/' + 'api',
+    login: '/api/login',
+    logout: '/api/logout',
   },
+  customers: {
+    base: API_BASE_URL + '/' +  'api',
+    list: '/api/customers',
+  }
+
+
+  
 };
