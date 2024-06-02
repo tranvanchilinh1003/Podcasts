@@ -17,7 +17,7 @@ const routes: Routes = [
         data: {breadcrumb: 'Thêm mới'},
       },
       {
-        path: 'edit',
+        path: 'edit/:id',
         component: EditComponent,
         data: {breadcrumb: 'Sửa'},
       },

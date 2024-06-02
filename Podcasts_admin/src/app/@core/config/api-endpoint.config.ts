@@ -12,11 +12,12 @@ export const API_ENDPOINT: IAPIEndpoint = {
     otp: '/api/otp',
     changePassword: '/api/changepassword'
   },
+  categories: {
+    base: API_BASE_URL + '/' + 'api',
+    categories: '/api/categories',
+  },
   customers: {
-    base: API_BASE_URL + '/' +  'api',
-    list: '/api/customers',
-  }
-
-
-  
+    base: API_BASE_URL + '/' + 'api',
+    customers: '/api/customers',
+  },
 };

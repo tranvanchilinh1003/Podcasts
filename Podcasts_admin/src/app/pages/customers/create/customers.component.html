@@ -1,82 +1,145 @@
 <div class="row">
     <div class="col-lg-12">
-        <nb-card>
-            <nb-card-header>Thêm khách hàng</nb-card-header>
-            <nb-card-body>
-                <form>
-                    <div class='row'>
-                        <div class="col-sm-4">
-                            <label for="username" class="fw-bold col-form-label ">Tài Khoản</label>
-                            <input type="text"
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="username" name="username" placeholder="Tài Khoản...">
-                            <span class="err text-danger"></span>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="full_name" class="fw-bold col-form-label ">Họ và tên</label>
-                            <input type="text"
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="full_name" name="full_name" placeholder='Họ Và Tên...'>
-                            <span class="err text-danger"></span>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="password" class="fw-bold col-form-label ">Mật khẩu</label>
-                            <input type="password"
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="password" name="password" placeholder='Mật Khẩu...'>
-                            <span class="err text-danger"></span>
-                        </div>
+      <nb-card>
+        <nb-card-header>Thêm khách hàng</nb-card-header>
+        <nb-card-body>
+          <form (ngSubmit)="onCreate()" [formGroup]="validateForm">
+            <div class="row">           
+              <div class="col-sm-4">
+                <label for="username" class="fw-bold col-form-label">Tài Khoản</label>
+                <input [(ngModel)]="newCustomers.username" type="text" formControlName="username" 
+                  class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                  fullWidth id="username" name="username" placeholder="Tài khoản...." class="form-control" status="success" autofocus>
+                <div *ngIf="validateForm.get('username').invalid && (validateForm.get('username').dirty || validateForm.get('username').touched)">
+                  <small *ngIf="validateForm.get('username').hasError('required')">
+                    <i class="text-danger">Vui lòng nhập tài khoản.</i>
+                  </small>
+                  <small *ngIf="validateForm.get('username').hasError('pattern')">
+                    <i class="text-danger">Tài khoản không chứa chữ hoa và ký tự đặc biệt.</i>
+                  </small>
+                </div>
+              </div>   
+              <div class="col-sm-4">
+                <label for="full_name" class="fw-bold col-form-label">Họ và tên</label>
+                <input [(ngModel)]="newCustomers.full_name" type="text" formControlName="full_name" 
+                  class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                  fullWidth id="full_name" name="full_name" placeholder='Họ Và Tên...'>
+                  <div *ngIf="validateForm.get('full_name').invalid && (validateForm.get('full_name').dirty || validateForm.get('full_name').touched)">
+                    <small *ngIf="validateForm.get('full_name').hasError('required')">
+                      <i class="text-danger">Vui lòng nhập họ và tên của bạn.</i>
+                    </small>
+                    <small *ngIf="validateForm.get('full_name').hasError('minlength')">
+                      <i class="text-danger">Họ và tên quá ngắn, vui lòng nhập đầy đủ họ và tên.</i>
+                    </small>
+                  </div>
+              </div>
+              <div class="col-sm-4">
+                <label for="password" class="fw-bold col-form-label">Mật khẩu</label>
+                <input [(ngModel)]="newCustomers.password" type="password" formControlName="password" 
+                  class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                  fullWidth id="password" name="password" placeholder='Mật Khẩu...'>
+                  <div
+                  *ngIf="validateForm.get('password').invalid && (validateForm.get('password').dirty || validateForm.get('password').touched)">
+                  <small *ngIf="validateForm.get('password').hasError('required')">
+                    <i class="text-danger">Vui lòng nhập mật khẩu.</i>
+                  </small>
+                  <small *ngIf="validateForm.get('password').hasError('minlength')">
+                    <i class="text-danger"> Mật khẩu phải có ít nhất 8 ký tự.</i>
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class='row mt-3'>
+              <div class="col-sm-4">
+                <label for="email" class="fw-bold col-form-label">Email</label>
+                <input [(ngModel)]="newCustomers.email" type="email" formControlName="email" 
+                  class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                  fullWidth id='email' name='email' placeholder='Gmail...'>
+                  <div
+                  *ngIf="validateForm.get('email').invalid && (validateForm.get('email').dirty || validateForm.get('email').touched)">
+                  <small *ngIf="validateForm.get('email').hasError('required')">
+                    <i class="text-danger">Vui lòng nhập email.</i>
+                  </small>
+                  <small *ngIf="validateForm.get('email').hasError('pattern')">
+                    <i class="text-danger">Email chưa đúng định dạng.</i>
+                  </small>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
+                <input (change)="OnFileChange($event)" type="file" formControlName="images"
+                  class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                  fullWidth id="img" accept="image/*" name="image">
+                  <div
+                  *ngIf="validateForm.get('images').invalid && (validateForm.get('images').dirty || validateForm.get('images').touched)">
+                  <small *ngIf="validateForm.get('images').hasError('required')">
+                    <i class="text-danger">Vui lòng chọn hình ảnh.</i>
+                  </small>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <label for="confirm_password" class="fw-bold col-form-label">Xác nhận mật khẩu</label>
+                <input type="password" formControlName="confirm_password"
+                  class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                  fullWidth id="confirm_password" name="confirm_password"
+                  placeholder='Xác Nhận Mật Khẩu...'>
+                <div *ngIf="validateForm.get('confirm_password').invalid && (validateForm.get('confirm_password').dirty || validateForm.get('confirm_password').touched)">
+                  <small *ngIf="validateForm.get('confirm_password').hasError('required')">
+                    <i class="text-danger"> Xác nhận mật khẩu là bắt buộc.</i>
+                  </small>
+                </div>
+                <div *ngIf="validateForm.hasError('mismatch')">
+                  <small>
+                    <i class="text-danger"> Mật khẩu và xác nhận mật khẩu không khớp.</i>
+                  </small>
+                </div>
+              </div>        
+            </div>
+            <div class='row mt-3'>
+              <div class="col-sm-4 " >
+                  <label class="fw-bold col-form-label">Vai trò</label>
+                  <nb-card class="checkbox-radio status-basic shape-rectangle nb-transition " nbInput >
+                      <div class="demo-items ">
+                          <nb-radio-group class="d-flex mx-3" name="role" formControlName="role" [(ngModel)]="newCustomers.role" >
+                              <nb-radio value="user"  >
+                                  Người dùng
+                              </nb-radio>
+                              <nb-radio value="admin" >    
+                                  Admin
+                              </nb-radio>
+                          </nb-radio-group>
+                      </div>
+                  </nb-card>
+              </div>
+              <div class="col-sm-4 " >
+                <label class="fw-bold col-form-label">Giới tính</label>
+                <nb-card class="checkbox-radio status-basic shape-rectangle nb-transition " nbInput>
+                    <div class=" ">
+                        <nb-radio-group class="d-flex mx-3" name="gender" formControlName="gender"  [(ngModel)]="newCustomers.gender">
+                            <nb-radio value="0"  >
+                                Nam
+                            </nb-radio>
+                            <nb-radio value="1" >    
+                                Nữ
+                            </nb-radio>
+                        </nb-radio-group>
                     </div>
-                    <div class='row mt-3'>
-                        <div class="col-sm-4">
-                            <label for="email" class="fw-bold col-form-label  ">Email</label>
-                            <input type="email"
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id='email' name='email' placeholder='Gmail...'>
-                            <span class="err text-danger"></span>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
-                            <input type="file"
-                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                nbInput fullWidth id="img" (change)="OnFileChange($event)"  accept="image/*" name="image">
-                            <span class="err text-danger"></span>
-                        </div>
-                        <div class="col-sm-4">
-                            <label for="comfirm_password" class="fw-bold col-form-label ">Xác nhận
-                                mật khẩu</label>
-                            <input type="password"
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="comfirm_password" name="comfirm_password"
-                                placeholder='Xác Nhận Mật Khẩu...'>
-                            <span class="err text-danger"></span>
-                        </div>
-                    </div>
-                    <!-- <div class='row mt-3'>
-                        <div class="col-sm-4 ">
-                            <label class="fw-bold col-form-label">Vai trò</label>
-                            <nb-card-body class="checkbox-radio border rounded">
-                                <div class="demo-items ">
-                                    <nb-radio-group [(value)]="radioGroupValue" class="d-flex">
-                                        <nb-radio [value]="'0'">
-                                            Người dùng
-                                        </nb-radio>
-                                        <nb-radio [value]="'1'">
-                                            Admin
-                                        </nb-radio>
-                                    </nb-radio-group>
-                                </div>
-                            </nb-card-body>
-                        </div>
-                    </div> -->
-                    <div class="text-end">
-                        <button (click)="UploadImg()" type="button" id="btn" nbButton
-                            class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5"><i
-                                class="nb-plus"></i>Thêm mới</button>
-                    </div>
-                    <br>
-                </form>
-            </nb-card-body>
-        </nb-card>
+                </nb-card>
+            </div>
+          </div>           
+            <div class="text-end">
+              <button type="submit" id="btn" nbButton 
+                class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5 mx-3">
+                <i class="nb-plus"></i>Thêm mới
+              </button>
+              <button type="reset" id="btn" nbButton
+                class="mat-ripple size-medium shape-rectangle appearance-hero status-warning ng-star-inserted nb-transition ml-5 mt-5">
+                Nhập lại
+              </button>
+            </div>
+          </form>
+        </nb-card-body>
+      </nb-card>
     </div>
-</div>
+  </div>
+  

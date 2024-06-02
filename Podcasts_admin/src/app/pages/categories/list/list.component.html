@@ -7,36 +7,25 @@
                   <table class="table border text-center">
                       <ng-container>
                           <tr>
-                              <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Mã loại</th>
+                              <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">#</th>
                               <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Tên loại</th>
                               <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"></th>
                           </tr>
                       </ng-container>
                       <ng-container>
-                          <tr>
-                              <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">1</td>
-                              <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Loại 1</td>                            
+                          <tr *ngFor="let category of categories; index as i">
+                              <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{i + 1}}</td>
+                              <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{category.name}}</td>                            
                               <td class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
-                                  <button nbButton (click)="detail()"
+                                  <button nbButton routerLink="../edit/{{category.id}}"
                                       class="mat-ripple status-success appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mt-3 mb-3">
                                       <nb-icon icon="edit-2-outline" pack="eva" class="fs-3"></nb-icon></button>
-                                  <button nbButton
+                                  <button nbButton  (click)="onDelete(category.id)"
                                       class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
                                       <nb-icon icon="trash-2" pack="eva" class="fs-3"></nb-icon></button>
                               </td>
                           </tr>
-                          <tr>
-                            <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2</td>
-                            <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Loại 2</td>                            
-                            <td class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
-                                <button nbButton  (click)="detail()"
-                                    class="mat-ripple status-success appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mt-3 mb-3">
-                                    <nb-icon icon="edit-2-outline" pack="eva" class="fs-3"></nb-icon></button>
-                                <button nbButton (click)="showDialog('3')"   class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
-                                    <nb-icon icon="trash-2" pack="eva" class="fs-3"></nb-icon></button>
                         
-                                </td>
-                        </tr>
                       </ng-container>
                   </table>
               </div>

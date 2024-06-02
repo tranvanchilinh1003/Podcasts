@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require("multer");
 let path = require("path");
+const cors = require('cors');
 const app = express();
 var bodyParser = require("body-parser");
 const crypto = require('crypto');
@@ -11,6 +12,8 @@ const myPlaintextPassword = 's0/\/\P4$$w0rD';
 const someOtherPlaintextPassword = 'not_bacon';
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 

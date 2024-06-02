@@ -1,30 +1,31 @@
 import { NgModule } from '@angular/core';
 import { NbCardModule ,NbIconModule} from '@nebular/theme';
-import { makeStateKey, TransferState } from '@angular/platform-browser';
-import { NbRadioModule } from '@nebular/theme';
-import { CommonModule } from '@angular/common';
+import { NbRadioModule,NbAlertModule } from '@nebular/theme';
+
 import { ThemeModule } from '../../@theme/theme.module';
 import { CustomersRoutingModule, routedComponents } from './customers-routing.module';
-import { ListComponent } from './list/list.component';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { EditComponent } from './edit/edit.component';
-import {HttpClientModule} from "@angular/common/http";
 import { AngularFireModule} from "@angular/fire/compat";
 import { AngularFireStorageModule } from "@angular/fire/compat/storage";
 import { environment } from '@environments/environment';
+import { FormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   imports: [
+    FormsModule,
     NbCardModule,
+    NbAlertModule,
     NbEvaIconsModule,
     NbIconModule,
     NbRadioModule,
     ThemeModule,
     CustomersRoutingModule,
-    HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    ReactiveFormsModule
   ],
   declarations: [
     ...routedComponents,

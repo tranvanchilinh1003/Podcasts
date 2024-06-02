@@ -7,35 +7,30 @@
                     <table class="table border text-center">
                         <ng-container>
                             <tr>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">ID</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Tài khoản</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Họ và Tên</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Email</th>
+                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">#</th>
                                 <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Ảnh đại diện</th>
-                                <!-- <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Vai trò</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Giới tính</th> -->
+                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Tài khoản</th>               
+                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Họ và Tên</th>
+                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Email</th>                              
                                 <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"></th>
                             </tr>
                         </ng-container>
                         <ng-container>
-                            <tr *ngFor="let customer of customers">
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{customer.id}}</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{customer.username}}</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{customer.full_name}}</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{customer.email}}</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"><img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{customer.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="100px" alt="" class="rounded-circle"></td>
-                                <!-- <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Admin</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Nam</td> -->
+                            <tr *ngFor = "let item of customers; index as i">
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{i + 1}}</td>
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"><img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{item.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="100px" alt="" class="rounded-circle"></td>
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{item.username}}</td>
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{item.full_name}}</td>
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{item.email}}</td>
                                 <td class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
                                     <button nbButton
-                                    class="mat-ripple status-success appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mt-3 mb-3" routerLink="../edit">
+                                    class="mat-ripple status-success appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mt-3 mb-3" routerLink="../edit/{{item.id}}">
                                     <nb-icon icon="edit-2-outline" pack="eva" class="fs-3"></nb-icon></button>
-                                <button nbButton
+                                    <button nbButton  (click)="onDelete(item.id)"
                                     class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
-                                    <nb-icon icon="trash-2-outline" pack="eva" class="fs-3"></nb-icon></button>
+                                    <nb-icon icon="trash-2" pack="eva" class="fs-3"></nb-icon></button>
                                 </td>
-                            </tr>
-                            
+                            </tr>                           
                         </ng-container>
                     </table>
                 </div>
