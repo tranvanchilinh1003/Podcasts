@@ -15,4 +15,7 @@ router.delete('/customers/:id', customers.delete);
 
 router.post('/login', auth.login )
 router.post('/logout', auth.logout )
+router.post('/forgotPassword', auth.forgotPassword)
+router.post('/otp', auth.otp);
+router.patch('/changepassword', auth.changePassword)
 module.exports = router;

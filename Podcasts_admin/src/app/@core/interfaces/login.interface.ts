@@ -7,4 +7,5 @@ export class ILogin {
   confirmPassword: string;
   verificationCode: string;
   role: string;
+  otp: string;
 }

@@ -8,6 +8,9 @@ export const API_ENDPOINT: IAPIEndpoint = {
     base: API_BASE_URL + '/' + 'api',
     login: '/api/login',
     logout: '/api/logout',
+    forgotPassword: '/api/forgotPassword',
+    otp: '/api/otp',
+    changePassword: '/api/changepassword'
   },
   customers: {
     base: API_BASE_URL + '/' +  'api',

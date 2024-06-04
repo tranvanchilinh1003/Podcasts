@@ -40,7 +40,7 @@ export class AuthService extends ApiService {
 
 
   requirePassword(form: ILogin): Observable<any> {
-    return this.post(API_BASE_URL + API_ENDPOINT.auth.login, {
+    return this.post(API_BASE_URL + API_ENDPOINT.auth.requirePassword, {
       id: this.getid(),
       password: form.password,
       newPassword: form.newPassword,
@@ -49,27 +49,25 @@ export class AuthService extends ApiService {
   }
 
   changePassword(form: ILogin): Observable<any> {
-    return this.post(API_BASE_URL + API_ENDPOINT.auth.changePassword, {
-      oldPassword: form.password,
-      newPassword: form.newPassword,
-      confirmNewPassword: form.confirmPassword,
-      token: this.getToken(),
+    return this.patch(API_BASE_URL + API_ENDPOINT.auth.changePassword, {
+    password: form.password,
+    email: form.email,
     });
   }
 
   forgotPassword(form: ILogin): Observable<any> {
     return this.post(API_BASE_URL + API_ENDPOINT.auth.forgotPassword, {
       id: form.id,
+      email: form.email
+    });
+  }
+  checkOTP(form: ILogin): Observable<any> {
+    return this.post(API_BASE_URL + API_ENDPOINT.auth.otp, {
+      email: form.email,
+      otp: form.otp
     });
   }
 
-  confirmPassword(form: ILogin): Observable<any> {
-    return this.post(API_BASE_URL + API_ENDPOINT.auth.confirmPassword, {
-      id: this.getid(),
-      newPassword: form.newPassword,
-      verificationCode: form.verificationCode,
-    });
-  }
 
   updateProfile(form: UserInfoModel): Observable<any> {
     return this.patch(API_BASE_URL + API_ENDPOINT.auth.updateProfile, {
