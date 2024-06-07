@@ -10,7 +10,8 @@ import { NbCardModule ,NbIconModule, NbActionsModule} from '@nebular/theme';
     NbActionsModule
   ],
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+
   ],
 })
 export class DashboardModule { }

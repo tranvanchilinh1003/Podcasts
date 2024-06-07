@@ -5,9 +5,8 @@ var connect = mysql.createConnection({
   password: "mysql",
   database: "frontend1",
 });
-connect.connect(function(err){
-    if(err) throw err;
-        console.log('Database is connected successfully !');
-    
+connect.connect(function (err) {
+  if (err) throw err;
+  console.log("Database is connected successfully !");
 });
 module.exports = connect;

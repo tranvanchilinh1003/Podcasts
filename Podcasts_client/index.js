@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require("multer");
 let path = require("path");
+let cors = require("cors"); // chặn api
 const app = express();
 var bodyParser = require("body-parser");
 const crypto = require('crypto');

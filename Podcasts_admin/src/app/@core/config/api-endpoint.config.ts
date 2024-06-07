@@ -28,4 +28,13 @@ export const API_ENDPOINT: IAPIEndpoint = {
     base: API_BASE_URL + '/' + 'api',
     categories: '/api/categories',
   },
+  shares: {
+    base: API_BASE_URL + '/' + 'api',
+    list: '/api/shares' 
+  },
+
+  favourite: {
+    base: API_BASE_URL + '/' + 'api',
+    list: '/api/favourite' 
+  },
 };

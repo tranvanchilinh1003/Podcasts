@@ -6,31 +6,50 @@
                 <div class="table-responsive pt-3">
                     <table class="table border text-center">
                         <ng-container>
-                              
+
                             <tr>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"></th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Người yêu thích</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Ngày yêu thích</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"></th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                </th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Người yêu thích</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Ngày yêu thích</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                </th>
                             </tr>
                         </ng-container>
                         <ng-container>
-                            <tr>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"><img class="rounded-circle" src="../../../../assets/images/FPT_Polytechnic.png" width="60px" height="60px" alt=""></td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Hoangde123</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2024-04-23 00:00:00</td>                                                
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                            <tr *ngFor="let list of detail">
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <img class="rounded-circle" src="../../../../assets/images/FPT_Polytechnic.png"
+                                        width="60px" height="60px" alt="">
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.username}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{ list.moi_nhat | date: 'dd/MM/yyyy' }}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     <button nbButton
-                                    class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
-                                    <nb-icon icon="trash-2" pack="eva" class="fs-3 ng-star-inserted"></nb-icon></button>
+                                        class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3"
+                                        (click)="onDelete(list.id)">
+                                        <nb-icon icon="trash-2" pack="eva"
+                                            class="fs-3 ng-star-inserted"></nb-icon></button>
                                 </td>
                             </tr>
-                             
-                              
+
+
                         </ng-container>
                     </table>
                 </div>
             </nb-card-body>
         </nb-card>
     </div>
-  </div>
+</div>

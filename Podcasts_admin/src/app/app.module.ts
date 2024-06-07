@@ -15,9 +15,15 @@ import {HttpClientModule} from "@angular/common/http";
 import {CoreModule} from "./@core/core.module";
 import {ThemeModule} from "./@theme/theme.module";
 import { PaginatorModule } from '../app/@theme/components/paginator/paginator.module';
+import { SharesModule } from './pages/shares/shares.module';
+
+
+
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -25,6 +31,7 @@ import { PaginatorModule } from '../app/@theme/components/paginator/paginator.mo
     HttpClientModule,
     AppRoutingModule,
     PaginatorModule,
+    SharesModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),

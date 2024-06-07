@@ -6,7 +6,8 @@ import { FormsRoutingModule, routedComponents } from './shares-routing.module';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ListComponent } from './list/list.component';
 import { DetailComponent } from './detail/detail.component';
-// import { DetailComponent } from './detail/detail.component';
+import { DetailService } from 'app/@core/services/apis/shares.service';
+
 
 @NgModule({
   imports: [
@@ -16,7 +17,9 @@ import { DetailComponent } from './detail/detail.component';
     ThemeModule,
     BreadcrumbModule,
     FormsRoutingModule,
-    NbTooltipModule
+    NbTooltipModule,
+
+
   ],
   declarations: [
     ...routedComponents,
@@ -25,5 +28,8 @@ import { DetailComponent } from './detail/detail.component';
     ListComponent,
     DetailComponent
   ],
+  providers: [
+    DetailService 
+  ]
 })
 export class SharesModule { }

@@ -16,12 +16,12 @@
                             </tr>
                         </ng-container>
                         <ng-container>
-                            <tr>
+                            <tr *ngFor="let list of favourite">
                                 <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"><img class="rounded-circle" src="../../../../assets/images/FPT_Polytechnic.png" width="60px" height="60px" alt=""></td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">1</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">50</td>                            
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2024-04-23 </td>                            
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2024-01-23 </td>                            
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{list.id}}</td>
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{list.so_luong}}</td>                            
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{ list.moi_nhat | date: 'dd/MM/yyyy' }}</td>                            
+                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">{{ list.cu_nhat | date: 'dd/MM/yyyy' }} </td>                            
                                 <td class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
                                     <button nbButton nbTooltip="This is a tooltip" nbTooltipPlacement="top"
                                      nbTooltip="Chi tiết chia sẻ" routerLink="/pages/favourite/detail" nbTooltipPlacement="top"

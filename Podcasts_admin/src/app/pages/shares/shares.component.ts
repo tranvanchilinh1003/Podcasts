@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+
+
 @Component({
   selector: 'app-shares',
   template: `
@@ -8,6 +10,12 @@ import { Component, OnInit } from '@angular/core';
  
 })
 export class SharesComponent implements OnInit {
+
+  constructor(
+
+  ) { }
+  
   ngOnInit(): void { }
 
+  
 }

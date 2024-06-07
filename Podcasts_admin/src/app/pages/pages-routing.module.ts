@@ -51,9 +51,21 @@ const routes: Routes = [{
       loadChildren: () => import('./favourite/favourite.module')
       .then(m => m.FavouriteModule),
       data: {breadcrumb: 'Yêu thích'},
-    }
+    },
+    {
+      path: 'profile',
+      loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+      data: { breadcrumb: 'Hồ sơ' },
+    },
+    {
+      path: 'profile/edit',
+      loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+      data: { breadcrumb: 'Hồ sơ' },
+    },
+
   ],
 }];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

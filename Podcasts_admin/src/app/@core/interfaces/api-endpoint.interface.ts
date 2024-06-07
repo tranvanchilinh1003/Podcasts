@@ -4,4 +4,7 @@ export interface IAPIEndpoint {
   customers: any;
   post: any;
   comment: any;
+  shares: any;
+  favourite: any;
+
 }
