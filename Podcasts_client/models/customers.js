@@ -15,6 +15,18 @@ module.exports = class Customers {
         });
       });
     }
+    static async findUser(username, email) {
+      return new Promise((resolve, reject) => {
+          const query = 'SELECT * FROM customers WHERE username = ? OR email = ?';
+          connect.query(query, [username, email], (err, results) => {
+              if (err) {
+                  reject(err);
+              } else {
+                  resolve(results);
+              }
+          });
+      });
+  }
     static async coutCustomers() {
       return new Promise((resolve, reject) => {
         let sql = `SELECT COUNT(*) AS count FROM customers`; 

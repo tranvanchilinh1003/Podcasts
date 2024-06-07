@@ -1,137 +1,121 @@
 <%- include('../layouts/header') %>
 
-  <header class="site-header d-flex flex-column justify-content-center align-items-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 col-12 text-center">
-          <h2 class="mb-0">Đăng ký</h2>
+<header class="site-header d-flex flex-column justify-content-center align-items-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-12 text-center">
+        <h2 class="mb-0">Đăng ký</h2>
+      </div>
+    </div>
+  </div>
+</header>
+<section class="about-section section-padding" id="section_2">
+  <div class="container">
+    <div class="login-box m-auto " id="bg-login">
+      <h2>Đăng ký</h2>
+      <form action="/client/form/insertUser" method="post" class="form needs-validation" novalidate >
+        <div class="user-box">
+          <input type="text" name="username" id="username" required>
+          <label>Tài khoản</label>
+          <span class="text-danger messageerr" style="font-size: 13px;"></span>
+          <span class="text-danger">
+            <% if (typeof error !== 'undefined') { %>
+              <p><%= error %></p>
+            <% } %>
+          </span>
         </div>
-      </div>
+        <div class="user-box">
+          <input type="text" name="full_name" id="full_name" required>
+          <label>Họ tên</label>
+          <span class="text-danger messageerr" style="font-size: 13px;"></span>
+        </div>
+        <div class="user-box">
+          <input type="email" name="email" id="email" required>
+          <label>Email</label>
+          <span class="text-danger" style="font-size: 13px;"></span>
+          <span class="text-danger">
+            <% if (typeof errorphone !== 'undefined') { %>
+              <p><%= errorphone %></p>
+            <% } %>
+          </span>
+        </div>
+        <div class="user-box">
+          <input type="password" name="password" id="password" required>
+          <label>Mật khẩu</label>
+          <span class="text-danger messageerr" style="font-size: 13px;"></span>
+        </div>
+        <div class="user-box">
+          <input type="password" name="confirm_password" id="confirm_password" required>
+          <label>Xác nhận mật khẩu</label>
+          <span class="text-danger messageerr" style="font-size: 13px;"></span>
+        </div>
+
+        <span id="errorMessage" style="color: red;"><% if(typeof errorMessage !== 'undefined'){ %> <%= errorMessage %> <% } %></span>
+        <div class="text-right d-flex justify-content-sm-end">
+          <button class="btn-signup bg-transparent">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Đăng ký
+          </button>
+        </div>
+        <div class="text-center mt-5">
+          <p class="text-white">Đăng nhập ngay! <a class="text-info" href="/client/form/login">Đăng nhập</a></p>
+        </div>
+      </form>
     </div>
-  </header>
-  <section class="about-section section-padding" id="section_2">
-    <div class="container">
-      <div class="login-box m-auto " id="bg-login">
-        <h2>Đăng ký</h2>
-        <form action="/client/form/sigup" method="post" class="form needs-validation" novalidate
-          enctype="multipart/form-data">
-          <div class="user-box">
-            <input type="text" name="username" id="username" required>
-            <label>Tài khoản</label>
-            <span class="text-danger messageerr" style="font-size: 13px;"></span>
-            <span class="text-danger">
-              <% if (typeof error !=='undefined' ) { %>
-                <p>
-                  <%= error %>
-                </p>
-                <% } %>
-            </span>
-          </div>
-          <div class="user-box">
-            <input type="text" name="full_name" id="full_name" required>
-            <label>Họ tên</label>
-            <span class="text-danger messageerr" style="font-size: 13px;"></span>
-          </div>
-          <div class="user-box">
-            <input type="email" name="email" id="email" required>
-            <label>Email</label>
-            <span class="text-danger messageerr" style="font-size: 13px;"></span>
-            <span class="text-danger">
-              <% if (typeof errorphone !=='undefined' ) { %>
-                <p>
-                  <%= errorphone %>
-                </p>
-                <% } %>
-            </span>
-          </div>
-          <div class="user-box">
-            <input type="password" name="password" id="password" required>
-            <label>Mật khẩu</label>
-            <span class="text-danger messageerr" style="font-size: 13px;"></span>
-          </div>
-          <div class="user-box">
-            <input type="password" name="confirm_password" id="confirm_password" required>
-            <label>Xác nhận mật khẩu</label>
-            <span class="text-danger messageerr" style="font-size: 13px;"></span>
-          </div>
+  </div>
+</section>
 
+<%- include('../layouts/footer') %>
 
-          <div class="text-right d-flex justify-content-sm-end">
-            <button class="btn-signup bg-transparent">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              Đăng ký
-            </button>
-          </div>
-          <div class="text-center mt-5">
-            <p class="text-white">Đăng nhập ngay! <a class="text-info" href="/client/form/login">Đăng nhập</a></p>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-
-  <%- include('../layouts/footer') %>
-
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-                  'use strict';
-                  var is_hidden = false;
-                  var form = document.querySelector('.needs-validation');
-                  var usernameInput = form.querySelector('#username');
-                  var full_name = form.querySelector('#full_name');
-                  var password = form.querySelector('#password');
-                  var phone_number = form.querySelector('#phone_number');
-                  const sdtRegex = /^\b(03|05|07|08|09)\d{8}\b/;
-                  var gender = form.querySelectorAll('.custom-control-input');
-                  var image = form.querySelector('#image');
-                  form.addEventListener('submit', function (event) {
-                    is_hidden = false;
-                    var err = document.getElementsByClassName('messageerr');
-                    err[0].innerHTML = ' ';
-                    err[1].innerHTML = ' ';
-                    err[2].innerHTML = ' ';
-                    err[3].innerHTML = ' ';
-                    err[4].innerHTML = ' ';
-                    err[5].innerHTML = ' ';
-                    if(usernameInput.value.trim() == '' || usernameInput.value.length < 5) {
-                      is_hidden = true;
-                      err[0].innerHTML = 'Tài khoản ít nhất 5 kí tự';
-                    }
-                    if(password.value.trim() == '' || password.value.length < 5) {
-                      is_hidden = true;
-                      err[3].innerHTML = 'Mật khẩu ít nhất 5 kí tự';
-                    }
-                    if(full_name.value.trim() == '' || full_name.value.length < 5 || !isNaN(full_name.value)) {
-                      is_hidden = true;
-                      err[1].innerHTML = 'Họ tên ít nhất 5 kí tự';
-                    }
-                    if(!sdtRegex.test(phone_number.value)){
-                      is_hidden = true;
-                      err[2].innerHTML = 'Nhập đúng số điện thoại';
-                    }
-                    if (!gender[0].checked && !gender[1].checked) {
-                          is_hidden = true;
-                        err[4].innerHTML = 'Chọn giới tính';
-                    }
-                    if (image.files.length === 0) {
-                          is_hidden = true;
-                          err[5].innerHTML = 'Chọn hình'
-                      }
-                      if (is_hidden ) {
-                          event.preventDefault();
-
-                      }
-
-                  });
-
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
+    var form = document.querySelector('.needs-validation');
+    var usernameInput = form.querySelector('#username');
+    var fullNameInput = form.querySelector('#full_name');
+    var emailInput = form.querySelector('#email');
+    var passwordInput = form.querySelector('#password');
+    var confirmPasswordInput = form.querySelector('#confirm_password');
+    
+    form.addEventListener('submit', function (event) {
+      var is_hidden = false;
+      var err = document.getElementsByClassName('messageerr');
       
-                
-                
-              
+     
+      Array.from(err).forEach(el => el.innerHTML = '');
 
-              });
-  </script> -->
+     
+      var usernameRegex = /^[a-z0-9_]+$/;  
+      if (usernameInput.value.trim() == '' || usernameInput.value.length < 5) {
+        is_hidden = true;
+        err[0].innerHTML = 'Tài khoản ít nhất 5 kí tự';
+      } else if (!usernameRegex.test(usernameInput.value)) {
+        is_hidden = true;
+        err[0].innerHTML = 'Tài khoản không được chứa ký tự đặc biệt hoặc chữ hoa';
+      }
+      if (fullNameInput.value.trim() == '' || fullNameInput.value.length < 5) {
+        is_hidden = true;
+        err[1].innerHTML = 'Họ tên ít nhất 5 kí tự';
+      }
+      if (emailInput.value.trim() == '') {
+        is_hidden = true;
+        err[2].innerHTML = 'Email không được để trống';
+      }
+      if (passwordInput.value.trim() == '' || passwordInput.value.length < 8) {
+        is_hidden = true;
+        err[3].innerHTML = 'Mật khẩu ít nhất 8 kí tự';
+      }
+      if (confirmPasswordInput.value !== passwordInput.value) {
+        is_hidden = true;
+        err[4].innerHTML = 'Xác nhận mật khẩu không khớp';
+      }
+      
+      if (is_hidden) {
+        event.preventDefault();
+      }
+    });
+  });
+</script>

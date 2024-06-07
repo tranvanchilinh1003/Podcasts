@@ -19,10 +19,12 @@ router.get('/about', home.getAbout);
 // router.get('/blog', home.getBlog);
 router.get('/contact', home.getContact);
 // //login
+
 router.get('/form/login', form.login);
+router.post('/form/loginUser', form.loginUser);
 // //signup
 router.get('/form/signup', form.signup);
-// router.post('/form/sigup' , form_signup.sigup_user);
+router.post('/form/insertUser' , form.createUser);
 // //login_form
 // router.get('/logout', home.logout)
 

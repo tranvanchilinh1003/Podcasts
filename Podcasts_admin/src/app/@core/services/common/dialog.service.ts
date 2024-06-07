@@ -21,6 +21,16 @@ export class DialogService {
     });
   }
 
+  error(message: string): void {
+    Swal.fire({
+      position: 'center',
+      icon: 'error',
+      title: message,
+      showConfirmButton: false,
+      timer: 2000
+    });
+  }
+
   showConfirmationDialog(item: string, id: string): Promise<boolean> {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {

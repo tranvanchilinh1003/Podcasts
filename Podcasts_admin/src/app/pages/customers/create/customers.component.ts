@@ -124,19 +124,24 @@ export class CreateComponent implements OnInit {
     
       this.customersService.create(this.newCustomers).subscribe({
         next: (customer: ICustomer) => {
-          this.customer.push(customer); 
+          this.customer.push(customer);
           this.dialog.success('Đã thêm thành công!');
         this.validateForm.reset();   
         this.isUploading = false;  
         },
         error: error => {
-          console.error('Error creating customer', error);
+          if (error.status === 400) {
+            this.dialog.error('Tài khoản hoặc email đã tồn tại.');
+          } else {
+            console.error('Error creating customer', error);
+          }
         }
       });
     } catch (error) {
       console.error('Error uploading image', error);
     }
   }
+  
 
   resetForm() {
     this.newCustomers = {

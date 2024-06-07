@@ -42,13 +42,23 @@ exports.list = async (req, res, next) => {
 };
 
 exports.create = async (req, res, next) => {
+    let username = req.body.username;
+    let email = req.body.email;
+    let password = req.body.password;
+
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10); 
+        let existingUser = await Customers.findUser(username, email);
+
+        if (existingUser.length > 0) {
+        return  res.status(400).json({ error: "Username hoặc email đã tồn tại." });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10); 
         const customers = {
-            username: req.body.username,
+            username: username,
             full_name: req.body.full_name,
             password: hashedPassword,
-            email: req.body.email,
+            email: email,
             role: req.body.role,
             gender: req.body.gender,
             images: req.body.images,
@@ -62,11 +72,51 @@ exports.create = async (req, res, next) => {
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({
-            error: 'Internal Server Error'
+            error: "Đã xảy ra lỗi khi tạo người dùng. "+ error.message,
         });
     }
 };
 
+
+exports.login = async (req, res, next) => {
+    try {
+        let username = req.body.username;
+        let password = req.body.password;
+
+
+        let result = await Customers.login(username);
+
+        if (result.length > 0) {
+            let hashPasswordDB = result[0].password;
+
+            let match = await bcrypt.compare(password, hashPasswordDB);
+
+            if (match) {
+                res.status(200).json({
+                    status: 1,
+                    data: result,
+                });
+            } else {
+                res.status(401).json({
+                    status: 0,
+                    message: "Mật khẩu không hợp lệ.",
+                });
+            }
+            
+        } else {
+            res.status(404).json({
+                status: 0,
+                message: "Không tìm thấy người dùng.",
+            });
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({
+            status: 0,
+            message: "Đã xảy ra lỗi không mong muốn.",
+        });
+    }
+};
 
 exports.detail = async (req, res, next) => {
     try {
@@ -83,6 +133,9 @@ exports.detail = async (req, res, next) => {
         });
     }
 };
+
+
+
 
 exports.update = async (req, res, next) => {
     try {
@@ -123,6 +176,11 @@ exports.update = async (req, res, next) => {
         });
     }
 };
+
+
+
+
+
 
 exports.delete = async (req, res, next) => {
     try {

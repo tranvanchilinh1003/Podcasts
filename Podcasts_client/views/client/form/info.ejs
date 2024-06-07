@@ -1,85 +1,76 @@
 <%- include('../layouts/header') %>
 <link rel="stylesheet" href="/styles/css/info.css">
 
-<header class="site-header d-flex flex-column justify-content-center align-items-center">
-	<div class="container">
-		<div class="row">
-  
-			<div class="col-lg-12 col-12 text-center">
-  
-				<h2 class="mb-2">Tài Khoản</h2>
-			</div>
-  
-		</div>
-	</div>
-  </header>
-	<div class="container-fluid mt-5" id="container-wrapper">
+<header class="site-header d-flex flex-column justify-content-center align-items-center" style="min-height: 250px">
+</header>
 
-		<div class="row gutters">
-			<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-				<div class="card h-100 border-bottom-danger">
-					<div class="card-body">
-						<div class="account-settings ">
-							<div class="user-profile">
-								<div class="user-avatar">
-									<a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-										<img src="/styles/images/profile/chef-9.jpg">
-
-										<p class="text-center text-body text-muted">Phóng to ảnh</p>
-										</img>
-									</a>
-								</div>
-								<h5 class="text-primary">
-									
-										</5>
-										<h5 class="user-name text-warning"></h5>
-										<!-- <h6 class="user-email">yuki@Maxwell.com</h6> -->
+<div class="container-fluid my-5" id="container-wrapper">
+    <div class="row gutters">
+		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+			<div class="card h-100 border-bottom-danger">
+				<div class="card-body">
+					<div class="account-settings">
+						<div class="user-profile text-center">
+							<div class="user-avatar">
+								<a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+									<img class="rounded-circle " style="width: 200px; height: 200px;" src="/styles/images/profile/chef-9.jpg" alt="User Avatar">
+								</a>
 							</div>
-							<div class="about">
-								<!-- <h5 class="mb-2 text-primary">About</h5> -->
-								<!-- <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p> -->
-							</div>
+							<h5 class="text-primary mt-3">
+								Username
+							</h5>
+						</div>
+						<div class="about text-center">
+							<h5 class=" text-primary mt-3">Thông tin người dùng</h5>
+							<p><strong>Email:</strong> example@example.com</p>
+							<p><strong>Họ và tên:</strong> John Doe</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-				<div class="card h-100">
-					<div class="card-body ">
-						
-					</div>
-
-
-
-
-
-				</div>
-			</div>
 		</div>
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			<div class="modal-dialog">
-			  <div class="modal-content">
-				<div class="modal-header">
-				  <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-				  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-				  ...
-				</div>
-				<div class="modal-footer">
-				  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				  <button type="button" class="btn btn-primary">Understood</button>
-				</div>
-			  </div>
-			</div>
-		  </div>
-		<!--Row-->
+		
+		
+        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+            <div class="card h-100">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tài khoản:</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label">Họ và tên:</label>
+                            <input type="text" class="form-control" id="full_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                        </div>
+						<div class="mb-3">
+                            <label for="images" class="form-label">Hình ảnh đại diện:</label>
+                            <input class="form-control" type="file" id="images" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Giới tính:</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="0" value="0">
+                                <label class="form-check-label" for="0">Nam</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="1" value="1">
+                                <label class="form-check-label" for="1">Nữ</label>
+                            </div>
+                        </div>
+						<div class="text-end">
+							<button type="submit" class="btn btn-primary ">Xác nhận</button>
+						</div>
+     
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
-
-	</div>
-
-
-	
-	<%- include('../layouts/footer') %>
+<%- include('../layouts/footer') %>
