@@ -131,7 +131,6 @@ export class EditComponent implements OnInit {
       }
     }
   
-
     const passwordControl = this.validateForm.controls['password'];
     const confirmPasswordControl = this.validateForm.controls['confirm_password'];
     if (passwordControl.value || confirmPasswordControl.value) {

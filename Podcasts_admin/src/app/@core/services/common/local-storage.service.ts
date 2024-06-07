@@ -5,6 +5,7 @@ import {AbstractStorageAdapter} from "./storage-adapter.service";
   providedIn: 'root',
 })
 export class LocalStorageService extends AbstractStorageAdapter {
+  
 
   /**
    * Custom localStorage.getItem

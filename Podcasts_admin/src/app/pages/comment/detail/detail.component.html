@@ -8,31 +8,76 @@
                         <ng-container>
                               
                             <tr>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Người bình luận</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Đánh giá</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Nội dung</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Ngày bình luận</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"></th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    #</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Ảnh đại diện</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Người bình luận</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Đánh giá</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Nội dung</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Ngày bình luận</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                </th>
                             </tr>
                         </ng-container>
                         <ng-container>
-                            <tr>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Hoangde123</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    <div class="crop bg-transparent"  >
+                            <tr *ngFor="let comment of comment; index as i">
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{i+1}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{comment.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+                                        width="100px" alt="" class="rounded-circle">
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{comment.username}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted" >
+                                    <!-- <div class="crop" [style.width.px]="comment.raiting*90/5">
+                                        <div style="width: 90px">
                                         <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
                                         <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
                                         <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
                                         <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
                                         <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
-                                </div>
-                            </td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Chia sẽ rất bổ ích</td>                            
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2024-04-23 00:00:00</td>                                                
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    <button nbButton
-                                    class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
-                                    <nb-icon icon="trash-2" pack="eva" class="fs-3 ng-star-inserted"></nb-icon></button>
+                                    </div>
+                                    </div> -->
+                                    <div style="overflow: hidden; " class="crop m-auto" [style.width.px]="comment.rating*110/5" title="rating">
+                                        <div style="width: 100px">
+                                            <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
+                                            <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
+                                            <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
+                                            <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
+                                            <nb-icon icon="star" pack="eva" class="eva "></nb-icon>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{comment.contents}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{ comment.date | date:'dd/MM/yyyy' }}
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <button nbButton (click)="onDelete(comment.id)"
+                                        class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
+                                        <nb-icon icon="trash-2" pack="eva"
+                                            class="fs-3 ng-star-inserted"></nb-icon></button>
                                 </td>
                             </tr>
                              

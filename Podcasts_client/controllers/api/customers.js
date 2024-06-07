@@ -7,6 +7,7 @@ app.use(express.json());
 exports.list = async (req, res, next) => {
     try {
         const customers = await Customers.fetchAll();
+  
         res.status(200).json({
             data: customers
         });

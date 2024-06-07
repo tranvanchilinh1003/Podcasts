@@ -9,7 +9,7 @@
                 <label for="username" class="fw-bold col-form-label">Tài Khoản</label>
                 <input [(ngModel)]="newCustomers.username" type="text" formControlName="username" 
                   class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                  fullWidth id="username" name="username" placeholder="Tài khoản...." class="form-control" status="success" autofocus>
+                  fullWidth id="username" name="username" placeholder="Tài khoản...."  status="success" autofocus>
                 <div *ngIf="validateForm.get('username').invalid && (validateForm.get('username').dirty || validateForm.get('username').touched)">
                   <small *ngIf="validateForm.get('username').hasError('required') || validateForm.get('username').hasError('minlength')">
                     <i class="text-danger">Vui lòng nhập tài khoản.</i>

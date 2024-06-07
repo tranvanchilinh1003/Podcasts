@@ -11,6 +11,7 @@ import { DialogService } from 'app/@core/services/common/dialog.service';
   styleUrls: ['./customers.component.scss']
 })
 export class CreateComponent implements OnInit {
+  [x: string]: any;
 
   file: File | null = null;
   newFileName: string = '';
@@ -31,6 +32,7 @@ export class CreateComponent implements OnInit {
   validateForm!: FormGroup;
 
   constructor(
+    
     private dialog: DialogService,
     private af: AngularFireStorage, 
     private customersService: CustomerService) {
@@ -112,14 +114,14 @@ export class CreateComponent implements OnInit {
     if (this.validateForm.invalid) {
       return;
     }
-    
+     
+
     try {
       await this.UploadImg();  
       this.isUploading = true;
       this.newCustomers.images = this.newFileName;
       console.log(this.newCustomers.role);
-      
-
+    
       this.customersService.create(this.newCustomers).subscribe({
         next: (customer: ICustomer) => {
           this.customer.push(customer); 

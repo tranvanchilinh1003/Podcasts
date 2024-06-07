@@ -38,6 +38,9 @@ export class CategoriesService extends ApiService {
   edit(categoryId: string): Observable<{ data: ICategories[] }> {
     return this._http.get<{ data: ICategories[] }>(API_BASE_URL + API_ENDPOINT.categories.categories + `/${categoryId}`);
   }
+  getIdCate(categoryId: string): Observable<ICategories> {
+    return this._http.get<ICategories>(API_BASE_URL + API_ENDPOINT.categories.categories + `/${categoryId}`);
+  }
 
   update(categoryId: string, updatedCategory: ICategories): Observable<ICategories> {
     return this._http.patch<ICategories>(API_BASE_URL + API_ENDPOINT.categories.categories + `/${categoryId}`, updatedCategory);

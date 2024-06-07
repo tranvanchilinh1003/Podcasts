@@ -38,5 +38,6 @@ import {ThemeModule} from "./@theme/theme.module";
   ],
   providers: [],
   bootstrap: [AppComponent]
+  
 })
 export class AppModule { }

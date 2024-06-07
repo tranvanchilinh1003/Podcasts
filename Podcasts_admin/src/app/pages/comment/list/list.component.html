@@ -7,20 +7,53 @@
                     <table class="table border text-center">
                         <ng-container>
                             <tr>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Hàng hóa</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Số bình luận</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Mới nhất</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Cũ nhất</th>
-                                <th class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted"></th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    #</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Hình ảnh</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Bài viết</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Số bình luận</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Mới nhất</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Cũ nhất</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                </th>
                             </tr>
                         </ng-container>
                         <ng-container>
-                            <tr>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">1</td>
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">Loại 1</td>                            
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2024-04-23 00:00:00</td>                            
-                                <td class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">2024-01-23 00:00:00</td>                            
-                                <td class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
+                            <tr *ngFor="let list of comment, index as i">
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{i+1}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+                                        width="100px" alt="" class="rounded-circle">
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.title}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.so_luong}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.moi_nhat | date:'dd/MM/yyyy'}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.cu_nhat | date:'dd/MM/yyyy'}}</td>
+                                <td
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
                                     <button nbButton nbTooltip="This is a tooltip" nbTooltipPlacement="top"
                                      nbTooltip="Chi tiết bình luận" routerLink="/pages/comment/detail" nbTooltipPlacement="top"
                                         class="mat-ripple status-warning appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mt-3 mb-3">

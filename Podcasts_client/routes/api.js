@@ -3,11 +3,24 @@ const express = require('express');
 const customers = require('../controllers/api/customers');
 const auth = require('../controllers/api/auth');
 const authToken = require('../middlewares/authToken');
-
+const post = require('../controllers/api/post');
+const comment = require('../controllers/api/comment');
 const cate = require('../controllers/api/categories');
 const router = express.Router();
 
-module.exports = router;
+// router.post('/categories_insert', cate.create);
+router.get('/post', post.list);
+router.post('/post', post.create);
+router.get('/post/:id', post.edit);
+router.delete('/post/:id', post.delete);
+router.patch('/post/:id', post.update);
+// router.delete('/categories_delete/:id', cate.delete);
+// router.get('/categories_edit/:id', cate.edit);
+// router.patch('/categories_update/:id', cate.update);
+router.get('/comment', comment.list);
+router.get('/comment/:id', comment.edit);
+router.delete('/comment/:id', comment.delete);
+
 
 
 router.post('/login', auth.login )

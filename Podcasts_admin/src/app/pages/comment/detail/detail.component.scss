@@ -1,4 +1,40 @@
 .crop {
     color: #FFCC00;
-   }
+}
 
+.rating-1 {
+    width: 120px;
+    height: 24px;
+    position: relative;
+    background-color: white;
+}
+
+progress.rating-bg {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    display: inline-block;
+    height: 24px;
+    width: 100%;
+    color: #FBD947;
+}
+
+progress.rating-bg::-webkit-progress-value {
+    background-color: #FBD947;
+}
+
+progress.rating-bg::-moz-progress-bar {
+    background-color: #FBD947;
+}
+
+.rating-1 svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#fivestars-1 path {
+    border: none !important;
+}

@@ -2,7 +2,7 @@
 var connect = require('./database');
 
 module.exports = class Customers {
-    constructor() {}
+    constructor() { }
     static fetchAll() {
         return new Promise((resolve, reject) => {
             connect.query('SELECT * FROM customers', (err, result) => {
@@ -15,12 +15,12 @@ module.exports = class Customers {
     static createCustomers(customers) {
         return new Promise((resolve, reject) => {
             connect.query("INSERT INTO customers SET ?", customers, (err, result) => {
-                if (err){
-                    reject(err);                  
-                } else{
+                if (err) {
+                    reject(err);
+                } else {
                     resolve(result);
                 }
-               
+
             });
         });
     }
@@ -28,25 +28,25 @@ module.exports = class Customers {
     static getUpdateCustomers(customersId) {
         return new Promise((resolve, reject) => {
             connect.query(`SELECT * FROM customers WHERE id = ${customersId}`, (err, result) => {
-                if (err){
-                    reject(err);                  
-                } else{
+                if (err) {
+                    reject(err);
+                } else {
                     resolve(result);
                 }
-               
+
             });
         });
     }
 
-    static updateCustomers(customers,customersId) {
+    static updateCustomers(customers, customersId) {
         return new Promise((resolve, reject) => {
             connect.query(`UPDATE customers SET ? WHERE id = ?`, [customers, customersId], (err, result) => {
-                if (err){
-                    reject(err);                  
-                } else{
+                if (err) {
+                    reject(err);
+                } else {
                     resolve(result);
                 }
-               
+
             });
         });
     }
@@ -54,16 +54,16 @@ module.exports = class Customers {
     static deleteCustomers(customersId) {
         return new Promise((resolve, reject) => {
             connect.query(
-            'DELETE FROM customers WHERE id = ?',
-            [customersId],
-            (err, result) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(result);
-              }
-            }
-          );
+                'DELETE FROM customers WHERE id = ?',
+                [customersId],
+                (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
         });
       }
       static async login(username) {

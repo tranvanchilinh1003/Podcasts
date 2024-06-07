@@ -3,36 +3,66 @@
         <nb-card>
             <nb-card-header>Thêm bài viết</nb-card-header>
             <nb-card-body>
-                <form class="form" method="post" enctype="multipart/form-data" action="#">
+                <form class="form" enctype="multipart/form-data" (ngSubmit)="onUpdate()" [formGroup]="postForm">
                     <div class='row'>
-                        <div class="col-sm-4">
+                        <input type="hidden"
+                            class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                            fullWidth id="id" name="id">
+                        <div class="col-sm-6">
                             <label for="title" class="fw-bold col-form-label ">Tiêu đề</label>
                             <input type="text"
                                 class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="title" name="title" placeholder="Ẩm thực">
-                            <span class="err text-danger"></span>
+                                fullWidth id="title" name="title" placeholder="Ẩm thực" formControlName="title"
+                                [(ngModel)]="postnew.title">
+                            <div
+                                *ngIf="postForm.get('title')!.invalid && (postForm.get('title')!.dirty || postForm.get('title')!.touched)">
+                                <small *ngIf="postForm.get('title').hasError('required')">
+                                    <i class="text-danger">Vui lòng nhập tiêu đề!</i>
+                                </small>
+                                <small *ngIf="postForm.get('title').hasError('minlength')">
+                                    <i class="text-danger">Tiêu đề quá ngắn, vui lòng nhập đầy đủ tiêu đề!</i>
+                                </small>
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
+                        <div class="col-sm-6">
+                            <label for="images" class="fw-bold col-form-label">Hình ảnh</label>
                             <input type="file"
-                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="img" accept="image/*" name="image">
-                            <span class="err text-danger"></span>
+                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
+                                nbInput fullWidth id="img" accept="image/*" (change)="onFileChange($event, 'image')"
+                                name="images" formControlName="images">
+                            <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressImage}}"
+                                max="100"></progress>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <label for="audio" class="fw-bold col-form-label">Audio</label>
                             <input type="file"
-                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                                fullWidth id="audio" accept="image/*" name="audio">
-                            <span class="err text-danger"></span>
+                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
+                                nbInput fullWidth id="audio" accept="audio/*" (change)="onFileChange($event, 'audio')"
+                                name="audio" formControlName="audio">
+                            <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressAudio}}"
+                                max="100"></progress>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="categories_id" class="fw-bold col-form-label">Thể loại</label>
+                            <nb-select class="col-12" name="categories_id" id="categories_id"
+                                formControlName="categories_id" [(ngModel)]="postnew.categories_id" required>
+                                <nb-option value="" disabled>Vui lòng chọn loại</nb-option>
+                                <nb-option *ngFor="let category of categories"
+                                    [value]="category.id">{{category.name}}</nb-option>
+                            </nb-select>
+                            <br>
+                            <span
+                                *ngIf="postForm.get('categories_id')!.errors?.required && (postForm.get('categories_id')!.dirty || postForm.get('categories_id')!.touched)"
+                                class="text-danger">Vui lòng chọn một thể loại!</span>
                         </div>
                     </div>
                     <div class='row mt-3'>
                         <div class="col-sm-12">
-                            <label for="decriptions" class="fw-bold col-form-label">Mô tả</label>
-                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="decriptions" name="decriptions"
-                                fullwidth="" shape="round" placeholder="Audio ẩm thực"
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition"></textarea>
+                            <label for="description" class="fw-bold col-form-label">Mô tả</label>
+                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="decription" name="description"
+                                fullwidth="" shape="round" placeholder="Mô tả..."
+                                class="input-full-width size-medium status-basic shape-rectangle nb-transition">{{postnew.description}}</textarea>
                             <span class="err text-danger"></span>
                         </div>
                     </div>
