@@ -9,4 +9,13 @@ export const API_ENDPOINT: IAPIEndpoint = {
     login: '/auth/login',
     logout: '/auth/logout',
   },
+  shares: {
+    base: API_BASE_URL + '/' + 'api',
+    list: '/api/shares' 
+  },
+
+  favourite: {
+    base: API_BASE_URL + '/' + 'api',
+    list: '/api/favourite' 
+  },
 };

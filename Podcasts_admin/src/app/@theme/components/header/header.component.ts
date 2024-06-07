@@ -31,7 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile',icon: 'person-outline' }, { title: 'Log out', icon: 'power' } ];
+  userMenu = [ { title: 'Profile',icon: 'person-outline', link:'/pages/profile' }, { title: 'Log out', icon: 'power' } ];
+  
 
   constructor(
     private router: Router,

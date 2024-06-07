@@ -3,12 +3,19 @@ import {AuthRoutingModule} from "./auth-routing.module";
 import {LoginModule} from "./login/login.module";
 import {AuthComponent} from "./auth.component";
 import {ThemeModule} from "../@theme/theme.module";
+import { NbCardModule, NbIconModule, NbActionsModule, NbLayoutModule } from '@nebular/theme';
+
+
 
 @NgModule({
   imports: [
-    AuthRoutingModule,
+    AuthRoutingModule,  
     LoginModule,
-    ThemeModule
+    ThemeModule,
+    NbCardModule,
+    NbIconModule,
+    NbActionsModule,
+    NbLayoutModule
   ],
   declarations: [
     AuthComponent

@@ -3,7 +3,8 @@ import {NgModule} from '@angular/core';
 
 import {PagesComponent} from './pages.component';
 import {DashboardComponent} from "./dashboard/dashboard.component";
-import { CategoriesComponent } from './categories/categories.component';
+
+
 
 
 
@@ -12,15 +13,15 @@ const routes: Routes = [{
   component: PagesComponent,
   children: [
     {
-      path: 'dashboard',
+      path: '',
       component: DashboardComponent,
-      data: {breadcrumb: 'Giới thiệu'},
+      data: {breadcrumb: 'Trang chủ'},
     },
     {
       path: 'categories',
       loadChildren: () => import('./categories/categories.module')
       .then(m => m.CategoriesModule),
-      data: {breadcrumb: 'Loại'},
+      data: {breadcrumb: 'Thể loại'},  
     },
     {
       path: 'customers',
@@ -39,9 +40,33 @@ const routes: Routes = [{
       loadChildren: () => import('./comment/comment.module')
       .then(m => m.CommentModule),
       data: {breadcrumb: 'Bình luận'},
-    }
+    },
+    {
+      path: 'shares',
+      loadChildren: () => import('./shares/shares.module')
+      .then(m => m.SharesModule),
+      data: {breadcrumb: 'Chia sẻ'},
+    },
+    {
+      path: 'favourite',
+      loadChildren: () => import('./favourite/favourite.module')
+      .then(m => m.FavouriteModule),
+      data: {breadcrumb: 'Yêu thích'},
+    },
+    {
+      path: 'profile',
+      loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+      data: { breadcrumb: 'Hồ sơ' },
+    },
+    {
+      path: 'profile/edit',
+      loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+      data: { breadcrumb: 'Hồ sơ' },
+    },
+
   ],
 }];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

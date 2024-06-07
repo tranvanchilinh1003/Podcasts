@@ -3,11 +3,10 @@ var connect = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "mysql",
-  database: "  ",
+  database: "frontend1",
 });
-connect.connect(function(err){
-    if(err) throw err;
-        console.log('Database is connected successfully !');
-    
+connect.connect(function (err) {
+  if (err) throw err;
+  console.log("Database is connected successfully !");
 });
 module.exports = connect;

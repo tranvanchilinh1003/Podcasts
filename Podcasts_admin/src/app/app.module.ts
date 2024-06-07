@@ -13,16 +13,22 @@ import {
 import {HttpClientModule} from "@angular/common/http";
 import {CoreModule} from "./@core/core.module";
 import {ThemeModule} from "./@theme/theme.module";
+import { SharesModule } from './pages/shares/shares.module';
+
+
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    SharesModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
