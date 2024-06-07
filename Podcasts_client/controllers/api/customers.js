@@ -7,7 +7,6 @@ app.use(express.json());
 exports.list = async (req, res, next) => {
     try {
         const customers = await Customers.fetchAll();
-        console.log(customers);
         res.status(200).json({
             data: customers
         });
@@ -50,7 +49,6 @@ exports.detail = async (req, res, next) => {
     try {
         const id = req.params.id;
         const result = await Customers.getUpdateCustomers(id);
-        console.log(result);
 
         res.status(201).json({
             data: result,
@@ -85,11 +83,9 @@ exports.update = async (req, res, next) => {
         };
 
         const result = await Customers.updateCustomers(customers, id);
-        console.log(result);
 
         res.status(201).json({
-            result: result,
-            data: customers
+            data: result
         });
     } catch (error) {
         console.error("Error:", error);

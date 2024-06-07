@@ -30,7 +30,6 @@ export class EditComponent implements OnInit {
 
   loadEditingCategory(): void {
     let id = this.route.snapshot.params['id'];
-    
     this.categoriesService.edit(id).subscribe({
       next: (category: { data: ICategories[] }) => {
         this.editingCategory = category.data[0];
@@ -38,7 +37,7 @@ export class EditComponent implements OnInit {
       error: error => {
         console.error('Error fetching editing category', error);
       }
-    });
+    }); 
   }
 
   onUpdate(): void {
@@ -50,7 +49,7 @@ export class EditComponent implements OnInit {
     this.categoriesService.update(id, this.editingCategory).subscribe({
       next: () => {
         this.dialog.success('Đã cập nhật thành công!');
-        this.validateForm.reset();
+        this.loadEditingCategory();
       },
       error: error => {
         console.error('Error updating category', error);

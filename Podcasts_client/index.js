@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const multer = require("multer");
 let path = require("path");
-const cors = require('cors');
 const app = express();
 var bodyParser = require("body-parser");
 const crypto = require('crypto');
@@ -12,8 +11,8 @@ const myPlaintextPassword = 's0/\/\P4$$w0rD';
 const someOtherPlaintextPassword = 'not_bacon';
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-
-app.use(cors());
+const admin = require("firebase-admin");
+const uuid = require('uuid-v4')
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -45,40 +44,57 @@ app.use('/api', api);
 const client = require('./routes/client');
 app.use('/client', client);
 
+var serviceAccount = require("./podcast-ba34e-firebase-adminsdk-nd5pm-f65843b35b.json");
 
-
-let diskStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, "uploads");
-  },
-  filename: (req, file, callback) => {
-    let math = ["image/png", "image/jpeg"];
-    if (math.indexOf(file.mimetype) === -1) {
-      let errorMess = `The file <strong>${file.originalname}</strong> is invalid. Only allowed to upload image jpeg or png.`;
-      return callback(errorMess, null);
-    }
-    let filename = `${Date.now()}-linhpc06747-${file.originalname}`;
-    callback(null, filename);
-  },
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "podcast-ba34e.appspot.com",
 });
-  
-  let uploadFile = multer({ storage: diskStorage }).single("image");
-  // Route này Xử lý khi client thực hiện hành động upload file
-  app.post("/upload_img", (req, res) => {
-    // Thực hiện upload file, truyền vào 2 biến req và res
-    uploadFile(req, res, (error) => {
-      // Nếu có lỗi thì trả về lỗi cho client.
-      // Ví dụ như upload một file không phải file ảnh theo như cấu hình của mình bên trên
-      if (error) {
-        return res.send(`Error when trying to upload: ${error}`);
-      }
-      const filename = req.file.filename;
-      res.sendFile(path.join(`${__dirname}/uploads/${req.file.filename}`));
-      // res.redirect("/custumers/list");
+
+const bucket = admin.storage().bucket();
+const storage = multer.memoryStorage();
+const upload = multer({storage: storage}).single('image');
+
+app.post("/upload_img", (req, res) => {
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json({ error: 'Lỗi khi tải lên' });
+    } else if (err) {
+      return res.status(500).json({ error: 'Lỗi khi tải lên' });
+    }
+
+    if (!req.file) {
+      return res.status(400).send('Không có tệp được tải lên');
+    }
+
+    const filename = req.file.originalname;
+    const blob = bucket.file( `upload/${filename}`);
+    const blobStream = blob.createWriteStream({
+      metadata: {
+        contentType: req.file.mimetype,
+        metadata: {
+          FirebaseStoreDowloadToken: uuid()
+        }
+      },
+      gzip: true
     });
+
+    blobStream.on('error', err => {
+      return res.status(500).json({ error: 'Lỗi khi tải lên' });
+    });
+
+    blobStream.on('finish', () => {
+      const imageUrl = `https://storage.googleapis.com/podcast-ba34e.appspot.com/${filename}`;
+      const imageName = req.file.originalname;
+      return res.status(200).json({imageName, imageUrl });
+    });
+
+    blobStream.end(req.file.buffer);
   });
+});
+
   
-  app.listen(port, () => {
+app.listen(port, () => {
     console.log(`ứng dụng chạy với port: ${port}`);
   });
   

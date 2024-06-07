@@ -35,7 +35,7 @@ export class ListComponent implements OnInit {
   }
 
   onDelete(categoryId: string): void {   
-    this.dialog.showConfirmationDialog(API_ENDPOINT.customers.customers, categoryId).then((result) => {
+    this.dialog.showConfirmationDialog(API_ENDPOINT.categories.categories, categoryId).then((result) => {
       if (result) {
         this.categories = this.categories.filter(categories => categories.id !== categoryId);
       }

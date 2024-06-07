@@ -3,7 +3,7 @@ const Category = require("../../models/categories");
 exports.list = async (req, res, next) => {
 
     var categories = await Category.fetchAll();
-    console.log(categories);
+
 
     res.status(200).json({
         data: categories
@@ -20,7 +20,7 @@ exports.create = async (req, res, next) => {
           data: addedCategory,
         });
       } catch (error) {
-        console.error("Error:", error);
+
         res.status(500).json({
           error: 'Internal Server Error'
         });
@@ -32,7 +32,7 @@ exports.detail = async (req, res, next) => {
 
     let result = await Category.getUpdateCategories(category_id);
 
-    console.log(result);
+
 
     res.status(201).json({
         data: result,

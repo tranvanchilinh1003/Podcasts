@@ -43,17 +43,18 @@ export class RequestPasswordComponent {
     
       this.otpForm = this.formBuilder.group({
         otp: this.formBuilder.group({
-          otp1: ['', Validators.required],
-          otp2: ['', Validators.required],
-          otp3: ['', Validators.required],
-          otp4: ['', Validators.required],
-          otp5: ['', Validators.required]
+          otp1: ['', [Validators.required, Validators.maxLength(1)]],
+          otp2: ['', [Validators.required, Validators.maxLength(1)]],
+          otp3: ['', [Validators.required, Validators.maxLength(1)]],
+          otp4: ['', [Validators.required, Validators.maxLength(1)]],
+          otp5: ['', [Validators.required, Validators.maxLength(1)]]
         })
       });
       this.changeForm = this.formBuilder.group({
         password: ['', [
           Validators.required,
-          Validators.pattern(/^[a-zA-Z0-9]+$/)
+          Validators.pattern(/^[a-zA-Z0-9]+$/),
+          Validators.minLength(8)
         ]],
         confirmpassword: ['', Validators.required]
       }, { validator: this.passwordMatchValidator });
@@ -86,7 +87,7 @@ export class RequestPasswordComponent {
     const otpValue = `${otpGroup.get('otp1').value}${otpGroup.get('otp2').value}${otpGroup.get('otp3').value}${otpGroup.get('otp4').value}${otpGroup.get('otp5').value}`;
     return otpValue;
   }
-  
+
   submitOTP() {
     if (this.otpForm.valid) {
       const otp = this.getOtpValue();      

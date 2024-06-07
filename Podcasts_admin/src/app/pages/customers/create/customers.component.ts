@@ -14,6 +14,7 @@ export class CreateComponent implements OnInit {
 
   file: File | null = null;
   newFileName: string = '';
+  isUploading: boolean = false;
   newCustomers: ICustomer = {
     id: '',
     username: '',
@@ -114,6 +115,7 @@ export class CreateComponent implements OnInit {
     
     try {
       await this.UploadImg();  
+      this.isUploading = true;
       this.newCustomers.images = this.newFileName;
       console.log(this.newCustomers.role);
       
@@ -122,7 +124,8 @@ export class CreateComponent implements OnInit {
         next: (customer: ICustomer) => {
           this.customer.push(customer); 
           this.dialog.success('Đã thêm thành công!');
-        this.validateForm.reset();     
+        this.validateForm.reset();   
+        this.isUploading = false;  
         },
         error: error => {
           console.error('Error creating customer', error);

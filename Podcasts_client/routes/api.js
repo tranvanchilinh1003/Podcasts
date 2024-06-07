@@ -3,12 +3,11 @@ const express = require('express');
 const customers = require('../controllers/api/customers');
 const auth = require('../controllers/api/auth');
 const authToken = require('../middlewares/authToken');
-module.exports = router;
+
 const cate = require('../controllers/api/categories');
-const customers = require('../controllers/api/customers');
 const router = express.Router();
 
-
+module.exports = router;
 
 
 router.post('/login', auth.login )
