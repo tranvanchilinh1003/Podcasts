@@ -16,7 +16,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 
-	<link rel="icon" href="/styles/images/icon_logo.jpg"  type="image/png">
+	<link rel="icon" href="/styles/images/icon_logo.jpg" type="image/png">
 	<link rel="stylesheet" href="/styles/css/bootstrap.min.css">
 
 	<link rel="stylesheet" href="/styles/css/bootstrap-icons.css">
@@ -67,13 +67,14 @@
 						</li>
 
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="/" id="navbarLightDropdownMenuLink" role="button"
+							<a class="nav-link dropdown-toggle" href="/client/menu/product" id="navbarLightDropdownMenuLink" role="button"
 								data-bs-toggle="dropdown" aria-expanded="false">Thể loại</a>
-
 							<ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-								<li><a class="dropdown-item" href="/client/menu/product">Chủ đề thịnh hành</a></li>
-
-								<!-- <li><a class="dropdown-item" href="/client/menu/">Ẩm thực nổi tiếng</a></li> -->
+								<% for (let cate of categories) { %>
+									<li><a class="dropdown-item" href="/client/menu/product/<%= cate.id %>">
+											<%= cate.name %>
+										</a></li>
+									<% } %>
 							</ul>
 						</li>
 

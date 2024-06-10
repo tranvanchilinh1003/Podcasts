@@ -14,16 +14,34 @@ module.exports = class Categories {
             });
           });
     }
+    static getCateId(categoriesId) {
+        return new Promise((resolve, reject) => {
+            connect.query(`SELECT post.*, 
+       categories.id AS categories_id, 
+       categories.name AS category_name, 
+       customers.id AS customers_id, 
+       customers.username, 
+       customers.images AS images_customers
+FROM post 
+JOIN categories ON post.categories_id = categories.id 
+JOIN customers ON post.customers_id = customers.id 
+WHERE categories_id = ${categoriesId};
+`, (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            });
+        });
+    }
 
     static createCategories(category) {
         return new Promise((resolve, reject) => {
             connect.query("INSERT INTO categories SET ?", category, (err, result) => {
-                if (err){
-                    reject(err);                  
-                } else{
+                if (err) {
+                    reject(err);
+                } else {
                     resolve(result);
                 }
-               
+
             });
         });
     }
@@ -31,25 +49,25 @@ module.exports = class Categories {
     static getUpdateCategories(categoryId) {
         return new Promise((resolve, reject) => {
             connect.query(`SELECT * FROM categories WHERE id = ${categoryId}`, (err, result) => {
-                if (err){
-                    reject(err);                  
-                } else{
+                if (err) {
+                    reject(err);
+                } else {
                     resolve(result);
                 }
-               
+
             });
         });
     }
 
-    static updateCategories(category,categoryId) {
+    static updateCategories(category, categoryId) {
         return new Promise((resolve, reject) => {
             connect.query(`UPDATE categories SET ? WHERE id = ?`, [category, categoryId], (err, result) => {
-                if (err){
-                    reject(err);                  
-                } else{
+                if (err) {
+                    reject(err);
+                } else {
                     resolve(result);
                 }
-               
+
             });
         });
     }
@@ -57,16 +75,16 @@ module.exports = class Categories {
     static deleteCategories(categoryId) {
         return new Promise((resolve, reject) => {
             connect.query(
-            'DELETE FROM categories WHERE id = ?',
-            [categoryId],
-            (err, result) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(result);
-              }
-            }
-          );
+                'DELETE FROM categories WHERE id = ?',
+                [categoryId],
+                (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
         });
       }
       static async countCategories() {

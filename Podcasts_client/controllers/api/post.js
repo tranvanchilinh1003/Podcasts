@@ -81,6 +81,21 @@ exports.edit = async (req, res, next) => {
         });
     }
 };
+// getIdPost
+exports.getPost = async (req, res, next) => {
+    try {
+        var post = await Post.getIdPost(req.params.id);
+        res.status(200).json({
+            data: post
+        });
+    } catch (error) {
+        console.error('Error updating users:', error);
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+};
+
 // Delete 
 exports.delete = async (req, res, next) => {
     try {

@@ -191,321 +191,86 @@
 						<h4 class="section-title">Ẩm thực</h4>
 					</div>
 				</div>
+
 				<div class="row">
-					<div class="col-lg-6 col-12 mb-4">
-						<div class="custom-block d-flex">
-							<div class="">
-								<div class="custom-block-icon-wrap">
-									<div class="section-overlay"></div>
-									<a href="/client/post_details" class="custom-block-image-wrap">
-										<img src="/styles/images/food/salad tron thit bo.jpg"
-											class="custom-block-image img-fluid" alt="">
-
-										<a href="#" class="custom-block-icon">
-											<i class="bi-play-fill"></i>
-										</a>
-									</a>
-								</div>
-							</div>
-							<div class="custom-block-info">
-								<div class="custom-block-top d-flex mb-1">
-									<small class="me-4">
-										<i class="bi-clock-fill custom-icon"></i>
-										10 phút
-									</small>
-
-
-								</div>
-
-								<h5 class="mb-2">
-									<a href="/client/post_details">
-										Salad Trộn thịt bò
-									</a>
-								</h5>
-
-								<div class="profile-block d-flex">
-									<img src="/styles/images/profile/chef-9.jpg" class="profile-block-image img-fluid"
-										alt="">
-
-									<p>
-										Gordon Ramsay
-										<img src="/styles/images/verified.png" class="verified-image img-fluid" alt="">
-										<strong>Người chia sẻ</strong>
-									</p>
-								</div>
-
-								<!-- <p class="mb-0">Salad Bò Trộn</p> -->
+					<% for (let post of posts) { %>
+						<div class="col-lg-6 col-12 mb-4">
+							<div class="custom-block d-flex">
 								<div class="">
-									<audio controls loop src="">
+									<div class="custom-block-icon-wrap">
+										<div class="section-overlay"></div>
+										<a href="#" class="custom-block-image-wrap">
+											<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post.images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+												class="custom-block-image img-fluid" alt="">
 
-									</audio>
+											<a href="#" class="custom-block-icon">
+												<i class="bi-play-fill"></i>
+											</a>
+										</a>
+									</div>
 								</div>
-								<div class="custom-block-bottom d-flex justify-content-between mt-3">
+								<div class="custom-block-info">
+									<div class="custom-block-top d-flex mb-1">
 
-									<a href="#" class="bi-headphones me-1">
-										<span>120k</span>
-									</a>
 
-									<a href="#" class="bi-heart me-1">
-										<span>42.5k</span>
-									</a>
+									</div>
 
-									<a href="#" class="bi-chat me-1">
-										<span>11k</span>
-									</a>
+									<h5 class="mb-2">
+										<a href="#">
+											<%= post.title %>
+										</a>
+									</h5>
+
+									<div class="profile-block d-flex">
+										<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post.images_customers%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+											class="profile-block-image img-fluid" alt="">
+
+										<p>
+											<%= post.username %>
+												<img src="/styles/images/verified.png" class="verified-image img-fluid"
+													alt="">
+												<strong>Người chia sẻ</strong>
+										</p>
+									</div>
+
+									<!-- <p class="mb-0">Salad Bò Trộn</p> -->
+									<div class="">
+										<audio controls loop src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F<%=post.audio%>?alt=media&token=73f7ac89-bf7a-4245-805b-b37323ff0bf9">
+
+										</audio>
+									</div>
+									<div class="custom-block-bottom d-flex justify-content-between mt-3">
+
+										<a href="#" class="bi-headphones me-1">
+											<span>120k</span>
+										</a>
+
+										<a href="#" class="bi-heart me-1">
+											<span>42.5k</span>
+										</a>
+
+										<a href="#" class="bi-chat me-1">
+											<span>11k</span>
+										</a>
+									</div>
+
 								</div>
 
-							</div>
+								<div class="d-flex flex-column ms-auto">
+									<a href="#" class="badge ms-auto">
+										<i class="bi-heart"></i>
+									</a>
 
-							<div class="d-flex flex-column ms-auto">
-								<a href="#" class="badge ms-auto">
-									<i class="bi-heart"></i>
-								</a>
+									<a href="#" class="badge ms-auto">
+										<i class="bi bi-share-fill"></i>
+									</a>
 
-								<a href="#" class="badge ms-auto">
-									<i class="bi bi-share-fill"></i>
-								</a>
+								</div>
 
 							</div>
 
 						</div>
-
-					</div>
-
-					<div class="col-lg-6 col-12 mb-4 ">
-						<div class="custom-block d-flex">
-							<div class="">
-								<div class="custom-block-icon-wrap">
-									<div class="section-overlay"></div>
-									<a href="/client/post_details" class="custom-block-image-wrap">
-										<img src="/styles/images/food/mi xao hai san.jpg"
-											class="custom-block-image img-fluid" alt="">
-
-										<a href="#" class="custom-block-icon">
-											<i class="bi-play-fill"></i>
-										</a>
-									</a>
-								</div>
-
-
-							</div>
-
-							<div class="custom-block-info">
-								<div class="custom-block-top d-flex mb-1">
-									<small class="me-4">
-										<i class="bi-clock-fill custom-icon"></i>
-										5 phút
-									</small>
-
-
-								</div>
-
-								<h5 class="mb-2">
-									<a href="/client/post_details">
-										Mì xào hải sản
-									</a>
-								</h5>
-
-								<div class="profile-block d-flex">
-									<img src="/styles/images/profile/chef-5.jpg" class="profile-block-image img-fluid"
-										alt="">
-
-									<p>Michelin
-										<img src="/styles/images/verified.png" class="verified-image img-fluid" alt="">
-										<strong>Đầu bếp </strong>
-
-									</p>
-								</div>
-								<div class="">
-									<audio controls loop src="">
-
-									</audio>
-								</div>
-
-								<div class="custom-block-bottom d-flex justify-content-between mt-3">
-									<a href="#" class="bi-headphones me-1">
-										<span>140k</span>
-									</a>
-
-									<a href="#" class="bi-heart me-1">
-										<span>22.4k</span>
-									</a>
-
-									<a href="#" class="bi-chat me-1">
-										<span>16k</span>
-									</a>
-
-
-								</div>
-							</div>
-
-							<div class="d-flex flex-column ms-auto">
-								<a href="#" class="badge ms-auto">
-									<i class="bi-heart"></i>
-								</a>
-
-								<a href="#" class="badge ms-auto">
-									<i class="bi bi-share-fill"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-6 col-12 mb-4 ">
-						<div class="custom-block d-flex">
-							<div class="">
-								<div class="custom-block-icon-wrap">
-									<div class="section-overlay"></div>
-									<a href="/client/post_details" class="custom-block-image-wrap">
-										<img src="/styles/images/food/jkkl.webp"
-											class="custom-block-image img-fluid" alt="">
-
-										<a href="#" class="custom-block-icon">
-											<i class="bi-play-fill"></i>
-										</a>
-									</a>
-								</div>
-
-
-							</div>
-
-							<div class="custom-block-info">
-								<div class="custom-block-top d-flex mb-1">
-									<small class="me-4">
-										<i class="bi-clock-fill custom-icon"></i>
-										5 phút
-									</small>
-
-
-								</div>
-
-								<h5 class="mb-2">
-									<a href="/client/post_details">
-										Thức ăn nhanh
-									</a>
-								</h5>
-
-								<div class="profile-block d-flex">
-									<img src="/styles/images/profile/chef-5.jpg" class="profile-block-image img-fluid"
-										alt="">
-
-									<p>Michelin
-										<img src="/styles/images/verified.png" class="verified-image img-fluid" alt="">
-										<strong>Đầu bếp </strong>
-
-									</p>
-								</div>
-								<div class="">
-									<audio controls loop src="">
-
-									</audio>
-								</div>
-
-								<div class="custom-block-bottom d-flex justify-content-between mt-3">
-									<a href="#" class="bi-headphones me-1">
-										<span>140k</span>
-									</a>
-
-									<a href="#" class="bi-heart me-1">
-										<span>22.4k</span>
-									</a>
-
-									<a href="#" class="bi-chat me-1">
-										<span>16k</span>
-									</a>
-
-
-								</div>
-							</div>
-
-							<div class="d-flex flex-column ms-auto">
-								<a href="#" class="badge ms-auto">
-									<i class="bi-heart"></i>
-								</a>
-
-								<a href="#" class="badge ms-auto">
-									<i class="bi bi-share-fill"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-6 col-12 mb-4 ">
-						<div class="custom-block d-flex">
-							<div class="">
-								<div class="custom-block-icon-wrap">
-									<div class="section-overlay"></div>
-									<a href="/client/post_details" class="custom-block-image-wrap">
-										<img src="/styles/images/food/xucxich size L.jpg"
-											class="custom-block-image img-fluid" alt="">
-
-										<a href="#" class="custom-block-icon">
-											<i class="bi-play-fill"></i>
-										</a>
-									</a>
-								</div>
-
-
-							</div>
-
-							<div class="custom-block-info">
-								<div class="custom-block-top d-flex mb-1">
-									<small class="me-4">
-										<i class="bi-clock-fill custom-icon"></i>
-										5 phút
-									</small>
-
-
-								</div>
-
-								<h5 class="mb-2">
-									<a href="/client/post_details">
-										Xúc xích 
-									</a>
-								</h5>
-
-								<div class="profile-block d-flex">
-									<img src="/styles/images/profile/chef-2.jpg" class="profile-block-image img-fluid"
-										alt="">
-
-									<p>Thu Hường
-										<img src="/styles/images/verified.png" class="verified-image img-fluid" alt="">
-										<strong>Đầu bếp </strong>
-
-									</p>
-								</div>
-								<div class="">
-									<audio controls loop src="">
-
-									</audio>
-								</div>
-
-								<div class="custom-block-bottom d-flex justify-content-between mt-3">
-									<a href="#" class="bi-headphones me-1">
-										<span>140k</span>
-									</a>
-
-									<a href="#" class="bi-heart me-1">
-										<span>22.4k</span>
-									</a>
-
-									<a href="#" class="bi-chat me-1">
-										<span>16k</span>
-									</a>
-
-
-								</div>
-							</div>
-
-							<div class="d-flex flex-column ms-auto">
-								<a href="#" class="badge ms-auto">
-									<i class="bi-heart"></i>
-								</a>
-
-								<a href="#" class="badge ms-auto">
-									<i class="bi bi-share-fill"></i>
-								</a>
-							</div>
-						</div>
-					</div>
+						<% } %>
 				</div>
 			</div>
 		</div>
@@ -525,8 +290,7 @@
 				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
 					<div class="custom-block custom-block-overlay">
 						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/banner con 2.jpg"
-								class="custom-block-image img-fluid" alt="">
+							<img src="/styles/images/food/banner con 2.jpg" class="custom-block-image img-fluid" alt="">
 						</a>
 
 						<div class="custom-block-info custom-block-overlay-info">
@@ -536,15 +300,15 @@
 								</a>
 							</h5>
 
-							
+
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
 					<div class="custom-block custom-block-overlay">
 						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/banner con con 3.jpg"
-								class="custom-block-image img-fluid" alt="">
+							<img src="/styles/images/food/banner con con 3.jpg" class="custom-block-image img-fluid"
+								alt="">
 						</a>
 
 						<div class="custom-block-info custom-block-overlay-info">
@@ -554,32 +318,30 @@
 								</a>
 							</h5>
 
-							
+
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
 					<div class="custom-block custom-block-overlay">
 						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/canhchua.webp"
-								class="custom-block-image img-fluid" alt="">
+							<img src="/styles/images/food/canhchua.webp" class="custom-block-image img-fluid" alt="">
 						</a>
 
 						<div class="custom-block-info custom-block-overlay-info">
 							<h5 class="mb-1">
-								<a href="">
-									Món ngon nhà làm								</a>
+								<a href="listing-page.html">
+									Món ngon nhà làm </a>
 							</h5>
 
-							
+
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
 					<div class="custom-block custom-block-overlay">
 						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/che.webp"
-								class="custom-block-image img-fluid" alt="">
+							<img src="/styles/images/food/che.webp" class="custom-block-image img-fluid" alt="">
 						</a>
 
 						<div class="custom-block-info custom-block-overlay-info">
@@ -589,12 +351,12 @@
 								</a>
 							</h5>
 
-							
+
 						</div>
 					</div>
 				</div>
 
-				
+
 			</div>
 		</div>
 	</section>
@@ -603,67 +365,68 @@
 	<section class="trending-podcast-section section-padding pt-0">
 		<div class="container">
 			<div class="row">
-	
+
 				<div class="col-lg-12 col-12">
 					<div class="section-title-wrap mb-5 mt-3">
 						<h4 class="section-title">Chủ đề thịnh hành</h4>
 					</div>
 				</div>
-	
+
 				<div class="col-lg-4 col-12 mb-4 mb-lg-0">
 					<div class="custom-block custom-block-full">
 						<div class="custom-block-image-wrap">
 							<a href="#">
-								<img src="/styles/images/food/mon nuong.jpg" class="custom-block-image img-fluid" alt="">
+								<img src="/styles/images/food/mon nuong.jpg" class="custom-block-image img-fluid"
+									alt="">
 							</a>
 						</div>
-	
+
 						<div class="custom-block-info">
 							<h5 class="mb-2">
 								<a href="#">
 									Món nướng
 								</a>
 							</h5>
-	
+
 							<div class="profile-block d-flex">
 								<img src="/styles/images/profile/woman-posing-black-dress-medium-shot.jpg"
 									class="profile-block-image img-fluid" alt="">
-	
+
 								<p>Elsa
 									<strong>Chuyên gia</strong>
 								</p>
 							</div>
-	
+
 							<p class="mb-0">Chuyên gia bình phẩm về những món đồ nướng</p>
-	
+
 							<div class="custom-block-bottom d-flex justify-content-between mt-3">
 								<a href="#" class="bi-headphones me-1">
 									<span>100k</span>
 								</a>
-	
+
 								<a href="#" class="bi-heart me-1">
 									<span>2.5k</span>
 								</a>
-	
+
 								<a href="#" class="bi-chat me-1">
 									<span>924k</span>
 								</a>
 							</div>
 						</div>
-	
+
 						<div class="social-share d-flex flex-column ms-auto">
 							<a href="#" class="badge ms-auto">
 								<i class="bi-heart"></i>
 							</a>
-	
+
 							<a href="#" class="badge ms-auto">
-										<i class="bi bi-share-fill"></i>
-			
+								<i class="bi bi-share-fill"></i>
+
 							</a>
 						</div>
 					</div>
 				</div>
-	
+
 				<div class="col-lg-4 col-12 mb-4 mb-lg-0">
 					<div class="custom-block custom-block-full">
 						<div class="custom-block-image-wrap">
@@ -671,55 +434,55 @@
 								<img src="/styles/images/food/mon xao.jpg" class="custom-block-image img-fluid" alt="">
 							</a>
 						</div>
-	
+
 						<div class="custom-block-info">
 							<h5 class="mb-2">
 								<a href="#">
 									Món xào
 								</a>
 							</h5>
-	
+
 							<div class="profile-block d-flex">
-								<img src="/styles/images/profile/smartboy.jpg"
-									class="profile-block-image img-fluid" alt="">
-	
+								<img src="/styles/images/profile/smartboy.jpg" class="profile-block-image img-fluid"
+									alt="">
+
 								<p>
 									Taylor
 									<img src="images/verified.png" class="verified-image img-fluid" alt="">
 									<strong>Chuyên gia</strong>
 								</p>
 							</div>
-	
+
 							<p class="mb-0">Chuyên gia bình phẩm về những món xào</p>
-	
+
 							<div class="custom-block-bottom d-flex justify-content-between mt-3">
 								<a href="#" class="bi-headphones me-1">
 									<span>100k</span>
 								</a>
-	
+
 								<a href="#" class="bi-heart-fill me-1 text-danger">
 									<span>2.5k</span>
 								</a>
-	
+
 								<a href="#" class="bi-chat me-1">
 									<span>924k</span>
 								</a>
 							</div>
 						</div>
-	
+
 						<div class="social-share d-flex flex-column ms-auto">
 							<a href="#" class="badge ms-auto">
 								<i class="bi-heart"></i>
 							</a>
-	
+
 							<a href="#" class="badge ms-auto">
-										<i class="bi bi-share-fill"></i>
-			
+								<i class="bi bi-share-fill"></i>
+
 							</a>
 						</div>
 					</div>
 				</div>
-	
+
 				<div class="col-lg-4 col-12">
 					<div class="custom-block custom-block-full">
 						<div class="custom-block-image-wrap">
@@ -727,59 +490,59 @@
 								<img src="/styles/images/food/mon nuoc.jpg" class="custom-block-image img-fluid" alt="">
 							</a>
 						</div>
-	
+
 						<div class="custom-block-info">
 							<h5 class="mb-2">
 								<a href="#">
 									Món nước
 								</a>
 							</h5>
-	
+
 							<div class="profile-block d-flex">
 								<img src="/styles/images/profile/handsome-asian-man-listening-music-through-headphones.jpg"
 									class="profile-block-image img-fluid" alt="">
-	
+
 								<p>
 									William
 									<img src="images/verified.png" class="verified-image img-fluid" alt="">
 									<strong>Vlogger</strong>
 								</p>
 							</div>
-	
+
 							<p class="mb-0">Chuyên gia về quay vlog ẩm thực những món nước</p>
-	
+
 							<div class="custom-block-bottom d-flex justify-content-between mt-3">
 								<a href="#" class="bi-headphones me-1">
 									<span>100k</span>
 								</a>
-	
+
 								<a href="#" class="bi-heart me-1">
 									<span>2.5k</span>
 								</a>
-	
+
 								<a href="#" class="bi-chat me-1">
 									<span>924k</span>
 								</a>
 							</div>
 						</div>
-	
+
 						<div class="social-share d-flex flex-column ms-auto">
 							<a href="#" class="badge ms-auto">
 								<i class="bi-heart"></i>
 							</a>
-	
+
 							<a href="#" class="badge ms-auto">
-										<i class="bi bi-share-fill"></i>
-			
+								<i class="bi bi-share-fill"></i>
+
 							</a>
 						</div>
 					</div>
 				</div>
-	
-				
-	
-		
-	
+
+
+
+
+
 			</div>
 		</div>
 	</section>

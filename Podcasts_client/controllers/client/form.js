@@ -8,22 +8,62 @@ const API_URL = "http://localhost:3000/api";
 
 const app = express();
 app.use(express.json());
-
+const API_URL = "http://localhost:3000/api";
 exports.login = async (req, res, next) => {
+  let userId = req.session.userId;
+  let info = null;
+
+  if (typeof userId !== 'undefined') {
+    try {
+      const response = await axios.get(`${API_URL}/customers/${userId}`);
+      info = response.data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
   try {
-    res.render("client/form/login");
+    const categoriesResponse = await axios.get(`${API_URL}/categories/`);
+    const categoriesData = categoriesResponse.data;
+    res.render("client/form/login", {
+      categories: categoriesData.data,
+        
+        });
   } catch (error) {
     console.error('ERR', error);
-    res.status(500).send(error);
+    res.render('client/login', {
+      categories: [],
+      user: info,
+      userId: userId
+    });
   }
 };
 
 exports.signup = async (req, res, next) => {
+  let userId = req.session.userId;
+  let info = null;
+
+  if (typeof userId !== 'undefined') {
+    try {
+      const response = await axios.get(`${API_URL}/customers/${userId}`);
+      info = response.data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
   try {
-    res.render("client/form/signup");
+    const categoriesResponse = await axios.get(`${API_URL}/categories/`);
+    const categoriesData = categoriesResponse.data;
+    res.render("client/form/signup", {
+      categories: categoriesData.data, 
+        
+        });
   } catch (error) {
     console.error('ERR', error);
-    res.status(500).send(error);
+    res.render('client/signup', {
+      categories: [],
+      user: info,
+      userId: userId
+    });
   }
 };
 
@@ -83,10 +123,29 @@ exports.loginUser = async function (req, res) {
 };
 
 exports.getform = async (req, res, next) => {
+  let userId = req.session.userId;
+  let info = null;
+
+  if (typeof userId !== 'undefined') {
+    try {
+      const response = await axios.get(`${API_URL}/customers/${userId}`);
+      info = response.data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
   try {
-    res.render("client/form/info");
+    const categoriesResponse = await axios.get(`${API_URL}/categories/`);
+    const categoriesData = categoriesResponse.data;
+    res.render("client/form/info", {
+      categories: categoriesData.data,
+        });
   } catch (error) {
     console.error('ERR', error);
-    res.status(500).send(error);
+    res.render('client/info', {
+      categories: [],
+      user: info,
+      userId: userId
+    });
   }
 };

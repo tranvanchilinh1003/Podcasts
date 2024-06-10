@@ -57,6 +57,13 @@ exports.detail = async (req, res, next) => {
     })
 
 };
+exports.getId = async (req, res, next) => {
+    var category_id = await Category.getCateId(req.params.id);
+    res.status(200).json({
+        data: category_id,
+    })
+
+};
 
 exports.update = async (req, res, next) => {
     let category_id = req.params.id;

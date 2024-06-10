@@ -173,7 +173,7 @@
 			width: 18px;
 			height: 18px;
 			fill: white;
-transition: all 0.3s;
+			transition: all 0.3s;
 		}
 
 		button .svg-wrapper {
@@ -307,8 +307,8 @@ transition: all 0.3s;
 						<div class="col-lg-3 col-12">
 							<div class="custom-block-icon-wrap">
 								<div class="custom-block-image-wrap custom-block-image-detail-page">
-									<img src="/styles/images/food/banner con 1.jpg" class="custom-block-image img-fluid"
-										alt="">
+									<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post_cate.images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+										class="custom-block-image img-fluid" alt="">
 								</div>
 							</div>
 						</div>
@@ -317,10 +317,11 @@ transition: all 0.3s;
 							<div class="custom-block-info">
 								<div class="custom-block-top d-flex mb-1">
 									<small class="me-4">
-<a href="#">
+										<!-- <a href="#">
 											<i class="bi-play"></i>
 											Nghe ngay
-										</a>
+										</a> -->
+
 									</small>
 
 									<small>
@@ -330,25 +331,30 @@ transition: all 0.3s;
 
 
 								</div>
+								<h2 class="mb-2">
+									<%= post_cate.title %>
+								</h2>
+								<div class="">
+									<audio controls loop
+										src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F<%=post_cate.audio%>?alt=media&token=73f7ac89-bf7a-4245-805b-b37323ff0bf9">
 
-								<h2 class="mb-2">Pizza Thức Ăn Nhanh</h2>
-
-								<p>Pizza Thịt Bò mang đến hương vị đậm đà với lớp thịt bò băm nhỏ, hành tây, phô mai
-									mozzarella và sốt BBQ ngọt ngào. Thêm một chút hành phi và ớt xanh để tạo nên sự
-									phong phú trong hương vị. Mỗi miếng pizza là một sự kết hợp hoàn hảo giữa vị thịt bò
-									đậm đà và các loại gia vị tinh tế.</p>
+									</audio>
+								</div>
+								<p>
+									<%= post_cate.description %>
+								</p>
 
 								<div
 									class="profile-block profile-detail-block d-flex flex-wrap align-items-center mt-5">
 									<div class="d-flex mb-3 mb-lg-0 mb-md-0">
-										<img src="/styles/images/profile/woman-posing-black-dress-medium-shot.jpg"
+										<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post_cate.images_customers%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
 											class="profile-block-image img-fluid" alt="">
 
 										<p>
-											Elsa
+											<%= post_cate.username %>
 											<img src="/styles/images/verified.png" class="verified-image img-fluid"
 												alt="">
-											<strong>Influencer</strong>
+											<strong>Người đăng</strong>
 										</p>
 									</div>
 
@@ -421,7 +427,7 @@ transition: all 0.3s;
 								<a href="#" class="bi-heart me-1">
 									<span>2.5k</span>
 								</a>
-<a href="#" class="bi-chat me-1">
+								<a href="#" class="bi-chat me-1">
 									<span>924k</span>
 								</a>
 							</div>
@@ -534,7 +540,7 @@ transition: all 0.3s;
 								</a>
 
 								<a href="#" class="bi-chat me-1">
-<span>924k</span>
+									<span>924k</span>
 								</a>
 							</div>
 						</div>
@@ -561,151 +567,155 @@ transition: all 0.3s;
 				<div class="section-title-wrap">
 					<h4 class="section-title">Bình luận của bạn</h4>
 				</div>
-				<div class="col-lg-7 col-7 mt-5">
 
-					<form action="/client/comments_sp" method="post" id="comment-form" name="comment-form"
-						class="comment-form">
-						<div class="rating d-flex justify-content-center">
-							<input type="radio" id="star-1" name="star-radio" value="1">
-							<label for="star-1">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-									<path pathLength="360"
-										d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
-									</path>
-								</svg>
-							</label>
-							<input type="radio" id="star-2" name="star-radio" value="2">
-							<label for="star-2">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-									<path pathLength="360"
-										d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
-									</path>
-								</svg>
-							</label>
-							<input type="radio" id="star-3" name="star-radio" value="3">
-							<label for="star-3">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-									<path pathLength="360"
-										d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
-									</path>
-								</svg>
-							</label>
-							<input type="radio" id="star-4" name="star-radio" value="4">
-							<label for="star-4">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-									<path pathLength="360"
-										d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
-									</path>
-								</svg>
-							</label>
-							<input type="radio" id="star-5" name="star-radio" value="5">
-							<label for="star-5">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-									<path pathLength="360"
-										d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
-									</path>
-								</svg>
-							</label>
-						</div>
+				<% if (typeof userId !=='undefined' ) { %>
 
-						<span class="error text-danger"></span> <br>
-						<input type="hidden" name="product_id">
-						<input type="hidden" name="user_id">
-						<input type="hidden" name="date">
-						<textarea name="message" id="message" class="form-control" rows="3"
-							placeholder="Bình luận của bạn"></textarea> <br>
-						<span class="error text-danger"></span><br> <br>
-<div class="d-flex justify-content-end">
-							<button>
-								<div class="svg-wrapper-1">
-									<div class="svg-wrapper">
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-											height="24">
-											<path fill="none" d="M0 0h24v24H0z"></path>
-											<path fill="currentColor"
-												d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
-											</path>
-										</svg>
-									</div>
-								</div>
-								<span>Đăng</span>
-							</button>
-						</div>
+					<div class="col-lg-7 col-7 mt-5">
 
-					</form>
-
-					<!-- <a href="/client/form/login" class="btn btn-outline-danger mt-3">Đăng nhập để bình luận</a> -->
-				</div>
-				<div class="col-lg-12 col-12 mt-5">
-					<div class="section-title-wrap mt-5 mb-5">
-						<h4 class="section-title">Danh sách bình luận</h4>
-					</div>
-
-
-					<div class="anime__review__item ">
-						<div class="anime__review__item__pic">
-							<img src="/styles/images/profile/bede.jpg" width="50px" height="50px" class="" alt="">
-						</div>
-
-						<div class="anime__review__item__text mb-2">
-							<div class="d-flex justify-content-between">
-								<label class="font-weight-bold">
-									Be De
-									<h6 class="mb-3">
-										<div class="rate d-flex justify-content-center mr-5 ">
-											<svg style="display:none;">
-												<defs>
-													<symbol id="fivestars-1" class="border-none">
-														<path
-															d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-															fill="white" fill-rule="evenodd" />
-														<path
-															d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-															fill="white" fill-rule="evenodd"
-															transform="translate(24)" />
-														<path
-															d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-															fill="white" fill-rule="evenodd"
-															transform="translate(48)" />
-														<path
-															d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-															fill="white" fill-rule="evenodd"
-															transform="translate(72)" />
-														<path
-															d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-															fill="white" fill-rule="evenodd"
-															transform="translate(96)" />
-													</symbol>
-												</defs>
-											</svg>
-											<div class="rating-1 ml-md-5">
-												<progress class="rating-bg " value="5" max="5"></progress>
-												<svg>
-<use xlink:href="#fivestars-1" />
-												</svg>
-											</div>
-										</div>
-									</h6>
+						<form action="/client/comments_sp" method="post" id="comment-form" name="comment-form"
+							class="comment-form">
+							<div class="rating d-flex justify-content-center">
+								<input type="radio" id="star-1" name="star-radio" value="1">
+								<label for="star-1">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path pathLength="360"
+											d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
+										</path>
+									</svg>
 								</label>
-								<span class="ml-3">
-									17/05/2024
-								</span>
+								<input type="radio" id="star-2" name="star-radio" value="2">
+								<label for="star-2">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path pathLength="360"
+											d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
+										</path>
+									</svg>
+								</label>
+								<input type="radio" id="star-3" name="star-radio" value="3">
+								<label for="star-3">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path pathLength="360"
+											d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
+										</path>
+									</svg>
+								</label>
+								<input type="radio" id="star-4" name="star-radio" value="4">
+								<label for="star-4">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path pathLength="360"
+											d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
+										</path>
+									</svg>
+								</label>
+								<input type="radio" id="star-5" name="star-radio" value="5">
+								<label for="star-5">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path pathLength="360"
+											d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z">
+										</path>
+									</svg>
+								</label>
 							</div>
 
+							<span class="error text-danger"></span> <br>
+							<input type="hidden" name="product_id">
+							<input type="hidden" name="user_id">
+							<input type="hidden" name="date">
+							<textarea name="message" id="message" class="form-control" rows="3"
+								placeholder="Bình luận của bạn"></textarea> <br>
+							<span class="error text-danger"></span><br> <br>
+							<div class="d-flex justify-content-end">
+								<button>
+									<div class="svg-wrapper-1">
+										<div class="svg-wrapper">
+											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+												height="24">
+												<path fill="none" d="M0 0h24v24H0z"></path>
+												<path fill="currentColor"
+													d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+												</path>
+											</svg>
+										</div>
+									</div>
+									<span>Đăng</span>
+								</button>
+							</div>
+						</form>
 
-							<p class="mt-2 ">
-								Audio này của anh Linh Dark code đẹp quá &#128525 &#128536
+						<% } else { %>
+							<div class="container">
+								<div class="row">
+									<div class="col-lg-12 col-12 text-center mt-3">
+										<a href="/client/form/login" class="btn btn btn-outline-dark">Đăng nhập để bình
+											luận</a>
+									</div>
+								</div>
+							</div>
+							<% } %>
+					</div>
+					<div class="col-lg-12 col-12 mt-5">
+						<div class="section-title-wrap mt-5 mb-5">
+							<h4 class="section-title">Danh sách bình luận</h4>
+						</div>
 
-							</p>
 
+						<div class="anime__review__item ">
+							<div class="anime__review__item__pic">
+								<img src="/styles/images/profile/bede.jpg" width="50px" height="50px" class="" alt="">
+							</div>
+
+							<div class="anime__review__item__text mb-2">
+								<div class="d-flex justify-content-between">
+									<label class="font-weight-bold">
+										Be De
+										<h6 class="mb-3">
+											<div class="rate d-flex justify-content-center mr-5 ">
+												<svg style="display:none;">
+													<defs>
+														<symbol id="fivestars-1" class="border-none">
+															<path
+																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																fill="white" fill-rule="evenodd" />
+															<path
+																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																fill="white" fill-rule="evenodd"
+																transform="translate(24)" />
+															<path
+																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																fill="white" fill-rule="evenodd"
+																transform="translate(48)" />
+															<path
+																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																fill="white" fill-rule="evenodd"
+																transform="translate(72)" />
+															<path
+																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																fill="white" fill-rule="evenodd"
+																transform="translate(96)" />
+														</symbol>
+													</defs>
+												</svg>
+												<div class="rating-1 ml-md-5">
+													<progress class="rating-bg " value="5" max="5"></progress>
+													<svg>
+														<use xlink:href="#fivestars-1" />
+													</svg>
+												</div>
+											</div>
+										</h6>
+									</label>
+									<span class="ml-3">
+										17/05/2024
+									</span>
+								</div>
+								<p class="mt-2 ">
+									Audio này của anh Linh Dark code đẹp quá &#128525 &#128536
+								</p>
+							</div>
 						</div>
 					</div>
-				</div>
-
-
-
-
 			</div>
 		</div>
 	</section>
+
 	<%- include('../layouts/footer') %>

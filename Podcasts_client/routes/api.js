@@ -10,11 +10,7 @@ const shares = require('../controllers/api/shares');
 const favourite = require('../controllers/api/favourite');
 const router = express.Router();
 // router.post('/categories_insert', cate.create);
-router.get('/post', post.list);
-router.post('/post', post.create);
-router.get('/post/:id', post.edit);
-router.delete('/post/:id', post.delete);
-router.patch('/post/:id', post.update);
+
 
 
 
@@ -38,10 +34,25 @@ router.post('/otp', auth.otp);
 router.patch('/changepassword', auth.changePassword)
 
 
+router.post('/post', post.create);
+router.get('/post', post.list);
+router.delete('/post/:id', post.delete);
+router.get('/post/:id', post.edit);
+router.get('/getId_post/:id', post.getPost);
+router.patch('/post/:id', post.update);
+
+
+router.get('/comment', comment.list);
+router.delete('/comment/:id', comment.delete);
+router.get('/comment/:id', comment.edit);
+
+
+
 router.post('/categories', cate.create);
 router.get('/categories', cate.list);
 router.delete('/categories/:id', cate.delete);
 router.get('/categories/:id', cate.detail);
+router.get('/product/:id', cate.getId);
 router.patch('/categories/:id', cate.update);
 
 router.post('/customers', customers.create);
