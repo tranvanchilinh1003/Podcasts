@@ -2,13 +2,17 @@ var connect = require('./database');
 var categories = [];
 module.exports = class Categories {
     constructor() {}
-    static fetchAll() {
+    static fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            connect.query('SELECT * FROM categories', (err, result) => {
-                if (err) reject(err);
-                resolve(result);
+            let sql = `SELECT * FROM categories LIMIT ?,?`;
+            connect.query(sql, [from, row], function (err, data) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(data);
+              }
             });
-        });
+          });
     }
 
     static createCategories(category) {
@@ -65,5 +69,16 @@ module.exports = class Categories {
           );
         });
       }
-
+      static async countProducts() {
+        return new Promise((resolve, reject) => {
+          let sql = `SELECT COUNT(*) AS count FROM categories`; 
+          connect.query(sql, function (err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data[0].count);
+            }
+          });
+        });
+    }
 }

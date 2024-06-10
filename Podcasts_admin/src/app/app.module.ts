@@ -14,7 +14,7 @@ import {
 import {HttpClientModule} from "@angular/common/http";
 import {CoreModule} from "./@core/core.module";
 import {ThemeModule} from "./@theme/theme.module";
-
+import { PaginatorModule } from '../app/@theme/components/paginator/paginator.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -24,6 +24,7 @@ import {ThemeModule} from "./@theme/theme.module";
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    PaginatorModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),

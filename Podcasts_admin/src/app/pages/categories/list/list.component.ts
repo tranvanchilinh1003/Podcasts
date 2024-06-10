@@ -3,8 +3,7 @@ import { CategoriesService } from 'app/@core/services/apis/categories.service';
 import { ICategories } from 'app/@core/interfaces/categories.interface';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from 'app/@core/services/common/dialog.service';
-import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
-
+import {API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -12,7 +11,9 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class ListComponent implements OnInit {
   categories: ICategories[] = [];
-
+  last_page: number = 0;
+  current_page: number = 0;
+  apiUrl = `${API_BASE_URL}${API_ENDPOINT.categories.categories}`;
   constructor(
     private dialog: DialogService,
     private route: ActivatedRoute,
@@ -24,15 +25,15 @@ export class ListComponent implements OnInit {
   }
 
   getAll() {
-    this.categoriesService.getCategories().subscribe({
-      next: (response: { data: ICategories[] }) => {
-        this.categories = response.data;
-      },
-      error: error => {
-        console.error('Error fetching categories', error);
-      }
-    });
-  }
+    this.categoriesService.getCategories().subscribe(res => {
+      this.categories = res.data
+      this.current_page = res.meta.current_page;
+      this.last_page = res.meta.last_page;
+      }, error => {
+        console.log(error);
+  
+      })
+    }
 
   onDelete(categoryId: string): void {
     this.dialog.showConfirmationDialog(API_ENDPOINT.categories.categories, categoryId).then((result) => {
@@ -41,5 +42,7 @@ export class ListComponent implements OnInit {
       }
     });
   }
-
+  getPage(event: any): void {
+    this.categories = event.data
+  }
 }

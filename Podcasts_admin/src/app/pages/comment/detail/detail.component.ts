@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IComment } from 'app/@core/interfaces/comment.interfface';
+import { IComment } from 'app/@core/interfaces/comment.interface';
 import { CommentService } from 'app/@core/services/apis/comment.service';
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
@@ -21,7 +21,8 @@ export class DetailComponent {
     private dialog: DialogService,
     private route: ActivatedRoute,
     private router: Router,
-    private commentService: CommentService
+    private commentService: CommentService,
+
   ) { }
 
   ngOnInit(): void {

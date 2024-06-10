@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IPost } from 'app/@core/interfaces/post.interface';
+import { PostService } from 'app/@core/services/apis/post.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { CategoriesService } from 'app/@core/services/apis/categories.service';
 import { ICategories } from 'app/@core/interfaces/categories.interface';
@@ -10,7 +15,8 @@ import { LOCALSTORAGE_KEY } from "../../../@core/config";
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss']
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
+  postForm!: FormGroup;
   fileAudio: File | null = null;
   fileImg: File | null = null;
   uploadProgressAudio: number = 0;
@@ -75,7 +81,7 @@ export class CreateComponent {
       return new Promise((resolve, reject) => {
         task.percentageChanges().subscribe(progress => {
           progressCallback(progress || 0);
-        });
+});
         task.then(() => resolve()).catch(error => reject(error));
       });
     };

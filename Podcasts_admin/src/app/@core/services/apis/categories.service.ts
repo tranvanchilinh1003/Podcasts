@@ -26,7 +26,7 @@ export class CategoriesService extends ApiService {
   super(_http);
 }
 
-  getCategories():Observable<{ data: ICategories[] }> {
+  getCategories():Observable<any> {
     return this._http.get<{ data: ICategories[] }>(API_BASE_URL + API_ENDPOINT.categories.categories,{
       headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
     });

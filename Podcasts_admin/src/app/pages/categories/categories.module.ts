@@ -8,6 +8,7 @@ import { FormsRoutingModule, routedComponents } from './categories-routing.modul
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { EditComponent } from './edit/edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PaginatorModule } from '../../@theme/components/paginator/paginator.module';
 
 
 
@@ -23,7 +24,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     FormsRoutingModule,
     NbEvaIconsModule,
     NbIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PaginatorModule
   ],
   declarations: [
    ...routedComponents,

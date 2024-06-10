@@ -7,7 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { IAlertMessage } from "../../../@theme/components/alert/ngx-alerts.component";
 import { ApiService, LocalStorageService } from "../common";
-import { IComment } from "../../interfaces/comment.interfface";
+import { IComment } from "../../interfaces/comment.interface";
 import { API_BASE_URL, API_ENDPOINT } from "../../config/api-endpoint.config";
 import { UserInfoModel } from "../../model/user-info.model";
 import { LOCALSTORAGE_KEY } from "../../config";

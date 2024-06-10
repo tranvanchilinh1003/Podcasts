@@ -25,25 +25,31 @@ export class PaginatorComponent implements OnInit {
   ngOnInit() {}
 
   goFirstPage() {
+    this.getData();
+    this.current_page = 1
     this.hasPreviousPage = true;
     this.hasNextPage = false;
     this.indexPage = 1;
-    this.getData();
+
   }
 
   goLastPage() {
+    this.getData();
     this.hasPreviousPage = false;
     this.hasNextPage = true;
     this.indexPage = this.last_page;
-    this.getData();
+
+    this.current_page = this.last_page
   }
 
   goPreviousPage() {
     if (this.indexPage <= this.last_page && this.indexPage > 1) {
       this.hasNextPage = false;
       this.indexPage--;
+      this.current_page = this.indexPage ;
       if (this.indexPage === 1) {
         this.hasPreviousPage = true;
+        
       }
       this.getData();
     }
@@ -53,14 +59,16 @@ export class PaginatorComponent implements OnInit {
     if (this.indexPage < this.last_page) {
       this.hasPreviousPage = false;
       this.indexPage++;
+      this.current_page = this.indexPage ;
       if (this.indexPage === this.last_page) {
         this.hasNextPage = true;
+        this.current_page
       }
       this.getData();
     }
   }
 
-  getPaginator(): Observable<any> {
+  getPaginator(): Observable<any> {    
     return this.apiService.get(this.apiUrl + '?page=' + Number(this.indexPage));
   }
 

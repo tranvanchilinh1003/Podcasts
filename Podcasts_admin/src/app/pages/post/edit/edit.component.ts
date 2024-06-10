@@ -83,7 +83,7 @@ export class EditComponent {
           error: error => {
             console.error('Error fetching editing category', error);
           }
-        });
+});
       },
       error: error => {
         console.error('Error fetching post', error);
@@ -171,7 +171,7 @@ export class EditComponent {
 
       this.postService.updatePost(this.postnew, postId).subscribe({
         next: () => {
-          this.dialog.success('Đã thêm thành công!');
+this.dialog.success('Đã thêm thành công!');
         },
         error: error => {
           console.error('Error updating post', error);

@@ -16,7 +16,7 @@ const routes: Routes = [
         data: {breadcrumb: 'Danh sách'},
       },
       {
-        path: 'detail',
+        path: 'detail/:id',
         component: DetailComponent,
         data: {breadcrumb: 'Chi tiết bình luận'},
       }

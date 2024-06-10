@@ -20,7 +20,7 @@ const routes: Routes = [{
             data: {breadcrumb: 'Danh sách'},
         },
         {
-            path: 'edit',
+            path: 'edit/:id',
             component: EditComponent,
             data: {breadcrumb: 'Sửa'},
         },
