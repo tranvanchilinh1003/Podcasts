@@ -5,75 +5,69 @@
             <div class="p-4">
                 <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-overview"
+                        <button  data-bs-toggle="tab" data-bs-target="#profile-overview"
                             aria-selected="true" role="tab" routerLink="/pages/profile"
-                            class="card  status-basic shape-rectangle nb-transition" nbInput>Tổng quan</button>
+                            class="nav-link btn card  status-basic shape-rectangle nb-transition" nbInput>Tổng quan</button>
                     </li>
 
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-edit"
+                    <li class="nav-item " role="presentation">
+                        <button  data-bs-toggle="tab" data-bs-target="#profile-edit"
                             aria-selected="false" role="tab" tabindex="-1" routerLink="./edit"
-                            class="card  status-basic shape-rectangle nb-transition" nbInput>Sửa hồ sơ</button>
+                            class=" nav-link  btn active  card  status-basic shape-rectangle nb-transition" nbInput>Sửa hồ sơ</button>
                     </li>
                 </ul>
             </div>
+            <form>
             <div class="row">
                 <div class="col-md-4">
                     <div class="card  status-basic shape-rectangle nb-transition" nbInput>
-                        <img src="/assets/images/xyz.jpg" alt="Profile Image" class="card-img-top">
-                        <div class="card-body text-center">
-                            <div class="card-title">Hieu</div>
-                        </div>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{inforAdmin[0].images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" alt="Profile Image" class="card-img-top">
+                        <label for="update_img" class="card-body text-center">
+                            Cập nhật ảnh
+                        </label>
+                        <input type="file" name="" id="update_img">
                     </div>
                 </div>
-
-                <div class="col-md-8">
-                    <form>
+                <div class="col-md-8">                    
                         <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Tên tài khoản</div>
+                            <div class="col-lg-3 col-md-4 label">Tên tài khoản:</div>
                             <div class="col-lg-9 col-md-8">
-                                <input type="text" class="form-control" value="Hieu"
-                                    class="card  status-basic shape-rectangle nb-transition" nbInput>
+                                <input type="text" disabled  value="{{inforAdmin[0].username}}"
+                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput >
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Tên đầy đủ</div>
+                            <div class="col-lg-3 col-md-4 label">Tên đầy đủ:</div>
                             <div class="col-lg-9 col-md-8">
-                                <input type="text" class="form-control" value="Ngô Bảo Hiếu"
-                                    class="card  status-basic shape-rectangle nb-transition" nbInput>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Giới tính</div>
-                            <div class="col-lg-9 col-md-8">
-                                <input type="text" class="form-control" value="Nam"
-                                    class="card  status-basic shape-rectangle nb-transition" nbInput>
+                                <input type="text"   value="{{inforAdmin[0].full_name}}"
+                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput >
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Điện thoại</div>
+                            <div class="col-lg-3 col-md-4 label">Giới tính:</div>
                             <div class="col-lg-9 col-md-8">
-                                <input type="text" class="form-control" value="(+84)123456789"
-                                    class="card  status-basic shape-rectangle nb-transition" nbInput>
+                                <input type="text" *ngIf="inforAdmin[0].gender == 0" value="Nam"
+                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput>
+                                <input type="text" *ngIf="inforAdmin[0].gender == 1" value="Nữ"
+                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput>
                             </div>
                         </div>
-
                         <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Email</div>
+                            <div class="col-lg-3 col-md-4 label">Email:</div>
                             <div class="col-lg-9 col-md-8">
-                                <input type="email" class="form-control" value="abc@gmail.com"
-                                    class="card  status-basic shape-rectangle nb-transition" nbInput>
+                                <input type="email" class="form-control" value="{{inforAdmin[0].email}}"
+                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput>
                             </div>
                         </div>
 
                         <div class="text-center">
                             <button type="button" class="btn btn-outline-success">Lưu thông tin</button>
                         </div>
-                    </form>
+                    
                 </div>
             </div>
+        </form>
         </nb-card-body>
     </nb-card>
 </div>

@@ -5,15 +5,15 @@
             <div class="p-4">
                 <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview"
+                        <button data-bs-toggle="tab" data-bs-target="#profile-overview"
                             aria-selected="true" role="tab" routerLink="/pages/profile"
-                            class="card  status-basic shape-rectangle nb-transition" nbInput>Tổng quan</button>
+                            class=" nav-link btn active  card  status-basic shape-rectangle nb-transition" nbInput>Tổng quan</button>
                     </li>
 
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit"
+                        <button class="" data-bs-toggle="tab" data-bs-target="#profile-edit"
                             aria-selected="false" role="tab" tabindex="-1" routerLink="/pages/profile/edit"
-                            class="card  status-basic shape-rectangle nb-transition" nbInput>Sửa hồ sơ</button>
+                            class="nav-link btn card   status-basic shape-rectangle nb-transition" nbInput>Sửa hồ sơ</button>
                     </li>
 
                 </ul>
@@ -21,9 +21,9 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="card status-basic shape-rectangle nb-transition" nbInput>
-                        <img src="/assets/images/xyz.jpg" alt="Profile Image" class="card-img-top">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{inforAdmin[0].images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" alt="Profile Image" class="card-img-top">
                         <div class="card-body text-center">
-                            <div class="card-title">Hieu</div>
+                            <h5 class="card-title">{{inforAdmin[0].username}}</h5>
                         </div>
                     </div>
                 </div>
@@ -31,26 +31,22 @@
                 <div class="col-md-8">
 
                     <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Tên tài khoản</div>
-                        <div class="col-lg-9 col-md-8">Hieu</div>
+                        <div class="col-lg-3 col-md-4 label">Tên tài khoản:</div>
+                        <div class="col-lg-9 col-md-8">{{inforAdmin[0].username}}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Tên đầy đủ</div>
-                        <div class="col-lg-9 col-md-8">Ngô Bảo Hiếu</div>
+                        <div class="col-lg-3 col-md-4 label">Tên đầy đủ:</div>
+                        <div class="col-lg-9 col-md-8">{{inforAdmin[0].full_name}}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Giới tính</div>
-                        <div class="col-lg-9 col-md-8">Nam</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Điện thoại</div>
-                        <div class="col-lg-9 col-md-8">(+84)123456789</div>
+                        <div class="col-lg-3 col-md-4 label">Giới tính:</div>
+                        <div class="col-lg-9 col-md-8" *ngIf="inforAdmin[0].gender == 0 ">Nam</div>
+                        <div class="col-lg-9 col-md-8" *ngIf="inforAdmin[0].gender == 1 ">Nữ</div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Email</div>
-                        <div class="col-lg-9 col-md-8">abc@gmail.com</div>
+                        <div class="col-lg-3 col-md-4 label">Email:</div>
+                        <div class="col-lg-9 col-md-8">{{inforAdmin[0].email}}</div>
                     </div>
                 </div>
             </div>
