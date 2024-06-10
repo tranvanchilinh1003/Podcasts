@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -11,6 +11,7 @@ import { IComment } from "../../interfaces/comment.interface";
 import { API_BASE_URL, API_ENDPOINT } from "../../config/api-endpoint.config";
 import { UserInfoModel } from "../../model/user-info.model";
 import { LOCALSTORAGE_KEY } from "../../config";
+import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root',
@@ -21,12 +22,16 @@ export class CommentService extends ApiService {
         private _http: HttpClient,
         private router: Router,
         private localStorageService: LocalStorageService,
+        private authservice: AuthService
     ) {
         super(_http);
     }
 
-    getPost(): Observable<{ data: IComment[] }> {
-        return this._http.get<{ data: IComment[] }>(API_BASE_URL + API_ENDPOINT.comment.comment);
+    getPost(): Observable<any> {
+        return this._http.get<{ data: IComment[] }>(API_BASE_URL + API_ENDPOINT.comment.comment, {
+            headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
+        });
+    
     }
 
     getPostById(commentId: string): Observable<{ data: IComment}> {

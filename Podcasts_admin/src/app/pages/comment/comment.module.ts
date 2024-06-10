@@ -5,6 +5,7 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
 import { FormsRoutingModule, routedComponents } from './comment-routing.module';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { DetailComponent } from './detail/detail.component';
+import { PaginatorModule } from 'app/@theme/components/paginator/paginator.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { DetailComponent } from './detail/detail.component';
     ThemeModule,
     BreadcrumbModule,
     FormsRoutingModule,
-    NbTooltipModule
+    NbTooltipModule,
+    PaginatorModule
   ],
   declarations: [
     ...routedComponents,

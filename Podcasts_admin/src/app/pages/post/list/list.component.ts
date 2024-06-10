@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { IPost } from 'app/@core/interfaces/post.interface';
 import { PostService } from 'app/@core/services/apis/post.service';
 import { DialogService } from 'app/@core/services/common/dialog.service';
-import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
+import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -12,6 +12,9 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class ListComponent implements OnInit {
   post: IPost[] = [];
+  last_page: number = 0;
+  current_page: number = 0;
+  apiUrl = `${API_BASE_URL}${API_ENDPOINT.categories.categories}`;
   newPost: IPost = {
     id: '',
     title: '',
@@ -31,15 +34,14 @@ export class ListComponent implements OnInit {
     this.getAll();
   }
   getAll() {
-    this.postService.getPost().subscribe({
-      next: (response: { data: IPost[] }) => {
-        this.post = response.data;
-        // console.log(this.post);
-      },
-      error: error => {
-        console.error('Error fetching categories', error);
-      }
-    });
+    this.postService.getPost().subscribe(res =>{
+      this.post = res.data
+      this.current_page = res.meta.current_page;
+      this.last_page = res.meta.last_page;
+      }, error => {
+        console.log(error);
+  
+      })
   }
   deletePost(postId: string) {
     if (confirm('Bạn có chắc chắn muốn xóa?')) {
@@ -60,5 +62,8 @@ export class ListComponent implements OnInit {
         this.post = this.post.filter(post => post.id !== postId);
       }
     });
+  }
+  getPage(event: any): void {
+    this.post = event.data
   }
 }

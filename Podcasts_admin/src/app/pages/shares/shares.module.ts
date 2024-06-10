@@ -7,6 +7,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { ListComponent } from './list/list.component';
 import { DetailComponent } from './detail/detail.component';
 import { DetailService } from 'app/@core/services/apis/shares.service';
+import { PaginatorModule } from 'app/@theme/components/paginator/paginator.module';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { DetailService } from 'app/@core/services/apis/shares.service';
     BreadcrumbModule,
     FormsRoutingModule,
     NbTooltipModule,
-
+    PaginatorModule
 
   ],
   declarations: [

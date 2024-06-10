@@ -29,6 +29,11 @@
                             </tr>
                         </ng-container>
                     </table>
+                    <ngx-paginator 
+                    [apiUrl]="apiUrl"
+                    [current_page]="current_page"
+                    [last_page]="last_page"
+                    (dataList)="getPage($event)"></ngx-paginator>
                 </div>
             </nb-card-body>
         </nb-card>

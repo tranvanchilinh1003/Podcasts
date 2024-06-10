@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharesService } from 'app/@core/services/apis/shares.service';
 import { IShares } from 'app/@core/interfaces/shares';
+import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 
 @Component({
   selector: 'app-list',
@@ -9,7 +10,9 @@ import { IShares } from 'app/@core/interfaces/shares';
 })
 export class ListComponent implements OnInit {
   shares: IShares[] = [];
- 
+  last_page: number = 0;
+  current_page: number = 0;
+  apiUrl = `${API_BASE_URL}${API_ENDPOINT.shares.shares}`;
   constructor(
      private sharesService: SharesService
     ){}
@@ -19,15 +22,17 @@ export class ListComponent implements OnInit {
   }
 
   getAll() {
-    this.sharesService.getShares().subscribe({
-      next: (response: { data: IShares[] }) => {
-        this.shares = response.data;        
-        console.log(this.shares);
-        
-      },
-      error: error => {
-        console.error('Error fetching share', error);
-      }
-    });
+    this.sharesService.getShares().subscribe(res =>{
+      this.shares = res.data
+      this.current_page = res.meta.current_page;
+      this.last_page = res.meta.last_page;
+      }, error => {
+        console.log(error);
+  
+      })
+  }
+
+  getPage(event: any): void {
+    this.shares = event.data
   }
 }

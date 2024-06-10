@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CustomerService } from 'app/@core/services/apis/customers.service'; 
 import { ICustomer } from 'app/@core/interfaces/customers.interface';  
 import { DialogService } from 'app/@core/services/common/dialog.service';
-import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config'; 
+import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config'; 
 
 @Component({
   selector: 'app-list',
@@ -11,7 +11,9 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class ListComponent implements OnInit {
   customers: ICustomer[] = [];
- 
+  last_page: number = 0;
+  current_page: number = 0;
+  apiUrl = `${API_BASE_URL}${API_ENDPOINT.customers.customers}`;
   constructor(
     private dialog: DialogService,
     private CustomersService: CustomerService
@@ -22,14 +24,14 @@ export class ListComponent implements OnInit {
   }
 
   getAll() {
-    this.CustomersService.getCustomer().subscribe({
-      next: (response: { data: ICustomer[] }) => {
-        this.customers = response.data;        
-      },
-      error: error => {
-        console.error('Error fetching Customers', error);
-      }
-    });
+    this.CustomersService.getCustomer().subscribe(res =>{
+      this.customers = res.data
+      this.current_page = res.meta.current_page;
+      this.last_page = res.meta.last_page;
+      }, error => {
+        console.log(error);
+  
+      })
   }
 
   onDelete(customerId: string): void {
@@ -38,5 +40,9 @@ export class ListComponent implements OnInit {
         this.customers = this.customers.filter(customers => customers.id !== customerId);
       }
     });
+  }
+
+  getPage(event: any): void {
+    this.customers = event.data
   }
 }

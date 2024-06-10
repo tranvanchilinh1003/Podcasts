@@ -3,6 +3,7 @@ import { IDetail } from 'app/@core/interfaces/shares';
 import { DetailService } from 'app/@core/services/apis/shares.service';
 import { DialogService } from 'app/@core/services/common/dialog.service'; 
 import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detail',
@@ -11,11 +12,12 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class DetailComponent implements OnInit {
   detail: IDetail[] = [];
-  listShares: IDetail[] = [];
+  
  
   constructor(
     private dialog: DialogService,
-    private detailService: DetailService
+    private detailService: DetailService,
+    private route: ActivatedRoute,
    ){}
   
   ngOnInit(): void {
@@ -23,7 +25,8 @@ export class DetailComponent implements OnInit {
   }
   
  getAllDetail() {
-    this.detailService.getDetail().subscribe({
+  let id = this.route.snapshot.params['id'];
+    this.detailService.getDetail(id).subscribe({
       next: (response: { data: IDetail[] }) => {
         this.detail = response.data;
         console.log(this.detail);
@@ -34,9 +37,9 @@ export class DetailComponent implements OnInit {
     });
   }
   onDelete(sharesId: string): void {
-    this.dialog.showConfirmationDialog(API_ENDPOINT.shares.list, sharesId).then((result) => {
+    this.dialog.showConfirmationDialog(API_ENDPOINT.shares.shares, sharesId).then((result) => {
       if (result) {
-        this.listShares = this.listShares.filter(shares => shares.id !== sharesId);
+        this.detail = this.detail.filter(shares => shares.id !== sharesId);
       }
     });
   }

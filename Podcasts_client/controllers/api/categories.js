@@ -4,7 +4,8 @@ exports.list = async (req, res, next) => {
     const page = req.query.page || 1;
     const row = 5; // Số lượng sản phẩm trên mỗi trang
     const from = (page - 1) * row;
-    const totalProducts = await Category.countProducts(); // Phải cung cấp hàm lấy tổng số sản phẩm
+    const totalProducts = await Category.countCategories();
+    if(totalProducts > 0) {
     const totalPages = Math.ceil(totalProducts / row);
     var categories = await Category.fetchAll(from, row);
 
@@ -17,6 +18,16 @@ exports.list = async (req, res, next) => {
             from: from
         }
     })
+}else {
+    res.status(200).json({
+        data: categories,
+        meta: {
+            current_page: page,
+            last_page: 1,
+            from: from
+        }
+    })
+}
 };
 
 exports.create = async (req, res, next) => {

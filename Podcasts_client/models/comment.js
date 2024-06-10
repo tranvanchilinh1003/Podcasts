@@ -12,7 +12,7 @@ module.exports = class Post {
         });
     }
     // Add 
-    static createPost(users) {
+    static createComment(users) {
         return new Promise((resolve, reject) => {
             const sql = `INSERT INTO comments SET ?`;
             connect.query(sql, users, (err, result) => {
@@ -37,19 +37,31 @@ module.exports = class Post {
     //         });
     //     });
     // }
-    static async getList() {
+    static async getList(from, row) {
         return new Promise((resolve, reject) => {
             let sql = `SELECT p.id, p.title, p.images, COUNT(*) so_luong,MIN(cmt.date) cu_nhat,MAX(cmt.date) moi_nhat FROM comments cmt 
             JOIN post p ON p.id = cmt.post_id 
             GROUP BY p.id, p.title 
-            HAVING so_luong > 0`;
-            connect.query(sql, function (err, data) {
+            HAVING so_luong > 0 LIMIT ?,?`;
+            connect.query(sql,[from, row], function (err, data) {
                 if (err) {
                     reject(err);
                 } else {
                     resolve(data);
                 }
             });
+        });
+    }
+    static async countComment() {
+        return new Promise((resolve, reject) => {
+          let sql = `SELECT COUNT(*) AS count FROM comments`; 
+          connect.query(sql, function (err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data[0].count);
+            }
+          });
         });
     }
     static async getId(commentId) {

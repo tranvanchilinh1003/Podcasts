@@ -1,16 +1,37 @@
 const Favourite = require("../../models/favourite");
 
 exports.list = async (req, res, next) => {
+    const page = req.query.page || 1;
+    const row = 5; 
+    const from = (page - 1) * row;
+    const totalProducts = await Favourite.countFavourite(); 
+    if(totalProducts > 0) {
 
-    var favourite = await Favourite.fetchAll();
-
+    
+    const totalPages = Math.ceil(totalProducts / row);
+    var favourite = await Favourite.fetchAll(from, row);
     res.status(200).json({
-        data: favourite
+        data: favourite,
+        meta: {
+            current_page: page,
+            last_page: totalPages,
+            from: from
+        }
     })
+}else {
+    res.status(200).json({
+        data: favourite,
+        meta: {
+            current_page: page,
+            last_page: 1,
+            from: from
+        }
+    })
+}
 };
 exports.listDetail = async (req, res, next) => {
 
-    var favourite = await Favourite.fetchAll();
+    var favourite = await Favourite.getId(req.params.id);
 
     res.status(200).json({
         data: favourite

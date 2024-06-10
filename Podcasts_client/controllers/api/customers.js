@@ -6,11 +6,33 @@ app.use(express.json());
 
 exports.list = async (req, res, next) => {
     try {
-        const customers = await Customers.fetchAll();
-  
+    const page = req.query.page || 1;
+    const row = 5; 
+    const from = (page - 1) * row;
+    const totalProducts = await Customers.coutCustomers(); 
+    if(totalProducts > 0) {
+
+    
+    const totalPages = Math.ceil(totalProducts / row);
+    const customers = await Customers.fetchAll(from, row);
         res.status(200).json({
-            data: customers
+            data: customers,
+            meta: {
+                current_page: page,
+                last_page: totalPages,
+                from: from
+            }
         });
+    }else{
+        res.status(200).json({
+            data: customers,
+            meta: {
+                current_page: page,
+                last_page: 1,
+                from: from
+            }
+        })
+    }
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({
@@ -65,10 +87,15 @@ exports.detail = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     try {
         const id = req.params.id;
+        const currentCustomer = await Customers.getUpdateCustomers(id);
 
+        if (!currentCustomer) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
 
         let hashedPassword = req.body.password;
-        if (hashedPassword) {
+
+        if (req.body.password && !req.body.password.startsWith("$2b$10$")) {
             hashedPassword = await bcrypt.hash(req.body.password, 10);
         }
 
@@ -86,7 +113,8 @@ exports.update = async (req, res, next) => {
         const result = await Customers.updateCustomers(customers, id);
 
         res.status(201).json({
-            data: result
+            result: result,
+            data: customers
         });
     } catch (error) {
         console.error("Error:", error);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 // import { JwtHelperService } from '@auth0/angular-jwt';
@@ -10,6 +10,7 @@ import {ApiService, LocalStorageService} from "../common";
 import { IShares } from 'app/@core/interfaces/shares';
 import { IDetail } from 'app/@core/interfaces/shares';
 import {API_BASE_URL, API_ENDPOINT} from "../../config/api-endpoint.config";
+import { AuthService } from './auth.service';
 // import {UserInfoModel} from "../../model/user-info.model";
 // import {LOCALSTORAGE_KEY} from "../../config";
 
@@ -24,11 +25,14 @@ export class SharesService extends ApiService {
       private _http: HttpClient,
       private router: Router,
       private localStorageService: LocalStorageService,
+      private authservice: AuthService
   ) {
     super(_http);
   }
-  getShares():Observable<{ data: IShares[] }> {
-    return this._http.get<{ data: IShares[] }>(API_BASE_URL + API_ENDPOINT.shares.list);
+  getShares():Observable<any> {
+    return this._http.get<{ data: IShares[] }>(API_BASE_URL + API_ENDPOINT.shares.shares, {
+      headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
+    });
   }
 }
 
@@ -48,11 +52,11 @@ export class DetailService extends ApiService {
   ) {
     super(_http);
   }
-  getDetail():Observable<{ data: IDetail[] }> {
-    return this._http.get<{ data: IDetail[] }>(API_BASE_URL + API_ENDPOINT.shares.list);
+  getDetail(id:string):Observable<{ data: IDetail[] }> {
+    return this._http.get<{ data: IDetail[] }>(API_BASE_URL + API_ENDPOINT.shares.shares + `/${id}`);
   }
 
   deleteShares(id: string): Observable<any>{
-    return this._http.delete(API_BASE_URL + API_ENDPOINT.shares.list + `/${id}` );
+    return this._http.delete(API_BASE_URL + API_ENDPOINT.shares.shares + `/${id}` );
   }
 }

@@ -69,7 +69,7 @@ module.exports = class Categories {
           );
         });
       }
-      static async countProducts() {
+      static async countCategories() {
         return new Promise((resolve, reject) => {
           let sql = `SELECT COUNT(*) AS count FROM categories`; 
           connect.query(sql, function (err, data) {

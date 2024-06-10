@@ -3,6 +3,7 @@ import { IComment } from 'app/@core/interfaces/comment.interface';
 import { Router } from '@angular/router';
 import { CommentService } from 'app/@core/services/apis/comment.service';
 import { ActivatedRoute } from '@angular/router';
+import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 
 @Component({
   selector: 'app-list',
@@ -11,6 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ListComponent implements OnInit {
   comment: IComment[] = [];
+  last_page: number = 0;
+  current_page: number = 0;
+  apiUrl = `${API_BASE_URL}${API_ENDPOINT.comment.comment}`;
   constructor(private router: Router,
     private commentService: CommentService,
     private route: ActivatedRoute
@@ -19,19 +23,20 @@ export class ListComponent implements OnInit {
     this.getAll();
   }
   getAll() {
-    this.commentService.getPost().subscribe({
-      next: (response: { data: IComment[] }) => {
-        this.comment = response.data;
-        console.log(this.comment);
-      },
-      error: error => {
-        console.error('Error fetching categories', error);
-      }
-    });
+    this.commentService.getPost().subscribe(res =>{
+      this.comment = res.data
+      this.current_page = res.meta.current_page;
+      this.last_page = res.meta.last_page;
+      }, error => {
+        console.log(error);
+  
+      })
   }
   detailCmt() {
     this.router.navigateByUrl('/pages/comment/detail');
     return false;
   }
-  
+  getPage(event: any): void {
+    this.comment = event.data
+  }
 }

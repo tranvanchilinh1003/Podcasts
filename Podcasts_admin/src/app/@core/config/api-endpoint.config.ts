@@ -30,11 +30,11 @@ export const API_ENDPOINT: IAPIEndpoint = {
   },
   shares: {
     base: API_BASE_URL + '/' + 'api',
-    list: '/api/shares' 
+    shares: '/api/shares' 
   },
 
   favourite: {
     base: API_BASE_URL + '/' + 'api',
-    list: '/api/favourite' 
+    favourite: '/api/favourite' 
   },
 };

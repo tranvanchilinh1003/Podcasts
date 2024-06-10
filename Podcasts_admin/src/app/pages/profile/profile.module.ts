@@ -4,7 +4,7 @@ import { BreadcrumbModule } from "xng-breadcrumb";
 import { NbCardModule, NbIconModule, NbActionsModule ,NbLayoutModule} from '@nebular/theme';
 import { FormsRoutingModule } from './profile-routing.module';
 import { EditComponent } from './edit/edit.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
     imports: [
         FormsRoutingModule,
@@ -12,7 +12,8 @@ import { EditComponent } from './edit/edit.component';
         NbCardModule,
         NbIconModule,
         NbActionsModule,
-        NbLayoutModule
+        NbLayoutModule,
+        ReactiveFormsModule
     ],
     declarations: [
     

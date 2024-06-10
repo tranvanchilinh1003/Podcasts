@@ -3,6 +3,7 @@ import { DetailService } from 'app/@core/services/apis/favourite.service';
 import { IDetail } from 'app/@core/interfaces/favourite';
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detail',
@@ -11,18 +12,21 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class DetailComponent implements OnInit {
   detail: IDetail[] = [];
-  listFavourite: IDetail[] = [];
+
 
   constructor(
     private dialog: DialogService,
-    private detailService: DetailService
+    private detailService: DetailService,
+    private route: ActivatedRoute,
    ){}
 
    ngOnInit(): void {
     this.getAllDetail();
    }
   getAllDetail() {
-    this.detailService.getDetail().subscribe({
+    let id = this.route.snapshot.params['id'];
+
+    this.detailService.getDetail(id).subscribe({
       next: (response: { data: IDetail[] }) => {
         this.detail = response.data;
         console.log(this.detail);
@@ -35,7 +39,7 @@ export class DetailComponent implements OnInit {
   onDelete(favouriteId: string): void {
     this.dialog.showConfirmationDialog(API_ENDPOINT.favourite.list, favouriteId).then((result) => {
       if (result) {
-        this.listFavourite = this.listFavourite.filter(favourite => favourite.id !== favouriteId);
+        this.detail = this.detail.filter(favourite => favourite.id !== favouriteId);
       }
     });
   }

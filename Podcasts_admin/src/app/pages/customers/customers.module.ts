@@ -11,6 +11,7 @@ import { AngularFireStorageModule } from "@angular/fire/compat/storage";
 import { environment } from '@environments/environment';
 import { FormsModule} from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PaginatorModule } from '../../@theme/components/paginator/paginator.module';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CustomersRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireStorageModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PaginatorModule
   ],
   declarations: [
     ...routedComponents,

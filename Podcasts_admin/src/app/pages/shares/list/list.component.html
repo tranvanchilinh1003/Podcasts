@@ -9,6 +9,7 @@
                             <tr>
                                 <th
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Ảnh
                                 </th>
                                 <th
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
@@ -31,7 +32,7 @@
                             <tr *ngFor="let list of shares">
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    <img class="rounded-circle" src="../../../../assets/images/FPT_Polytechnic.png"
+                                    <img class="rounded-circle" src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
                                         width="60px" height="60px" alt=""></td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
@@ -48,7 +49,7 @@
                                 <td
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
                                     <button nbButton nbTooltip="Chi tiết chia sẻ" nbTooltipPlacement="top"
-                                        routerLink="/pages/shares/detail"
+                                        routerLink="/pages/shares/detail/{{list.id}}"
                                         class="mat-ripple status-warning appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mt-3 mb-3">
                                         <nb-icon icon="alert-circle-outline" pack="eva"
                                             class="size-medium fs-3"></nb-icon>
@@ -60,6 +61,11 @@
                     </table>
                 </div>
             </nb-card-body>
+            <ngx-paginator 
+            [apiUrl]="apiUrl"
+            [current_page]="current_page"
+            [last_page]="last_page"
+            (dataList)="getPage($event)"></ngx-paginator>
         </nb-card>
     </div>
 </div>

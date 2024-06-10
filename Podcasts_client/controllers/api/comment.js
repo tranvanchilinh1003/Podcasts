@@ -1,11 +1,31 @@
 const Comment = require('../../models/comment');
 // All List 
 exports.list = async (req, res, next) => {
-    var comment = await Comment.getList();
+    const page = req.query.page || 1;
+    const row = 5; // Số lượng sản phẩm trên mỗi trang
+    const from = (page - 1) * row;
+    const totalProducts = await Comment.countComment();
+    if(totalProducts > 0) {
+    const totalPages = Math.ceil(totalProducts / row);
+    var comment = await Comment.getList(from, row);
     res.status(200).json({
-        data: comment
+        data: comment,
+        meta: {
+            current_page: page,
+            last_page: totalPages,
+            from: from
+        }
     })
-
+    }else{
+        res.status(200).json({
+            data: comment,
+            meta: {
+                current_page: page,
+                last_page: 1,
+                from: from
+            }
+        })
+    }
 };
 // Detail 
 exports.edit = async (req, res, next) => {

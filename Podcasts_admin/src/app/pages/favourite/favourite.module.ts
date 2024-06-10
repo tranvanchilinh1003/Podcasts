@@ -7,6 +7,7 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
 import { FormsRoutingModule, routedComponents } from './favourite-routing.module';
 import { ListComponent } from "./list/list.component";
 import { DetailComponent } from './detail/detail.component';
+import { PaginatorModule } from 'app/@theme/components/paginator/paginator.module';
 
 // import { DetailComponent } from './detail/detail.component';
 
@@ -18,7 +19,8 @@ import { DetailComponent } from './detail/detail.component';
     ThemeModule,
     BreadcrumbModule,
     FormsRoutingModule,
-    NbTooltipModule
+    NbTooltipModule,
+    PaginatorModule
   ],
   declarations: [
     ...routedComponents,

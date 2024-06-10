@@ -20,7 +20,7 @@ router.patch('/post/:id', post.update);
 
 // router.post('/categories_insert', cate.create);
 router.get('/shares', shares.list);
-router.get('/shares/detail', shares.listDetail);
+router.get('/shares/:id', shares.listDetail);
 router.delete('/shares/:id', shares.deleteDetail);
 // router.delete('/categories_delete/:id', cate.delete);
 // router.get('/categories_edit/:id', cate.edit);
@@ -51,7 +51,7 @@ router.get('/customers/:id', customers.detail);
 router.patch('/customers/:id', customers.update);
 
 router.get('/favourite', favourite.list);
-router.get('/favourite/detail', favourite.listDetail);
+router.get('/favourite/:id', favourite.listDetail);
 router.delete('/favourite/:id', favourite.deleteDetail);
 
 

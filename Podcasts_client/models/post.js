@@ -3,12 +3,24 @@ var Post = [];;
 module.exports = class Post {
     constructor() { }
     // All List 
-    static fetchAll() {
+    static fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            connect.query('SELECT * FROM post', (err, result) => {
+            connect.query('SELECT * FROM post LIMIT ?,?',[from, row], (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             });
+        });
+    }
+    static async coutCustomers() {
+        return new Promise((resolve, reject) => {
+          let sql = `SELECT COUNT(*) AS count FROM post`; 
+          connect.query(sql, function (err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data[0].count);
+            }
+          });
         });
     }
     // Add 

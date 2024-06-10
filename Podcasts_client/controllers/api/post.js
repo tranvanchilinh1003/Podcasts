@@ -1,11 +1,31 @@
 const Post = require('../../models/post');
 // All List 
 exports.list = async (req, res, next) => {
-    var post = await Post.fetchAll();
+    const page = req.query.page || 1;
+    const row = 4; // Số lượng sản phẩm trên mỗi trang
+    const from = (page - 1) * row;
+    const totalProducts = await Post.coutCustomers();
+    if(totalProducts > 0){ 
+    const totalPages = Math.ceil(totalProducts / row);
+    var post = await Post.fetchAll(from, row);
     res.status(200).json({
-        data: post
+        data: post,
+        meta: {
+            current_page: page,
+            last_page: totalPages,
+            from: from
+        }
     })
-
+    }else{
+        res.status(200).json({
+            data: post,
+            meta: {
+                current_page: page,
+                last_page: 1,
+                from: from
+            }
+        })
+    }
 };
 // Create
 exports.create = async (req, res, next) => {

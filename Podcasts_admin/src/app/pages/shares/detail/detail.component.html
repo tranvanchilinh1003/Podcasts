@@ -10,6 +10,7 @@
                             <tr>
                                 <th
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Ảnh
                                 </th>
                                 <th
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
@@ -26,7 +27,7 @@
                             <tr *ngFor="let list of detail">
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    <img class="rounded-circle" src="../../../../assets/images/FPT_Polytechnic.png"
+                                    <img class="rounded-circle" src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
                                         width="60px" height="60px" alt="">
                                 </td>
                                 <td
@@ -34,7 +35,7 @@
                                     {{list.username}}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    {{ list.moi_nhat | date: 'dd/MM/yyyy' }}</td>
+                                    {{ list.date | date: 'dd/MM/yyyy' }}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     <button nbButton

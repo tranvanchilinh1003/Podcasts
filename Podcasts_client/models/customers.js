@@ -3,15 +3,30 @@ var connect = require('./database');
 
 module.exports = class Customers {
     constructor() { }
-    static fetchAll() {
-        return new Promise((resolve, reject) => {
-            connect.query('SELECT * FROM customers', (err, result) => {
-                if (err) reject(err);
-                resolve(result);
-            });
+    static fetchAll(from, row) {
+      return new Promise((resolve, reject) => {
+        let sql = `SELECT * FROM customers LIMIT ?,?`;
+        connect.query(sql, [from, row], function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
         });
+      });
     }
-
+    static async coutCustomers() {
+      return new Promise((resolve, reject) => {
+        let sql = `SELECT COUNT(*) AS count FROM customers`; 
+        connect.query(sql, function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data[0].count);
+          }
+        });
+      });
+  }
     static createCustomers(customers) {
         return new Promise((resolve, reject) => {
             connect.query("INSERT INTO customers SET ?", customers, (err, result) => {

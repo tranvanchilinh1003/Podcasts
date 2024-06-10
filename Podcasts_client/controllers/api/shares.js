@@ -1,16 +1,37 @@
 const Shares = require("../../models/shares");
 
 exports.list = async (req, res, next) => {
+    const page = req.query.page || 1;
+    const row = 5; // Số lượng sản phẩm trên mỗi trang
+    const from = (page - 1) * row;
+    const totalProducts = await Shares.countShare(); 
+    if(totalProducts > 0){
 
-    var shares = await Shares.fetchAll();
-
+    
+    const totalPages = Math.ceil(totalProducts / row);
+    var shares = await Shares.fetchAll(from, row);
     res.status(200).json({
-        data: shares
+        data: shares,
+        meta: {
+            current_page: page,
+            last_page: totalPages,
+            from: from
+        }
     })
+}else{
+    res.status(200).json({
+        data: shares,
+        meta: {
+            current_page: page,
+            last_page: 1,
+            from: from
+        }
+    })
+}
 };
 exports.listDetail = async (req, res, next) => {
 
-    var shares = await Shares.fetchAll();
+    var shares = await Shares.getId(req.params.id)
 
     res.status(200).json({
         data: shares
