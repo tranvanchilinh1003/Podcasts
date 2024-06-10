@@ -17,6 +17,9 @@
                   <small *ngIf="validateForm.get('username').hasError('pattern')">
                     <i class="text-danger">Tài khoản không chứa chữ hoa và ký tự đặc biệt.</i>
                   </small>
+                  <small *ngIf="validateForm.get('username').hasError('minlength')">
+                    <i class="text-danger"> Tài khoản phải có ít nhất 6 ký tự.</i>
+                  </small>
                 </div>
               </div>   
               <div class="col-sm-4">

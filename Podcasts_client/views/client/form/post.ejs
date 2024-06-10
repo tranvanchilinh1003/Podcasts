@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="container">
+            <div class="d-flex align-items-center my-4">
+                    <img class="rounded-circle" style="width: 50px; height: 50px;" src="/styles/images/profile/chef-9.jpg" alt="User Avatar">
+                    <input type="text" class="ms-4 form-control rounded-5" data-bs-toggle="modal" data-bs-target="#addPostModal" value="   Bạn có muốn thêm bài viết?"> 
+            </div>
+            
+        </div>
+        
+        <div class="list-group">
+    
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Tiêu đề bài đăng 1</h5>
+                    <small>Ngày đăng: 10/06/2024</small>
+                </div>
+                <p class="mb-1">Nội dung bài đăng 1.</p>
+                <audio controls>
+                    <source src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </a>
+          
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Tiêu đề bài đăng 2</h5>
+                    <small>Ngày đăng: 09/06/2024</small>
+                </div>
+                <p class="mb-1">Nội dung bài đăng 2.</p>
+                <audio controls>
+                    <source src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </a>
+   
+        </div>
+    </div>
+</div>
+
+<div class="backdrop"></div>
+<div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="addPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPostModalLabel">Thêm bài đăng mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">Tiêu đề:</label>
+                        <input type="text" class="form-control" id="postTitle" placeholder="Nhập tiêu đề">
+                    </div>
+                    <div class="mb-3">
+                        <label for="postContent" class="form-label">Nội dung:</label>
+                        <textarea class="form-control" id="postContent" rows="3" placeholder="Nhập nội dung"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Đăng bài</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,76 +1,106 @@
 <%- include('../layouts/header') %>
 <link rel="stylesheet" href="/styles/css/info.css">
 
-<header class="site-header d-flex flex-column justify-content-center align-items-center" style="min-height: 250px">
+<header class="site-header d-flex flex-column justify-content-center align-items-center" style="min-height: 350px">
+    <h2 class="mb-4">Trang Cá Nhân</h2>
 </header>
 
-<div class="container-fluid my-5" id="container-wrapper">
-    <div class="row gutters">
-		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-			<div class="card h-100 border-bottom-danger">
-				<div class="card-body">
-					<div class="account-settings">
-						<div class="user-profile text-center">
-							<div class="user-avatar">
-								<a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-									<img class="rounded-circle " style="width: 200px; height: 200px;" src="/styles/images/profile/chef-9.jpg" alt="User Avatar">
-								</a>
-							</div>
-							<h5 class="text-primary mt-3">
-								Username
-							</h5>
-						</div>
-						<div class="about text-center">
-							<h5 class=" text-primary mt-3">Thông tin người dùng</h5>
-							<p><strong>Email:</strong> example@example.com</p>
-							<p><strong>Họ và tên:</strong> John Doe</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		
-        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-            <div class="card h-100">
-                <div class="card-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Tài khoản:</label>
-                            <input type="text" class="form-control" id="username">
-                        </div>
-                        <div class="mb-3">
-                            <label for="full_name" class="form-label">Họ và tên:</label>
-                            <input type="text" class="form-control" id="full_name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-                        </div>
-						<div class="mb-3">
-                            <label for="images" class="form-label">Hình ảnh đại diện:</label>
-                            <input class="form-control" type="file" id="images" accept="image/*">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Giới tính:</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="0" value="0">
-                                <label class="form-check-label" for="0">Nam</label>
+<div class="container mt-5 my-5">
+    
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Thông tin tài khoản</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false">Bài đăng</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="shares-tab" data-bs-toggle="tab" href="#sharesContent" role="tab" aria-controls="sharesContent" aria-selected="false">Chia sẻ</a>
+    </li>    
+      <li class="nav-item">
+        <a class="nav-link" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Yêu thích</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+        <h3 class="mt-3">Thông tin tài khoản</h3>
+        <div class="row gutters">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                <div class="card h-100 border-bottom-danger">
+                    <div class="card-body">
+                        <div class="account-settings">
+                            <div class="user-profile text-center">
+                                <div class="user-avatar">
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        <img class="rounded-circle " style="width: 200px; height: 200px;" src="/styles/images/profile/chef-9.jpg" alt="User Avatar">
+                                    </a>
+                                </div>
+                                <h5 class="text-primary mt-3">
+                                    Username
+                                </h5>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="1" value="1">
-                                <label class="form-check-label" for="1">Nữ</label>
+                            <div class="about text-center">
+                                <h5 class=" text-primary mt-3">Thông tin người dùng</h5>
+                                <p><strong>Email:</strong> example@example.com</p>
+                                <p><strong>Họ và tên:</strong> John Doe</p>
                             </div>
                         </div>
-						<div class="text-end">
-							<button type="submit" class="btn btn-primary ">Xác nhận</button>
-						</div>
-     
-                    </form>
+                    </div>
+                </div>
+            </div>       
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Tài khoản:</label>
+                                <input type="text" class="form-control" id="username">
+                            </div>
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Họ và tên:</label>
+                                <input type="text" class="form-control" id="full_name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                            </div>
+                            <div class="mb-3">
+                                <label for="images" class="form-label">Ảnh đại diện:</label>
+                                <input class="form-control" type="file" id="images" accept="image/*">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Giới tính:</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="0" value="0">
+                                    <label class="form-check-label" for="0">Nam</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="gender" id="1" value="1">
+                                    <label class="form-check-label" for="1">Nữ</label>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary ">Xác nhận</button>
+                            </div>
+         
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+      </div>
+    <div class="tab-pane fade" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+        <%- include('./post') %>
     </div>
+    <div class="tab-pane fade" id="sharesContent" role="tabpanel" aria-labelledby="shares-tab">
+        <h3 class="mt-3">Chia sẻ</h3>
+        <%- include('./shares') %>
+    </div>
+    <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+        <h3 class="mt-3">Yêu thích</h3>
+        <%- include('./favourite') %>
+    </div>
+</div>
 </div>
 
 <%- include('../layouts/footer') %>
