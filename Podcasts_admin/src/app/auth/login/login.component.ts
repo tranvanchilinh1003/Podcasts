@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.router.navigate([ROUTER_CONFIG.pages]).then();
     if (this.loginForm.valid) {
       this.spinner.show();
       this.loading = true;
@@ -50,18 +49,25 @@ export class LoginComponent implements OnInit {
         })
       ).subscribe({
         next: (response) => {
-
-          // console.log('Đăng nhập thành công', response);
-          this.handleLoginSuccess(response);
-          // this.dialog.success('Đăng nhập thành công')
+          if (response.data[0].role === 'admin') {
+            this.handleLoginSuccess(response);
+          } else {
+            this.handleLoginFailed();
+          }
         },
         error: (error) => {
-          // console.error('Đăng nhập thất bại', error);
-          this.handleLoginFailed();
+          if (error.status === 401) {
+            // Xử lý lỗi Unauthorized (401)
+            this.handleLoginFailed();
+          } else {
+            // Xử lý các lỗi khác
+            this.handleLoginFailed();
+          }
         }
       });
     }
   }
+  
 
   protected handleLoginSuccess(res) {
     this.storageService.setItem(LOCALSTORAGE_KEY.userInfo, res.data);

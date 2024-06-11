@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
   post: IPost[] = [];
   last_page: number = 0;
   current_page: number = 0;
-  apiUrl = `${API_BASE_URL}${API_ENDPOINT.categories.categories}`;
+  apiUrl = `${API_BASE_URL}${API_ENDPOINT.post.post}`;
   newPost: IPost = {
     id: '',
     title: '',

@@ -25,7 +25,7 @@ exports.login = async (req, res, next) => {
                 const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
 
                 if (result[0].role === 'user') {
-                    return res.status(200).json({ success: true, message: 'Đăng nhập thành công (user)', token });
+                    return res.status(200).json({ data: result, success: true, message: 'Đăng nhập thành công (user)', token });
                 } else if (result[0].role === 'admin') {
                     return res.status(200).json({ data: result, token, success: true, message: 'Đăng nhập thành công (admin)' });
                 }

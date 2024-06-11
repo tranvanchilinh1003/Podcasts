@@ -8,7 +8,7 @@ const API_URL = "http://localhost:3000/api";
 
 const app = express();
 app.use(express.json());
-const API_URL = "http://localhost:3000/api";
+
 exports.login = async (req, res, next) => {
   let userId = req.session.userId;
   let info = null;
@@ -68,13 +68,16 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.createUser = async function (req, res) {
+  const categoriesResponse = await axios.get(`${API_URL}/categories/`);
+  const categoriesData = categoriesResponse.data;
   try {
+
     const custumer = {
       username: req.body.username,
       full_name: req.body.full_name,
       password: req.body.password,
       email: req.body.email,
-      images: 'user.jpg',
+      images: '1711556637138-anh_dai_dien.jpg',
       role: 'user',
       isticket: 'inactive',
       gender: 0,
@@ -85,19 +88,22 @@ exports.createUser = async function (req, res) {
       res.redirect('/client/form/login');
     } else {
       let err = response.data.error;
-      res.render('client/form/signup', { errorMessage: err });
+      res.render('client/form/signup', { errorMessage: err, categories: categoriesData.data});
     }
   } catch (error) {
     if (error.response && error.response.status === 400) {
-      res.render('client/form/signup', { errorMessage: "Username hoặc email đã tồn tại." });
+      res.render('client/form/signup', { errorMessage: "Username hoặc email đã tồn tại.",   categories: categoriesData.data });
     } else {
-      res.render('client/form/signup', { errorMessage: "Đã xảy ra lỗi khi thêm người dùng." });
+      res.render('client/form/signup', { errorMessage: "Đã xảy ra lỗi khi thêm người dùng.",   categories: categoriesData.data });
     }
   }
 };
 
 exports.loginUser = async function (req, res) {
+  const categoriesResponse = await axios.get(`${API_URL}/categories/`);
+  const categoriesData = categoriesResponse.data;
   try {
+  
     let username = req.body.username;
     let password = req.body.password;
 
@@ -114,11 +120,12 @@ exports.loginUser = async function (req, res) {
       
     } else {
       let err = data.message;
-      res.render('client/form/login', { errorMessage: err });
+      res.render('client/form/login', { errorMessage: err, categories: categoriesData.data});
     }
   } catch (error) {
+    
     let errorMessage = error.response ? error.response.data.message : 'Đã xảy ra lỗi không mong muốn.';
-    res.render('client/form/login', { errorMessage: errorMessage });
+    res.render('client/form/login', { errorMessage: errorMessage,   categories: categoriesData.data });
   }
 };
 

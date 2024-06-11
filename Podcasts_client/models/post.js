@@ -2,10 +2,9 @@ var connect = require('./database');
 var Post = [];;
 module.exports = class Post {
     constructor() { }
-    // All List 
     static fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            connect.query('SELECT * FROM post LIMIT ?,?',[from, row], (err, result) => {
+            connect.query('SELECT post.*, customers.images AS images_customers, customers.username FROM post JOIN customers ON post.customers_id = customers.id LIMIT ?,?',[from, row], (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             });

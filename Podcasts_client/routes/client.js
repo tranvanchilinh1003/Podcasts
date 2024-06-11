@@ -16,17 +16,17 @@ app.use((req, res, next) => {
 });
 router.get('/', home.homeClient);
 router.get('/about', home.getAbout);
-// router.get('/blog', home.getBlog);
 router.get('/contact', home.getContact);
 // //login
+// //login_form
+router.get('/logout', home.logout)
 
 router.get('/form/login', form.login);
 router.post('/form/loginUser', form.loginUser);
 // //signup
 router.get('/form/signup', form.signup);
 router.post('/form/insertUser' , form.createUser);
-// //login_form
-// router.get('/logout', home.logout)
+
 
 // //info
 router.get('/form/info', form.getform);
@@ -36,7 +36,8 @@ router.get('/form/info', form.getform);
 // // products
 router.get('/menu/product/:id', home.getMenu)
 router.get('/menu/post_details/:id', post.getPostDetail)
-// router.post('/comments_sp', Products.addComment);
+
+router.post('/comments', post.addComment);
 // router.get('/products_cate/:id', Products.getProductCate)
 
 // // cart

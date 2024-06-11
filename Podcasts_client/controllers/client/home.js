@@ -139,3 +139,14 @@ exports.getMenu = async (req, res, next) => {
   }
 };
 
+exports.logout = async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Lỗi khi đăng xuất:', err);
+      res.status(500).send('Đã xảy ra lỗi khi đăng xuất');
+    } else {
+      res.redirect('/client/form/login'); 
+    }
+  });
+}
+

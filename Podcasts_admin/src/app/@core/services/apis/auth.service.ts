@@ -31,10 +31,10 @@ export class AuthService extends ApiService {
 
   login(form: ILogin): Observable<any>  {
     return this.post<any>(API_BASE_URL + API_ENDPOINT.auth.login, {
-      role: form.role,
       username: form.username.trim(),
+      role: form.role,
       password: form.password,
-      
+      // role: form.role,
     });
   }
 

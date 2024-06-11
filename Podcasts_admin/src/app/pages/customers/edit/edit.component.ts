@@ -6,7 +6,6 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormGroup, FormControl, Validators, ValidationErrors } from '@angular/forms';
 import { DialogService } from 'app/@core/services/common/dialog.service';
 
-
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -16,6 +15,7 @@ export class EditComponent implements OnInit {
   file: File | null = null;
   newFileName: string = '';
   oldImagePath: string | null = null; 
+  oldPassword: string = '';  
   validateForm!: FormGroup;
   editingCustomer: ICustomer = {
     id: '',
@@ -49,12 +49,9 @@ export class EditComponent implements OnInit {
         Validators.minLength(3)
       ]),
       password: new FormControl('', [
-        Validators.required,
         Validators.minLength(8)
       ]),
-      confirm_password: new FormControl('', [
-        Validators.required
-      ]),
+      confirm_password: new FormControl(''),
       role: new FormControl('', [
         Validators.required
       ]),
@@ -74,7 +71,7 @@ export class EditComponent implements OnInit {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirm_password')?.value;
 
-    if (password !== confirmPassword) {
+    if (password && confirmPassword && password !== confirmPassword) {
       return { mismatch: true };
     } else {
       return null;
@@ -100,17 +97,29 @@ export class EditComponent implements OnInit {
     const fileRef = this.af.ref(path);
   
     await this.af.upload(path, this.file);
-    console.log('Cập nhật thành công, new file name:', this.newFileName);
+console.log('Cập nhật thành công, new file name:', this.newFileName);
   }
-  
 
   loadEditingCustomer(): void {
     const id = this.route.snapshot.params['id'];
     this.customerService.edit(id).subscribe({
       next: (response: { data: ICustomer[] }) => {
         this.editingCustomer = response.data[0];
+        if (this.editingCustomer.gender !== null && this.editingCustomer.gender !== undefined) {
+          this.editingCustomer.gender = this.editingCustomer.gender.toString();
+        }
+
         this.oldImagePath = this.editingCustomer.images;
-        console.log(this.oldImagePath);
+        this.oldPassword = this.editingCustomer.password;  
+
+        this.validateForm.patchValue({
+          username: this.editingCustomer.username,
+          full_name: this.editingCustomer.full_name,
+          role: this.editingCustomer.role,
+          gender: this.editingCustomer.gender,
+          email: this.editingCustomer.email,
+        });
+  
       },
       error: error => {
         console.error('Error fetching editing Customer', error);
@@ -119,38 +128,21 @@ export class EditComponent implements OnInit {
   }
 
   async onUpdate(): Promise<void> {
-   
-    let formValid = true;
-    for (const controlName in this.validateForm.controls) {
-      if (controlName !== 'password' && controlName !== 'confirm_password') {
-        const control = this.validateForm.controls[controlName];
-        if (control.invalid) {
-          formValid = false;
-          break;
-        }
-      }
-    }
-  
-    const passwordControl = this.validateForm.controls['password'];
-    const confirmPasswordControl = this.validateForm.controls['confirm_password'];
-    if (passwordControl.value || confirmPasswordControl.value) {
-      if (passwordControl.invalid || confirmPasswordControl.invalid || passwordControl.value !== confirmPasswordControl.value) {
-        formValid = false;
-      }
-    }
-  
-    if (!formValid) {
+    if (this.validateForm.invalid) {
       return;
     }
   
     const id = this.route.snapshot.params['id'];
     this.editingCustomer.id = id;
   
-    
+    const passwordControl = this.validateForm.controls['password'];
     if (passwordControl.value) {
       this.editingCustomer.password = passwordControl.value;
+    } else {
+      this.editingCustomer.password = this.oldPassword || '';  
     }
   
+
     try {
       if (this.file) {
         await this.capNhatAnh();
@@ -167,8 +159,6 @@ export class EditComponent implements OnInit {
     } catch (error) {
       console.error('Error during the update process', error);
     }
-  }
-  
-  
-  
+}
+
 }

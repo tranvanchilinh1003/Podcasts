@@ -37,7 +37,7 @@ export class DetailComponent implements OnInit {
     });
   }
   onDelete(favouriteId: string): void {
-    this.dialog.showConfirmationDialog(API_ENDPOINT.favourite.list, favouriteId).then((result) => {
+    this.dialog.showConfirmationDialog(API_ENDPOINT.favourite.favourite, favouriteId).then((result) => {
       if (result) {
         this.detail = this.detail.filter(favourite => favourite.id !== favouriteId);
       }

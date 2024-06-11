@@ -67,8 +67,8 @@
 						</li>
 
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="/client/menu/product" id="navbarLightDropdownMenuLink" role="button"
-								data-bs-toggle="dropdown" aria-expanded="false">Thể loại</a>
+							<a class="nav-link dropdown-toggle" href="/client/menu/product"
+								id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown">Thể loại</a>
 							<ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
 								<% for (let cate of categories) { %>
 									<li><a class="dropdown-item" href="/client/menu/product/<%= cate.id %>">
@@ -82,23 +82,39 @@
 							<a class="nav-link" href="/client/contact">Liên hệ</a>
 						</li>
 					</ul>
-					<div class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle btn custom-btn custom-border-btn smoothscroll" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="fs-4 bi bi-person-circle"></i>
-						</a>
-					
-						<ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-							<% if (typeof userId !== 'undefined') { %>
-								<li><a class="dropdown-item" href="/client/form/info"><%= user.data[0].username %></a></li>
-								<li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
-							<% } else { %>
+					<% if (typeof userId !=='undefined' ) { %>
+						<div class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle btn custom-btn custom-border-btn smoothscroll" href="#"
+								id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+								aria-expanded="false">
+								<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=user.data[0].images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" class="was-validated rounded-circle" style="width: 30px; border-radius: 50%;" alt="">
+							</a>
 
-								<li><a class="dropdown-item" href="/client/form/login">Đăng nhập</a></li>
-								<li><a class="dropdown-item" href="/client/form/signup">Đăng ký</a></li>
+							<ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+
+								<li><a class="dropdown-item" href="/client/form/info">
+										<%= user.data[0].username %>
+									</a></li>
+								<li><a class="dropdown-item" href="/client/logout">Đăng xuất</a></li>
+
+							</ul>
+						</div>
+						<% } else { %>
+							<div class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle btn custom-btn custom-border-btn smoothscroll"
+									href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown"
+									aria-expanded="false">
+									<i class="fs-4 bi bi-person-circle"></i>
+								</a>
+
+								<ul class="dropdown-menu dropdown-menu-light"
+									aria-labelledby="navbarLightDropdownMenuLink">
+									<li><a class="dropdown-item" href="/client/form/login">Đăng nhập</a></li>
+									<li><a class="dropdown-item" href="/client/form/signup">Đăng ký</a></li>
+								</ul>
+							</div>
+
 							<% } %>
-						</ul>
-					</div>
-					
 				</div>
 			</div>
 		</nav>

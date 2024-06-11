@@ -2,7 +2,7 @@ const Post = require('../../models/post');
 // All List 
 exports.list = async (req, res, next) => {
     const page = req.query.page || 1;
-    const row = 4; // Số lượng sản phẩm trên mỗi trang
+    const row = 4;
     const from = (page - 1) * row;
     const totalProducts = await Post.coutCustomers();
     if(totalProducts > 0){ 

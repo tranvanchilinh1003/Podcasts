@@ -334,16 +334,16 @@
 								<h2 class="mb-2">
 									<%= post_cate.title %>
 								</h2>
-								<div class="">
-									<audio controls loop
+
+								<p>
+									<%= post_cate.description %>
+								</p>
+								<div class="mt-5">
+									<audio class="w-100" controls loop
 										src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F<%=post_cate.audio%>?alt=media&token=73f7ac89-bf7a-4245-805b-b37323ff0bf9">
 
 									</audio>
 								</div>
-								<p>
-									<%= post_cate.description %>
-								</p>
-
 								<div
 									class="profile-block profile-detail-block d-flex flex-wrap align-items-center mt-5">
 									<div class="d-flex mb-3 mb-lg-0 mb-md-0">
@@ -352,10 +352,11 @@
 
 										<p>
 											<%= post_cate.username %>
-											<img src="/styles/images/verified.png" class="verified-image img-fluid"
-												alt="">
-											<strong>Người đăng</strong>
+												<img src="/styles/images/verified.png" class="verified-image img-fluid"
+													alt="">
+												<strong>Người đăng</strong>
 										</p>
+
 									</div>
 
 									<ul class="social-icon ms-lg-auto ms-md-auto">
@@ -572,10 +573,10 @@
 
 					<div class="col-lg-7 col-7 mt-5">
 
-						<form action="/client/comments_sp" method="post" id="comment-form" name="comment-form"
+						<form action="/client/comments" method="post" id="comment-form" name="comment-form"
 							class="comment-form">
 							<div class="rating d-flex justify-content-center">
-								<input type="radio" id="star-1" name="star-radio" value="1">
+								<input type="radio" id="star-1" name="rating" value="5">
 								<label for="star-1">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 										<path pathLength="360"
@@ -583,7 +584,7 @@
 										</path>
 									</svg>
 								</label>
-								<input type="radio" id="star-2" name="star-radio" value="2">
+								<input type="radio" id="star-2" name="rating" value="4">
 								<label for="star-2">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 										<path pathLength="360"
@@ -591,7 +592,7 @@
 										</path>
 									</svg>
 								</label>
-								<input type="radio" id="star-3" name="star-radio" value="3">
+								<input type="radio" id="star-3" name="rating" value="3">
 								<label for="star-3">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 										<path pathLength="360"
@@ -599,7 +600,7 @@
 										</path>
 									</svg>
 								</label>
-								<input type="radio" id="star-4" name="star-radio" value="4">
+								<input type="radio" id="star-4" name="rating" value="2">
 								<label for="star-4">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 										<path pathLength="360"
@@ -607,7 +608,7 @@
 										</path>
 									</svg>
 								</label>
-								<input type="radio" id="star-5" name="star-radio" value="5">
+								<input type="radio" id="star-5" name="rating" value="1">
 								<label for="star-5">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 										<path pathLength="360"
@@ -621,7 +622,7 @@
 							<input type="hidden" name="product_id">
 							<input type="hidden" name="user_id">
 							<input type="hidden" name="date">
-							<textarea name="message" id="message" class="form-control" rows="3"
+							<textarea name="contents" id="contents" class="form-control" rows="3"
 								placeholder="Bình luận của bạn"></textarea> <br>
 							<span class="error text-danger"></span><br> <br>
 							<div class="d-flex justify-content-end">
@@ -658,61 +659,64 @@
 							<h4 class="section-title">Danh sách bình luận</h4>
 						</div>
 
-
-						<div class="anime__review__item ">
-							<div class="anime__review__item__pic">
-								<img src="/styles/images/profile/bede.jpg" width="50px" height="50px" class="" alt="">
-							</div>
-
-							<div class="anime__review__item__text mb-2">
-								<div class="d-flex justify-content-between">
-									<label class="font-weight-bold">
-										Be De
-										<h6 class="mb-3">
-											<div class="rate d-flex justify-content-center mr-5 ">
-												<svg style="display:none;">
-													<defs>
-														<symbol id="fivestars-1" class="border-none">
-															<path
-																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-																fill="white" fill-rule="evenodd" />
-															<path
-																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-																fill="white" fill-rule="evenodd"
-																transform="translate(24)" />
-															<path
-																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-																fill="white" fill-rule="evenodd"
-																transform="translate(48)" />
-															<path
-																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-																fill="white" fill-rule="evenodd"
-																transform="translate(72)" />
-															<path
-																d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
-																fill="white" fill-rule="evenodd"
-																transform="translate(96)" />
-														</symbol>
-													</defs>
-												</svg>
-												<div class="rating-1 ml-md-5">
-													<progress class="rating-bg " value="5" max="5"></progress>
-													<svg>
-														<use xlink:href="#fivestars-1" />
-													</svg>
-												</div>
-											</div>
-										</h6>
-									</label>
-									<span class="ml-3">
-										17/05/2024
-									</span>
+						<% comments_List.forEach(element=> { %>
+							<div class="anime__review__item ">
+								<div class="anime__review__item__pic">
+									<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=element.images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+										width="50px" height="50px" class="" alt="">
 								</div>
-								<p class="mt-2 ">
-									Audio này của anh Linh Dark code đẹp quá &#128525 &#128536
-								</p>
+
+								<div class="anime__review__item__text mb-2">
+									<div class="d-flex justify-content-between">
+										<label class="font-weight-bold">
+											<%= element.username %>
+												<h6 class="mb-3">
+													<div class="rate d-flex justify-content-center mr-5 ">
+														<svg style="display:none;">
+															<defs>
+																<symbol id="fivestars-1" class="border-none">
+																	<path
+																		d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																		fill="white" fill-rule="evenodd" />
+																	<path
+																		d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																		fill="white" fill-rule="evenodd"
+																		transform="translate(24)" />
+																	<path
+																		d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																		fill="white" fill-rule="evenodd"
+																		transform="translate(48)" />
+																	<path
+																		d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																		fill="white" fill-rule="evenodd"
+																		transform="translate(72)" />
+																	<path
+																		d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z M0 0 h24 v24 h-24 v-24"
+																		fill="white" fill-rule="evenodd"
+																		transform="translate(96)" />
+																</symbol>
+															</defs>
+														</svg>
+														<div class="rating-1 ml-md-5">
+															<progress class="rating-bg " value="<%= element.rating %>"
+																max="5"></progress>
+															<svg>
+																<use xlink:href="#fivestars-1" />
+															</svg>
+														</div>
+													</div>
+												</h6>
+										</label>
+										<span class="ml-3">
+											<%= new Date(element.date ).toLocaleDateString() %>
+										</span>
+									</div>
+									<p class="mt-2 ">
+										<%= element.contents %>
+									</p>
+								</div>
 							</div>
-						</div>
+							<% }); %>
 					</div>
 			</div>
 		</div>
