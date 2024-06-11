@@ -11,7 +11,7 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class DetailComponent implements OnInit {
   detail: IDetail[] = [];
-  listFavourite: IDetail[] = [];
+ 
 
   constructor(
     private dialog: DialogService,
@@ -35,7 +35,7 @@ export class DetailComponent implements OnInit {
   onDelete(favouriteId: string): void {
     this.dialog.showConfirmationDialog(API_ENDPOINT.favourite.list, favouriteId).then((result) => {
       if (result) {
-        this.listFavourite = this.listFavourite.filter(favourite => favourite.id !== favouriteId);
+        this.detail = this.detail.filter(favourite => favourite.id !== favouriteId);
       }
     });
   }

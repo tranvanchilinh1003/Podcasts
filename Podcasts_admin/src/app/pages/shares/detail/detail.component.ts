@@ -11,7 +11,7 @@ import { API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 })
 export class DetailComponent implements OnInit {
   detail: IDetail[] = [];
-  listShares: IDetail[] = [];
+
  
   constructor(
     private dialog: DialogService,
@@ -36,7 +36,7 @@ export class DetailComponent implements OnInit {
   onDelete(sharesId: string): void {
     this.dialog.showConfirmationDialog(API_ENDPOINT.shares.list, sharesId).then((result) => {
       if (result) {
-        this.listShares = this.listShares.filter(shares => shares.id !== sharesId);
+        this.detail = this.detail.filter(shares => shares.id !== sharesId);
       }
     });
   }

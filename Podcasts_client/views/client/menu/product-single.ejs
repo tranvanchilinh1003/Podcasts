@@ -173,7 +173,7 @@
 			width: 18px;
 			height: 18px;
 			fill: white;
-transition: all 0.3s;
+			transition: all 0.3s;
 		}
 
 		button .svg-wrapper {
@@ -317,7 +317,7 @@ transition: all 0.3s;
 							<div class="custom-block-info">
 								<div class="custom-block-top d-flex mb-1">
 									<small class="me-4">
-<a href="#">
+										<a href="#">
 											<i class="bi-play"></i>
 											Nghe ngay
 										</a>
@@ -421,7 +421,7 @@ transition: all 0.3s;
 								<a href="#" class="bi-heart me-1">
 									<span>2.5k</span>
 								</a>
-<a href="#" class="bi-chat me-1">
+								<a href="#" class="bi-chat me-1">
 									<span>924k</span>
 								</a>
 							</div>
@@ -534,7 +534,7 @@ transition: all 0.3s;
 								</a>
 
 								<a href="#" class="bi-chat me-1">
-<span>924k</span>
+									<span>924k</span>
 								</a>
 							</div>
 						</div>
@@ -563,8 +563,7 @@ transition: all 0.3s;
 				</div>
 				<div class="col-lg-7 col-7 mt-5">
 
-					<form action="/client/comments_sp" method="post" id="comment-form" name="comment-form"
-						class="comment-form">
+					<form method="POST" id="comment-form" name="comment-form" class="comment-form">
 						<div class="rating d-flex justify-content-center">
 							<input type="radio" id="star-1" name="star-radio" value="1">
 							<label for="star-1">
@@ -609,13 +608,15 @@ transition: all 0.3s;
 						</div>
 
 						<span class="error text-danger"></span> <br>
-						<input type="hidden" name="product_id">
-						<input type="hidden" name="user_id">
-						<input type="hidden" name="date">
+
+						<!-- <input type="hidden" name="ratings" value="5">
+						<input type="hidden" name="customers_id" value="1">
+						<input type="hidden" name="post_id" value="1"> -->
+
 						<textarea name="message" id="message" class="form-control" rows="3"
 							placeholder="Bình luận của bạn"></textarea> <br>
 						<span class="error text-danger"></span><br> <br>
-<div class="d-flex justify-content-end">
+						<div class="d-flex justify-content-end">
 							<button>
 								<div class="svg-wrapper-1">
 									<div class="svg-wrapper">
@@ -681,7 +682,7 @@ transition: all 0.3s;
 											<div class="rating-1 ml-md-5">
 												<progress class="rating-bg " value="5" max="5"></progress>
 												<svg>
-<use xlink:href="#fivestars-1" />
+													<use xlink:href="#fivestars-1" />
 												</svg>
 											</div>
 										</div>
@@ -701,9 +702,6 @@ transition: all 0.3s;
 						</div>
 					</div>
 				</div>
-
-
-
 
 			</div>
 		</div>

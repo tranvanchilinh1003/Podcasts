@@ -37,9 +37,9 @@
                                     {{ list.moi_nhat | date: 'dd/MM/yyyy' }}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    <button nbButton
-                                        class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3"
-                                        (click)="onDelete(list.id)">
+                                    <button nbButton    (click)="onDelete(list.id)"
+                                        class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2 mt-3 mb-3">
+
                                         <nb-icon icon="trash-2" pack="eva" class="fs-3 ng-star-inserted">
                                         </nb-icon>
                                     </button>

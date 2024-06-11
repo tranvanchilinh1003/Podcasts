@@ -10,3 +10,4 @@ connect.connect(function (err) {
   console.log("Database is connected successfully !");
 });
 module.exports = connect;
+
