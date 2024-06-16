@@ -114,13 +114,55 @@
 <script src="/styles/js/owl.carousel.min.js"></script>
 <script src="/styles/js/custom.js"></script>
 <script>
-    $('#addPostModal').on('show.bs.modal', function () {
-    $('.backdrop').fadeIn();
-});
+    function handleLikeClick(event, postId) {
+        event.preventDefault();
 
-$('#addPostModal').on('hide.bs.modal', function () {
-    $('.backdrop').fadeOut();
-});
+        const likeButton = event.currentTarget;
+        const likeCount = likeButton.querySelector('span');
+        const messageDiv = document.getElementById('message');
+
+        let currentLikes = parseFloat(likeCount.textContent);
+
+        if (likeButton.classList.contains('text-danger')) {
+            likeButton.classList.add('bi-heart');
+            likeButton.classList.remove('text-danger');
+            likeButton.classList.remove('bi-heart-fill');
+            likeCount.textContent = currentLikes - 1;
+        } else {
+            likeButton.classList.add('text-danger');
+            likeButton.classList.add('bi-heart-fill');
+            likeButton.classList.remove('bi-heart');
+
+            likeCount.textContent = currentLikes + 1;
+        }
+
+        // fetch('/update-like', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json', 
+        //     },
+        //     body: JSON.stringify({
+        //         postId: 123,
+        //         isLiked: likeButton.classList.contains('text-danger'),
+        //     }),
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     messageDiv.textContent = data.message;
+        // })
+        // .catch(error => {
+        //     console.error('Error:', error);
+        //     messageDiv.textContent = 'Đã xảy ra lỗi khi cập nhật';
+        // });
+    }
+
+    $('#addPostModal').on('show.bs.modal', function () {
+        $('.backdrop').fadeIn();
+    });
+
+    $('#addPostModal').on('hide.bs.modal', function () {
+        $('.backdrop').fadeOut();
+    });
 
 </script>
 </body>

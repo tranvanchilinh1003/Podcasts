@@ -28,6 +28,12 @@
 	<link href="/styles/css/templatemo-pod-talk.css" rel="stylesheet">
 	<link rel="stylesheet" href="/styles/css/login.css">
 	<link rel="stylesheet" href="/styles/css/main.css">
+	<style>
+		.text-danger {
+    color: red; /* Màu đỏ */
+}
+
+	</style>
 </head>
 
 <body>
@@ -65,7 +71,6 @@
 						<li class="nav-item">
 							<a class="nav-link" href="/client/about">Về chúng tôi</a>
 						</li>
-
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="/client/menu/product"
 								id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown">Thể loại</a>
@@ -87,7 +92,9 @@
 							<a class="nav-link dropdown-toggle btn custom-btn custom-border-btn smoothscroll" href="#"
 								id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown"
 								aria-expanded="false">
-								<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=user.data[0].images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" class="was-validated rounded-circle" style="width: 30px; border-radius: 50%;" alt="">
+								<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=user.data[0].images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+									class="was-validated rounded-circle" style="width: 30px; border-radius: 50%;"
+									alt="">
 							</a>
 
 							<ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">

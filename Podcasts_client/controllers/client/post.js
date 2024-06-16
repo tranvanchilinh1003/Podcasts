@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 const API_URL = "http://localhost:3000/api";
 const comment = require('../../models/comment')
+const post = require('../../models/post')
 exports.getPostDetail = async (req, res, next) => {
   let userId = req.session.userId;
   let info = null;
@@ -22,14 +23,13 @@ exports.getPostDetail = async (req, res, next) => {
   }
 
   try {
+    const View = await post.post_view(req.params.id);
     const [categoriesResponse, posts_cateResponse, list_comments ] = await Promise.all([
       axios.get(`${API_URL}/categories/`),
       axios.get(`${API_URL}/getId_post/${req.params.id}`),
       axios.get(`${API_URL}/comment/${req.params.id}`),
       req.session.post_id = req.params.id,
-
     ]);
-         
     const comments_List =  list_comments.data;
     const categoriesData = categoriesResponse.data;
     const post_categoriesData = posts_cateResponse.data;

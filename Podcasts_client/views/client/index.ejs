@@ -1,4 +1,26 @@
 <%- include('./layouts/header') %>
+	<style>
+		button {
+			font-family: inherit;
+			font-size: 18px;
+			background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+			color: white;
+			padding: 0.8em 1.2em;
+			display: flex;
+			border: none;
+			border-radius: 25px;
+			transition: all 0.3s;
+		}
+
+		button:hover {
+			transform: translateY(-3px);
+		}
+
+		button:active {
+			transform: scale(0.95);
+			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+		}
+	</style>
 	<!-- END nav -->
 	<section class="hero-section">
 		<div class="container">
@@ -199,7 +221,8 @@
 								<div class="">
 									<div class="custom-block-icon-wrap">
 										<div class="section-overlay"></div>
-										<a href="/client/menu/post_details/<%= post.id %>" class="custom-block-image-wrap">
+										<a href="/client/menu/post_details/<%= post.id %>"
+											class="custom-block-image-wrap">
 											<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post.images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
 												class="custom-block-image img-fluid" alt="">
 
@@ -235,22 +258,27 @@
 
 									<!-- <p class="mb-0">Salad Bò Trộn</p> -->
 									<div class="">
-										<audio controls loop src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F<%=post.audio%>?alt=media&token=73f7ac89-bf7a-4245-805b-b37323ff0bf9">
+										<audio controls loop
+											src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F<%=post.audio%>?alt=media&token=73f7ac89-bf7a-4245-805b-b37323ff0bf9">
 
 										</audio>
 									</div>
 									<div class="custom-block-bottom d-flex justify-content-between mt-3">
 
 										<a href="#" class="bi-headphones me-1">
-											<span>120k</span>
+											<span>
+												<%= post.view %>
+											</span>
 										</a>
 
-										<a href="#" class="bi-heart me-1">
-											<span>42.5k</span>
+										<a href="#" class="bi-heart me-1" onclick="handleLikeClick(event, '<%= post.id %>')">
+											<span>0</span>
 										</a>
 
 										<a href="#" class="bi-chat me-1">
-											<span>11k</span>
+											<span>
+												<%= post.total_comments%>
+											</span>
 										</a>
 									</div>
 
@@ -271,8 +299,16 @@
 
 						</div>
 						<% } %>
+
 				</div>
 			</div>
+		</div>
+		<div class="d-flex justify-content-center">
+			<a href="/client/menu/product-all">
+				<button class="shadow">
+					<span>Xem tất cả</span>
+				</button>
+			</a>
 		</div>
 	</section>
 
@@ -286,77 +322,26 @@
 						<h4 class="section-title">Chủ đề</h4>
 					</div>
 				</div>
+				<% for (let cate of categories) { %>
+					<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
+						<div class="custom-block custom-block-overlay">
+							<a href="/client/menu/product/<%= cate.id %>" class="custom-block-image-wrap">
+								<img src="/styles/images/food/banner con 2.jpg" class="custom-block-image img-fluid"
+									alt="">
+							</a>
 
-				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-					<div class="custom-block custom-block-overlay">
-						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/banner con 2.jpg" class="custom-block-image img-fluid" alt="">
-						</a>
-
-						<div class="custom-block-info custom-block-overlay-info">
-							<h5 class="mb-1">
-								<a href="">
-									Món ngon đường phố
-								</a>
-							</h5>
-
-
+							<div class="custom-block-info custom-block-overlay-info">
+								<h5 class="mb-1">
+									<a href="/client/menu/product/<%= cate.id %>">
+										<%= cate.name %>
+									</a>
+								</h5>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-					<div class="custom-block custom-block-overlay">
-						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/banner con con 3.jpg" class="custom-block-image img-fluid"
-								alt="">
-						</a>
-
-						<div class="custom-block-info custom-block-overlay-info">
-							<h5 class="mb-1">
-								<a href="">
-									Thức ăn nhanh
-								</a>
-							</h5>
 
 
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-					<div class="custom-block custom-block-overlay">
-						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/canhchua.webp" class="custom-block-image img-fluid" alt="">
-						</a>
-
-						<div class="custom-block-info custom-block-overlay-info">
-							<h5 class="mb-1">
-								<a href="listing-page.html">
-									Món ngon nhà làm </a>
-							</h5>
-
-
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-					<div class="custom-block custom-block-overlay">
-						<a href="/client/post_details" class="custom-block-image-wrap">
-							<img src="/styles/images/food/che.webp" class="custom-block-image img-fluid" alt="">
-						</a>
-
-						<div class="custom-block-info custom-block-overlay-info">
-							<h5 class="mb-1">
-								<a href="">
-									Món tráng miệng
-								</a>
-							</h5>
-
-
-						</div>
-					</div>
-				</div>
-
-
+					<% } %>
 			</div>
 		</div>
 	</section>
@@ -404,9 +389,14 @@
 									<span>100k</span>
 								</a>
 
-								<a href="#" class="bi-heart me-1">
+								<!-- <a type="button" id="button" class="bi-heart me-1" >
 									<span>2.5k</span>
+								</a> -->
+								<a href="#" class="bi-heart me-1" onclick="handleLikeClick(event)">
+									<span>0</span>
 								</a>
+								<div id="message"></div>
+
 
 								<a href="#" class="bi-chat me-1">
 									<span>924k</span>

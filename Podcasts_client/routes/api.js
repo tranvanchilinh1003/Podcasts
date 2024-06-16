@@ -39,6 +39,7 @@ router.get('/post', post.list);
 router.delete('/post/:id', post.delete);
 router.get('/post/:id', post.edit);
 router.get('/getId_post/:id', post.getPost);
+router.get('/get_All', post.getAllPost);
 router.patch('/post/:id', post.update);
 router.get('/post_search', post.search);
 router.get('/suggest_keywords', post.suggestKeywords);

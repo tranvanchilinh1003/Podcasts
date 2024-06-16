@@ -55,7 +55,6 @@ export class EditComponent {
   }
 
   ngOnInit(): void {
-    // this.getPost();
     this.getCate();
     this.getIdCate();
     this.postForm = new FormGroup({
@@ -67,38 +66,40 @@ export class EditComponent {
       customers_id: new FormControl(''),
     })
   }
+  // list cate
+  getCate()  {
+    this.categoriesService.getCategories().subscribe(res => {
+      this.categories = res.data
+      console.log(this.categories);
+    }, error => {
+      console.log(error);
+
+    })
+  }
   // get id post and cate 
-  getIdCate() {
+   getIdCate() {
     let id = this.route.snapshot.params['id'];
     this.postService.getPostById(id).subscribe({
       next: (response: { data: IPost[] }) => {
         this.postnew = response.data[0];
-        // console.log(this.postnew);
+        console.log(this.postnew);
         const categoryId = this.postnew.categories_id;
         this.categoriesService.edit(categoryId).subscribe({
           next: (category: { data: ICategories[] }) => {
             this.editingCategory = category.data[0];
-            // console.log(this.editingCategory);
+            console.log(this.editingCategory);
           },
           error: error => {
             console.error('Error fetching editing category', error);
           }
-});
+        });
       },
       error: error => {
         console.error('Error fetching post', error);
       }
     });
   }
-  getCate() {
-    this.categoriesService.getCategories().subscribe(res => {
-      this.categories = res.data
-      // console.log(res.data);
-    }, error => {
-      console.log(error);
 
-    })
-  }
 
   onFileChange(event: any, fileType: string): void {
     const file = event.target.files[0];
@@ -171,7 +172,7 @@ export class EditComponent {
 
       this.postService.updatePost(this.postnew, postId).subscribe({
         next: () => {
-this.dialog.success('Đã thêm thành công!');
+          this.dialog.success('Đã thêm thành công!');
         },
         error: error => {
           console.error('Error updating post', error);

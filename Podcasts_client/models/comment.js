@@ -76,6 +76,7 @@ module.exports = class Post {
             });
         });
     }
+
      // Delete 
      static deleteComment(commentId) {
         return new Promise((resolve, reject) => {

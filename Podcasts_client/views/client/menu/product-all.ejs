@@ -25,8 +25,7 @@
                     </div>
                     <% if (post_cate && post_cate.length> 0) { %>
                         <% for (let post of post_cate) { %>
-
-                            <div class="col-lg-4 col-12 mb-4 mt-4 mb-lg-0">
+                            <div class="col-lg-4 col-12 mb-4 mb-lg-0 mt-4">
                                 <div class="custom-block custom-block-full">
                                     <div class="custom-block-image-wrap">
                                         <a href="/client/menu/post_details/<%= post.id%>">
@@ -34,25 +33,22 @@
                                                 class="custom-block-image img-fluid" alt="">
                                         </a>
                                     </div>
-
                                     <div class="custom-block-info">
                                         <h5 class="mb-2">
                                             <a href="/client/menu/post_details/<%= post.id%>">
-                                                <%= post.category_name %>
+                                                <%= post.title %>
                                             </a>
                                         </h5>
-
                                         <div class="profile-block d-flex">
                                             <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post.images_customers%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
                                                 class="profile-block-image img-fluid" alt="">
-
                                             <p>
                                                 <%=post.username%>
-                                                    <strong>Chuyên gia</strong>
+                                                    <strong>Người đăng</strong>
                                             </p>
                                         </div>
 
-                                        
+
 
                                         <div class="custom-block-bottom d-flex justify-content-between mt-3">
                                             <a href="#" class="bi-headphones me-1">
@@ -83,10 +79,7 @@
                             <% } %>
                                 <% } else { %>
                                     <div class="col-12 text-center text-warning">
-                                    <% if (typeof message !== 'undefined') {  %>    
-                                        <p><%= message  %></p>
-
-                                    <% } %>    
+                                        <p>Không có bài đăng nào cho thể loại này!</p>
                                     </div>
                                     <% } %>
                 </div>

@@ -45,8 +45,8 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="categories_id" class="fw-bold col-form-label">Thể loại</label>
-                            <nb-select class="col-12" name="categories_id" id="categories_id"
-                                formControlName="categories_id" [(ngModel)]="postnew.categories_id" required>
+                            <nb-select class="col-12" name="categories_id" id="categories_id" 
+                                formControlName="categories_id" [(ngModel)]="postnew.categories_id">
                                 <nb-option value="" disabled>Vui lòng chọn loại</nb-option>
                                 <nb-option *ngFor="let category of categories"
                                     [value]="category.id">{{category.name}}</nb-option>

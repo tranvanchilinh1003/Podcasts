@@ -30,8 +30,8 @@ exports.homeClient = async (req, res, next) => {
     const postsData = postsResponse.data;
 
     res.render('client/index', {
-      categories: categoriesData.data, // Assuming categories data is under 'data' key
-      posts: postsData.data, // Assuming posts data is under 'data' key
+      categories: categoriesData.data,
+      posts: postsData.data,
       user: info,
       userId: userId
     });
@@ -99,6 +99,40 @@ exports.getContact = async (req, res, next) => {
     console.error('ERR', error);
     res.render('client/contact', {
       categories: [],
+      user: info,
+      userId: userId
+    });
+  }
+};
+exports.getPostAll = async (req, res, next) => {
+  let userId = req.session.userId;
+  let info = null;
+
+  if (typeof userId !== 'undefined') {
+    try {
+      const response = await axios.get(`${API_URL}/customers/${userId}`);
+      info = response.data;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  try {
+    const [categoriesResponse, posts_cateResponse] = await Promise.all([
+      axios.get(`${API_URL}/categories/`),
+      axios.get(`${API_URL}/get_All/`)
+    ]);
+    const categoriesData = categoriesResponse.data;
+    const post_categoriesData = posts_cateResponse.data;
+    res.render("client/menu/product-all", {
+      categories: categoriesData.data, 
+      post_cate: post_categoriesData.data, 
+
+    });
+  } catch (error) {
+    console.error('ERR', error);
+    res.render('client/product-all', {
+      categories: [],
+      post_cate: [],
       user: info,
       userId: userId
     });

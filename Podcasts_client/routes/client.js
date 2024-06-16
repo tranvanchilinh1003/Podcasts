@@ -35,6 +35,7 @@ router.get('/search', form.getsearch);
 // router.post('/update/:id', form_info.update);
 // // products
 router.get('/menu/product/:id', home.getMenu)
+router.get('/menu/product-all', home.getPostAll)
 router.get('/menu/post_details/:id', post.getPostDetail)
 
 router.post('/comments', post.addComment);

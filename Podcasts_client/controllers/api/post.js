@@ -48,6 +48,7 @@ exports.create = async (req, res, next) => {
         data: result
     })
 };
+
 // Update
 exports.update = async (req, res, next) => {
     try {
@@ -91,6 +92,20 @@ exports.edit = async (req, res, next) => {
 exports.getPost = async (req, res, next) => {
     try {
         var post = await Post.getIdPost(req.params.id);
+        res.status(200).json({
+            data: post
+        });
+    } catch (error) {
+        console.error('Error updating users:', error);
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+};
+// get All Post
+exports.getAllPost = async (req, res, next) => {
+    try {
+        var post = await Post.getAllPost();
         res.status(200).json({
             data: post
         });
