@@ -35,6 +35,8 @@ exports.create = async (req, res, next) => {
     try {
         const categoties = {
             name: req.body.name,
+            images: req.body.images,
+            description: req.body.description,
         };
         const addedCategory = await Category.createCategories(categoties);
         res.status(200).json({
@@ -72,6 +74,8 @@ exports.update = async (req, res, next) => {
 
     let category = {
         name: name,
+        images: req.body.images,
+        description: req.body.description,
     }
     let result = await Category.updateCategories(category, category_id);
 

@@ -4,17 +4,43 @@
             <nb-card-header >Thêm danh mục</nb-card-header>
             <nb-card-body>        
                 <form (ngSubmit)="onCreate()" [formGroup]="validateForm">
-                    <div class="mb-3">
-                        <label for="name"  class="form-label">Tên loại</label>
-                        <input type="text" nbInput fullWidth  formControlName="name"  name="name" id="name" class="input-full-width size-medium status-basic shape-rectangle nb-transition" [(ngModel)]="newCategories.name" required>
-                        <div
-                        *ngIf="validateForm.get('name')!.invalid &&
-                        (validateForm.get('name')!.dirty || validateForm.get('name')!.touched)"
-                        >  
-                        <small *ngIf="validateForm.get('name').hasError('required')">
-                            <i class="text-danger">Vui lòng nhập tên loại.</i>
-                        </small></div>
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="name"  class="fw-bold col-form-label">Tên loại</label>
+                            <input type="text" nbInput fullWidth  formControlName="name"  name="name" id="name" placeholder="Tên loại..." class="input-full-width size-medium status-basic shape-rectangle nb-transition" [(ngModel)]="newCategories.name" required>
+                            <div
+                            *ngIf="validateForm.get('name')!.invalid &&
+                            (validateForm.get('name')!.dirty || validateForm.get('name')!.touched)"
+                            >  
+                            <small *ngIf="validateForm.get('name').hasError('required')">
+                                <i class="text-danger">Vui lòng nhập tên loại.</i>
+                            </small></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
+                            <input (change)="OnFileChange($event)" type="file" formControlName="images"
+                              class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
+                              fullWidth id="img" accept="image/*" name="image">
+                              <progress class="w-100" *ngIf="isUploading"   value="{{uploadProgressImage}}" max="100"></progress>
+                              <div
+                              *ngIf="validateForm.get('images').invalid && (validateForm.get('images').dirty || validateForm.get('images').touched)">
+                              <small *ngIf="validateForm.get('images').hasError('required')">
+                                <i class="text-danger">Vui lòng chọn hình ảnh.</i>
+                              </small>
+                            </div>
+                        </div>
                     </div>
+                    <div class='row mb-3'>
+                        <div class="col-sm-12">
+                            <label for="description" class="fw-bold col-form-label">Mô tả</label>
+                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="description" name="description"
+                                fullwidth="" shape="round" placeholder="Mô tả..."
+                                class="input-full-width size-medium status-basic shape-rectangle nb-transition"
+                                formControlName="description" [(ngModel)]="newCategories.description"></textarea>
+                        </div>
+                    </div>
+
+  
                     <div class="mb-3 text-end ">
                         <button type="submit" nbButton name="" value="" class="mat-ripple size-small shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition mx-3 ">
                             <i class="nb-plus mr-3"></i> Thêm mới </button>

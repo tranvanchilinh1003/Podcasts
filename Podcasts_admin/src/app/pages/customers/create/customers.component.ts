@@ -38,11 +38,11 @@ export class CreateComponent implements OnInit {
     private customersService: CustomerService) {
     }
 
-  OnFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.file = input.files[0];
-    }
+    OnFileChange(event: Event): void {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files.length) {
+        this.file = input.files[0];
+      }
   }
   
   ngOnInit(): void {
@@ -115,7 +115,6 @@ export class CreateComponent implements OnInit {
       return;
     }
      
-
     try {
       await this.UploadImg();  
       this.isUploading = true;
