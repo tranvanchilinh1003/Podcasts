@@ -4,14 +4,34 @@
         <nb-card-header>Sửa danh mục</nb-card-header>
         <nb-card-body>       
           <form (ngSubmit)="onUpdate()"  [formGroup]="validateForm">
-            <div class="mb-3">
-              <label for="name" class="form-label">Tên loại</label>
-              <input type="text" nbInput fullWidth formControlName="name" name="name" id="name" class="input-full-width size-medium status-basic shape-rectangle nb-transition" [(ngModel)]="editingCategory.name" required>
-              <span class="text-danger" 
-              *ngIf="validateForm.get('name')!.invalid &&
-              (validateForm.get('name')!.dirty || validateForm.get('name')!.touched)"
-              >Tên không được để trống</span>
+            <div class="mb-3 row">
+              <div class="col-md-6">
+                <label for="name"  class="fw-bold col-form-label">Tên loại</label>
+                            <input type="text" nbInput fullWidth  formControlName="name"  name="name" id="name" placeholder="Tên loại..." class="input-full-width size-medium status-basic shape-rectangle nb-transition" [(ngModel)]="editingCategory.name" required>
+                <span class="text-danger" 
+                *ngIf="validateForm.get('name')!.invalid &&
+                (validateForm.get('name')!.dirty || validateForm.get('name')!.touched)"
+                >Tên không được để trống</span>
+              </div>
+              <div class="col-sm-6">
+                <label for="images" class="fw-bold col-form-label">Hình ảnh</label>
+                <input type="file"
+                    class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
+                    nbInput fullWidth id="img" accept="image/*" (change)="onFileChange($event)"
+                    name="images" formControlName="images">
+                <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressImage}}"
+                    max="100"></progress>
             </div>
+            </div>
+            <div class='row mb-3'>
+              <div class="col-sm-12">
+                  <label for="description" class="fw-bold col-form-label">Mô tả</label>
+                  <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="description" name="description"
+                      fullwidth="" shape="round" placeholder="Mô tả..."
+                      class="input-full-width size-medium status-basic shape-rectangle nb-transition"
+                      formControlName="description" [(ngModel)]="editingCategory.description"></textarea>
+              </div>
+          </div>
             <div class="mb-3 text-end">
               <button type="submit" nbButton class="mat-ripple size-small shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition mx-3">
                 <i class="nb-plus mr-3"></i> Sửa
