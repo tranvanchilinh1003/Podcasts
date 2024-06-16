@@ -64,6 +64,8 @@ exports.getAbout = async (req, res, next) => {
     const categoriesData = categoriesResponse.data;
     res.render("client/about", {
       categories: categoriesData.data, 
+      user: info,
+      userId: userId
 
     });
   } catch (error) {
@@ -93,7 +95,8 @@ exports.getContact = async (req, res, next) => {
     const categoriesData = categoriesResponse.data;
     res.render("client/contact", {
       categories: categoriesData.data, 
-
+      user: info,
+      userId: userId
     });
   } catch (error) {
     console.error('ERR', error);
@@ -126,6 +129,8 @@ exports.getMenu = async (req, res, next) => {
     res.render("client/menu/product", {
       categories: categoriesData.data, 
       post_cate: post_categoriesData.data, 
+      user: info,
+      userId: userId
 
     });
   } catch (error) {

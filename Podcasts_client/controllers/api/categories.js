@@ -88,10 +88,15 @@ exports.update = async (req, res, next) => {
 };
 exports.delete = async (req, res, next) => {
     let category_id = req.params.id;
-
-    let result = await Category.deleteCategories(category_id);
-
-    res.status(201).json({
-        result: result
-    })
+    try {
+        let result = await Category.deleteCategories(category_id);
+        res.status(201).json({
+            result: result
+        });
+    } catch (error) {
+        console.error("Không thể xóa danh mục:", error);
+        res.status(500).json({
+            error: "Không thể xóa danh mục."
+        });
+    }
 };

@@ -146,10 +146,12 @@ exports.getform = async (req, res, next) => {
     const categoriesData = categoriesResponse.data;
     res.render("client/form/info", {
       categories: categoriesData.data,
+      user: info,
+      userId: userId
         });
   } catch (error) {
     console.error('ERR', error);
-    res.render('client/info', {
+    res.render('client/form/info', {
       categories: [],
       user: info,
       userId: userId
