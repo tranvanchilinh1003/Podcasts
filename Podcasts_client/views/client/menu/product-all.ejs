@@ -26,15 +26,15 @@
                     <% if (post_cate && post_cate.length> 0) { %>
                         <% for (let post of post_cate) { %>
                             <div class="col-lg-4 col-12 mb-4 mb-lg-0 mt-4">
-                                <div class="custom-block custom-block-full">
-                                    <div class="custom-block-image-wrap">
-                                        <a href="/client/menu/post_details/<%= post.id%>">
+                                <div class="custom-block custom-block-full" style="max-height: 445px;">
+                                    <div class="custom-block-image-wrap" >
+                                        <a href="/client/menu/post_details/<%= post.id%>" >
                                             <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=post.images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
                                                 class="custom-block-image img-fluid" alt="">
                                         </a>
                                     </div>
                                     <div class="custom-block-info">
-                                        <h5 class="mb-2">
+                                        <h5 class="">
                                             <a href="/client/menu/post_details/<%= post.id%>">
                                                 <%= post.title %>
                                             </a>
