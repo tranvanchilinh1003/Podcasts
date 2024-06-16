@@ -15,6 +15,10 @@ export const API_ENDPOINT: IAPIEndpoint = {
   post: {
     base: API_BASE_URL + '/' + 'api',
     post: '/api/post',
+    search: '/api/post_search',
+    suggest_keywords: '/api/suggest_keywords',
+    data: '/api/data',
+    chart: '/api/data_post'
   },
   comment: {
     base: API_BASE_URL + '/' + 'api',
@@ -23,6 +27,9 @@ export const API_ENDPOINT: IAPIEndpoint = {
   customers: {
     base: API_BASE_URL + '/' + 'api',
     customers: '/api/customers',
+    search: '/api/customer_search',
+    suggest_keywords: '/api/customer_keywords',
+    data: '/api/data_customers'
   },
   categories: {
     base: API_BASE_URL + '/' + 'api',

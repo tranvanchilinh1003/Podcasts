@@ -91,36 +91,40 @@ export class EditComponent implements OnInit {
 
   
 async onSubmit(): Promise<void> {
-    if (this.formEdit.invalid) {
-      return;
-    }
-
-    const id = this.inforAdmin[0].id;
-    if (this.formEdit.value.gender === 'Nam') {
-      this.formEdit.get('gender')?.setValue(0);
-    }
-    if (this.formEdit.value.gender === 'Nữ') {
-      this.formEdit.get('gender')?.setValue(1);
-    }
-    try {
-      if (this.imageFile) {
-        await this.capNhatAnh();
-        this.formEdit.value.images = this.newFileName;
-      }
-      this.customerService.update(id, this.formEdit.value).subscribe({
-        next: (update) => {
-          this.inforAdmin = update;
-          this.dialog.success('Đã cập nhật thành công!');
-        //   const updatedUserInfo = { ...this.inforAdmin[0], ...this.formEdit.value };
-        // this.storageService.setItem(LOCALSTORAGE_KEY.userInfo, updatedUserInfo);
-        },
-        error: error => {
-          console.error('Error updating Customer', error);
-        }
-      });
-    } catch (error) {
-      console.error('Error during the update process', error);
-    }
-  
+  if (this.formEdit.invalid) {
+    return;
   }
+
+  const id = this.inforAdmin[0].id;
+  if (this.formEdit.value.gender === 'Nam') {
+    this.formEdit.get('gender')?.setValue(0);
+  }
+  if (this.formEdit.value.gender === 'Nữ') {
+    this.formEdit.get('gender')?.setValue(1);
+  }
+  try {
+    let imageData: string | null = null;
+
+    if (this.imageFile) {
+      await this.capNhatAnh();
+      imageData = this.newFileName;
+    } else {
+      imageData = this.inforAdmin[0].images;
+    }
+    this.formEdit.value.images = imageData;
+
+    this.customerService.update(id, this.formEdit.value).subscribe({
+      next: (update) => {
+        this.inforAdmin = update;
+        this.dialog.success('Đã cập nhật thành công!');
+      },
+      error: error => {
+        console.error('Error updating Customer', error);
+      }
+    });
+  } catch (error) {
+    console.error('Error during the update process', error);
+  }
+}
+
 }

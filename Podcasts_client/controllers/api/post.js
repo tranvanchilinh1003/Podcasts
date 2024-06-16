@@ -1,4 +1,6 @@
 const Post = require('../../models/post');
+const  Cate = require('../../models/categories');
+const moment = require('moment-timezone');
 // All List 
 exports.list = async (req, res, next) => {
     const page = req.query.page || 1;
@@ -13,7 +15,8 @@ exports.list = async (req, res, next) => {
         meta: {
             current_page: page,
             last_page: totalPages,
-            from: from
+            from: from,
+            count: totalProducts
         }
     })
     }else{
@@ -22,13 +25,15 @@ exports.list = async (req, res, next) => {
             meta: {
                 current_page: page,
                 last_page: 1,
-                from: from
+                from: from,
+                
             }
         })
     }
 };
 // Create
 exports.create = async (req, res, next) => {
+    const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
     let post = {
         title: req.body.title,
         description: req.body.description,
@@ -36,6 +41,7 @@ exports.create = async (req, res, next) => {
         customers_id: req.body.customers_id,
         images: req.body.images,
         audio: req.body.audio,
+        date: date_create
     };
     let result = await Post.createPost(post);
     res.status(200).json({
@@ -115,4 +121,56 @@ exports.delete = async (req, res, next) => {
             error: 'Internal Server Error'
         });
     }
+
+    
 };
+exports.search = async (req, res, next) => {    
+    const key = req.query.messages; 
+    try {
+        const posts = await Post.search(key);
+        res.status(200).json({
+            data: posts 
+        });
+    } catch (error) {
+        console.error("Error searching posts:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+exports.suggestKeywords = async (req, res, next) => {    
+    let key = req.query.keyword.toLowerCase();
+    try {
+        const keywords = await Post.suggestKeywords(key);
+        res.status(200).json({
+            data: keywords
+        });
+    } catch (error) {
+        console.error("Error suggesting keywords:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+exports.data = async (req, res, next) => {    
+    
+    try {
+        
+        const data = await Post.getData();
+        res.status(200).json({
+            data
+        });
+    } catch (error) {
+        console.error("Error suggesting keywords:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+exports.chart = async (req, res, next) => {    
+    try {
+        const PostStats = await Post.getChart(); 
+        res.json(PostStats);
+      } catch (error) {
+        console.error('Error fetching customer stats:', error);
+        res.status(500).json({ error: 'Error fetching customer stats' });
+      }
+    }
+ 

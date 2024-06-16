@@ -40,7 +40,10 @@ router.delete('/post/:id', post.delete);
 router.get('/post/:id', post.edit);
 router.get('/getId_post/:id', post.getPost);
 router.patch('/post/:id', post.update);
-
+router.get('/post_search', post.search);
+router.get('/suggest_keywords', post.suggestKeywords);
+router.get('/data', post.data);
+router.get('/data_post', post.chart)
 
 router.get('/comment', comment.list);
 router.delete('/comment/:id', comment.delete);
@@ -61,6 +64,10 @@ router.get('/customers', customers.list);
 router.delete('/customers/:id', customers.delete);
 router.get('/customers/:id', customers.detail);
 router.patch('/customers/:id', customers.update);
+router.get('/customer_search', customers.search);
+router.get('/customer_keywords', customers.suggestKeywords);
+router.get('/data_customers', customers.chart)
+
 
 router.get('/favourite', favourite.list);
 router.get('/favourite/:id', favourite.listDetail);

@@ -46,7 +46,16 @@ export class CustomerService extends ApiService {
   delete(customerId: string): Observable<any> {
     return this._http.delete<any>(API_BASE_URL + API_ENDPOINT.customers.customers + `/${customerId}`);
   }
+  getSearch(key: string): Observable<any> { 
+    return this._http.get<ICustomer>(API_BASE_URL + API_ENDPOINT.customers.search + `?messages=${key}`);
+}
+suggestKeywords(keyword: string): Observable<any> {
+    return this._http.get<any>(API_BASE_URL + API_ENDPOINT.customers.suggest_keywords + `?keyword=${keyword}`);
+  }
 
+  dataChart(): Observable<any> {
+    return this._http.get<any>(API_BASE_URL + API_ENDPOINT.customers.data);
+}
   override getToken() {
     return this.localStorageService.getItem<any>(LOCALSTORAGE_KEY.token);
   }

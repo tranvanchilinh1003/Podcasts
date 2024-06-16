@@ -5,51 +5,92 @@
             <div class="p-4">
                 <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button data-bs-toggle="tab" data-bs-target="#profile-overview"
-                            aria-selected="true" role="tab" routerLink="/pages/profile"
-                            class=" nav-link btn active  card  status-basic shape-rectangle nb-transition" nbInput>Tổng quan</button>
+                        <button data-bs-toggle="tab" data-bs-target="#profile-overview" aria-selected="true" role="tab"
+                            routerLink="/pages/profile"
+                            class=" nav-link btn active  card  status-basic shape-rectangle nb-transition" nbInput>Tổng
+                            quan</button>
                     </li>
 
                     <li class="nav-item" role="presentation">
-                        <button class="" data-bs-toggle="tab" data-bs-target="#profile-edit"
-                            aria-selected="false" role="tab" tabindex="-1" routerLink="/pages/profile/edit"
-                            class="nav-link btn card   status-basic shape-rectangle nb-transition" nbInput>Sửa hồ sơ</button>
+                        <button class="" data-bs-toggle="tab" data-bs-target="#profile-edit" aria-selected="false"
+                            role="tab" tabindex="-1" routerLink="/pages/profile/edit"
+                            class="nav-link btn card   status-basic shape-rectangle nb-transition" nbInput>Sửa hồ
+                            sơ</button>
                     </li>
 
                 </ul>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card status-basic shape-rectangle nb-transition" nbInput>
-                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{inforAdmin[0].images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" alt="Profile Image" class="card-img-top">
+            <div class="row ">
+                <div class="col-lg-4">
+                    <div class="card mb-4 bg-transparent border">
                         <div class="card-body text-center">
-                            <h5 class="card-title">{{inforAdmin[0].username}}</h5>
+                            <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{inforAdmin[0].images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+                                alt="avatar" class="rounded-circle img-fluid" style="width: 140px;">
+                            <h5 class="my-3">{{inforAdmin[0].username}}</h5>
+                        
+                            <p class=" mb-4">Lập trình web (Front-end)</p>
+                            <div class="d-flex justify-content-center mb-2">
+                                <!-- <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
+                          <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button> -->
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-8">
 
-                    <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Tên tài khoản:</div>
-                        <div class="col-lg-9 col-md-8">{{inforAdmin[0].username}}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Tên đầy đủ:</div>
-                        <div class="col-lg-9 col-md-8">{{inforAdmin[0].full_name}}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Giới tính:</div>
-                        <div class="col-lg-9 col-md-8" *ngIf="inforAdmin[0].gender == 0 ">Nam</div>
-                        <div class="col-lg-9 col-md-8" *ngIf="inforAdmin[0].gender == 1 ">Nữ</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-lg-3 col-md-4 label">Email:</div>
-                        <div class="col-lg-9 col-md-8">{{inforAdmin[0].email}}</div>
+                <div class="col-lg-8 text-start">
+                    <div class="card mb-4 bg-transparent border">
+                        <div class="card-body">
+                            <div class="row ">
+                                <div class="col-sm-3" >
+                                    <p class="mb-0">Tài khoản:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class=" mb-0">{{inforAdmin[0].username}}</p>
+                                </div>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Họ và tên:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class=" mb-0">{{inforAdmin[0].full_name}}</p>
+                                </div>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class=" mb-0">{{inforAdmin[0].email}}</p>
+                                </div>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Giới tính:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class=" mb-0" *ngIf="inforAdmin[0].gender == '0'">Nam</p>
+                                    <p class=" mb-0" *ngIf="inforAdmin[0].gender == '1'">Nữ</p>
+                                </div>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0"><nb-icon icon="github-outline" pack="eva" class="fs-3"></nb-icon></p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class=" mb-0">https://github.com/tranvanchilinh1003/Podcasts</p>
+                                </div>
+                            </div>
+                        
+                        </div>
                     </div>
                 </div>
-            </div>
+                </div>
         </nb-card-body>
     </nb-card>
 </div>

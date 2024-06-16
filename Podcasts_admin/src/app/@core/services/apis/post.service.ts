@@ -46,4 +46,16 @@ export class PostService extends ApiService {
     updatePost( post: IPost ,postId: string): Observable<IPost> {
         return this._http.patch<IPost>(API_BASE_URL + API_ENDPOINT.post.post + `/${postId}`, post);
     }
+    getSearch(key: string): Observable<any> { 
+        return this._http.get<IPost>(API_BASE_URL + API_ENDPOINT.post.search + `?messages=${key}`);
+    }
+    suggestKeywords(keyword: string): Observable<any> {
+        return this._http.get<any>(API_BASE_URL + API_ENDPOINT.post.suggest_keywords + `?keyword=${keyword}`);
+      }
+    dataChart(): Observable<any> {
+        return this._http.get<any>(API_BASE_URL + API_ENDPOINT.post.data);
+    }
+    Chart(): Observable<any> {
+        return this._http.get<any>(API_BASE_URL + API_ENDPOINT.post.chart);
+    }
 }

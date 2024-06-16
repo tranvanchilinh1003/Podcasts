@@ -79,4 +79,6 @@ export class DialogService {
   deleteItem(item: string, id: string): Observable<any> {
     return this.httpService.delete<any>(`${API_BASE_URL}${item}/${id}`);
   }
+
+  
 }

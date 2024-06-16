@@ -75,18 +75,22 @@ WHERE categories_id = ${categoriesId};
     static deleteCategories(categoryId) {
         return new Promise((resolve, reject) => {
             connect.query(
-                'DELETE FROM categories WHERE id = ?',
-                [categoryId],
+                `DELETE FROM categories WHERE id = ${categoryId} AND (SELECT COUNT(*) FROM post WHERE categories_id = ${categoryId}) = 0;`,
                 (err, result) => {
                     if (err) {
-                        reject(err);
+                        reject(err); // Trả về lỗi nếu có lỗi xảy ra
                     } else {
-                        resolve(result);
+                        if (result.affectedRows > 0) {
+                            resolve(result); // Nếu có hàng bị ảnh hưởng, trả về kết quả
+                        } else {
+                            reject("Không thể xóa danh mục vì có bài viết đang sử dụng nó."); // Nếu không có hàng nào bị ảnh hưởng, trả về thông báo lỗi
+                        }
                     }
                 }
             );
         });
-      }
+    }
+    
       static async countCategories() {
         return new Promise((resolve, reject) => {
           let sql = `SELECT COUNT(*) AS count FROM categories`; 

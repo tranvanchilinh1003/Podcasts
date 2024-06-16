@@ -80,7 +80,18 @@ function sendEmail(email, otp) {
       to: email, 
       subject: "Foodcast Forum Gửi Mã OTP", // Chủ đề email
       text: `Mã OTP của bạn là: ${otp}`, // Nội dung văn bản
-      html: `<p>Mã OTP của bạn là:</p><h1>${otp}</h1>`, 
+      html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background-color: #f9f9f9; padding: 20px; text-align: center; border-radius: 10px;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F2024-06-14T06%3A19%3A57.176Z.png?alt=media&token=c0c732ae-a0af-4b05-b87a-e4dacc7a8c82" alt="Foodcast Forum Logo" style="max-width: 100px;">
+          <h2 style="color: #333;">Xác nhận Email của bạn</h2>
+          <p style="color: #666;">Mã OTP của bạn là:</p>
+          <h1 style="background-color: #007bff; color: #fff; padding: 10px; border-radius: 5px; margin: 20px 0;">${otp}</h1>
+          <p style="color: #666;">Vui lòng sử dụng mã này để hoàn thành thao tác xác thực.</p>
+        </div>
+        <p style="text-align: center; margin-top: 20px; color: #888;">Đây là email tự động, vui lòng không phản hồi.</p>
+      </div>
+    `,
     };
 
     try {

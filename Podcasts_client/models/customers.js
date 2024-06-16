@@ -146,4 +146,61 @@ module.exports = class Customers {
       });
     }
     
+
+    static async search(key) {
+      return new Promise((resolve, reject) => {
+        let sql = `SELECT customers.* FROM customers WHERE LOWER(customers.username) LIKE ? OR LOWER(customers.full_name) LIKE ?`;
+        connect.query(sql, [`%${key}%`, `%${key}%`], function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            const keywords = data.map((item) => item.username); 
+            resolve({ data, keywords });
+          }
+        });
+      });
+    }
+    
+
+    static async suggestCustomerKeywords(key) {
+      return new Promise((resolve, reject) => {
+        let sql = `SELECT DISTINCT username, full_name FROM customers WHERE LOWER(username) LIKE ? `;
+        connect.query(sql, [`%${key}%`], function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+            const usernames = data.map((item) => item.username);
+            resolve([...usernames]);
+          }
+        });
+      });
+    }
+    
+
+
+    
+
+static async getData() {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        MONTH(date) AS month,
+        COUNT(*) AS customer_count
+      FROM customers
+      GROUP BY MONTH(date)
+      ORDER BY month ASC
+    `;
+    connect.query(query, (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+
+
+
 };

@@ -5,6 +5,7 @@ import { IPost } from 'app/@core/interfaces/post.interface';
 import { PostService } from 'app/@core/services/apis/post.service';
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -12,9 +13,11 @@ import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config
 })
 export class ListComponent implements OnInit {
   post: IPost[] = [];
+  suggestedKeywords: string[] = [];
   last_page: number = 0;
   current_page: number = 0;
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.post.post}`;
+  query: string = '';
   newPost: IPost = {
     id: '',
     title: '',
@@ -27,7 +30,8 @@ export class ListComponent implements OnInit {
   constructor(
     private dialog: DialogService,
     private postService: PostService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -66,4 +70,41 @@ export class ListComponent implements OnInit {
   getPage(event: any): void {
     this.post = event.data
   }
+  searchPosts() {
+    this.postService.getSearch(this.query)
+      .subscribe(
+        (data) => {
+          this.post = data.data; 
+          // console.log(data.data);
+          
+          
+        },
+        (error) => {
+          console.error('Lỗi khi tìm kiếm bài viết:', error);
+        }
+      );
+  }
+
+  suggestKeywords() {
+    if (this.query.length >= 1) {
+      this.postService.suggestKeywords(this.query)
+        .subscribe(
+          (data) => {
+            this.suggestedKeywords = data.data;
+          },
+          (error) => {
+            console.error('Lỗi khi gợi ý từ khóa:', error);
+          
+          }
+        );
+    } else {
+      this.suggestedKeywords = []; // Xóa danh sách gợi ý nếu không có từ khóa
+    }
+  }
+
+  selectKeyword(keyword: string) {
+    this.query = keyword; // Chọn từ khóa và đưa vào ô tìm kiếm
+    this.suggestedKeywords = []; // Xóa danh sách gợi ý sau khi chọn từ khóa
+  }
+
 }

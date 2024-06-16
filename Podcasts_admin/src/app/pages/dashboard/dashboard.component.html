@@ -1,57 +1,32 @@
 <nb-card class="row mx-0">
   <nb-card-body class="row mx-0 ">
-    <div class="col-md-6 col-lg-3">
-      <div class="card status-basic shape-rectangle nb-transition" nbInput>
-        <div class="card-body">
-          <h5 class="card-title">Khách hàng</h5>
-          <div class="d-flex align-items-center mb-2 mt-4">
-            <h2 class="mb-0 display-5"> <nb-icon icon="people" pack="eva" class="fs-3 text-info"></nb-icon></h2>
-            <div class="ms-auto">
-              <h2 class="mb-0 display-6"><span class="fw-normal">1</span></h2>
-            </div>
-          </div>
-        </div>
-      </div>
+    <h6>Biểu đồ thống kê</h6>
+    <div style="display: block;">
+      <canvas baseChart
+        [datasets]="lineChartData"
+        [labels]="lineChartLabels"
+        [options]="lineChartOptions"
+        [legend]="lineChartLegend"
+        [chartType]="lineChartType"
+        [colors]="chartColor">
+      </canvas>
     </div>
-    <div class="col-md-6 col-lg-3">
-      <div class="card status-basic shape-rectangle nb-transition" nbInput>
-        <div class="card-body">
-          <h5 class="card-title">Loại</h5>
-          <div class="d-flex align-items-center mb-2 mt-4">
-            <h2 class="mb-0 display-5"><nb-icon icon="bookmark" pack="eva" class="fs-3 text-success"></nb-icon></h2>
-            <div class="ms-auto">
-              <h2 class="mb-0 display-6"><span class="fw-normal">2</span></h2>
-            </div>
-          </div>
-        </div>
-      </div>
+    
+    <div style="display: block;">
+      <canvas class="mt-5" baseChart
+              [data]="chartData"
+              [labels]="chartLabels"
+              [chartType]="'doughnut'"
+              [colors]="chartColors"
+              [options]="chartOptions"
+              [legend]="true">
+      </canvas>
     </div>
-    <div class="col-md-6 col-lg-3">
-      <div class="card status-basic shape-rectangle nb-transition"nbInput>
-        <div class="card-body">
-          <h5 class="card-title">Bài đăng</h5>
-          <div class="d-flex align-items-center mb-2 mt-4">
-            <h2 class="mb-0 display-5"><nb-icon icon="book" pack="eva" class="fs-3 text-warning"></nb-icon></h2>
-            <div class="ms-auto">
-              <h2 class="mb-0 display-6"><span class="fw-normal">3</span></h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-      <div class="card status-basic shape-rectangle nb-transition" nbInput>
-        <div class="card-body">
-          <h5 class="card-title">Bình luận</h5>
-          <div class="d-flex align-items-center mb-2 mt-4">
-            <h2 class="mb-0 display-5"><nb-icon icon="message-circle" pack="eva" class="fs-3 text-danger"></nb-icon>
-            </h2>
-            <div class="ms-auto">
-              <h2 class="mb-0 display-6"><span class="fw-normal">1</span></h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+    
+  
+    
+    
+    
   </nb-card-body>
 </nb-card>

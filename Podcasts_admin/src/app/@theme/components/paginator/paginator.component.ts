@@ -25,21 +25,22 @@ export class PaginatorComponent implements OnInit {
   ngOnInit() {}
 
   goFirstPage() {
-    this.getData();
+  
     this.current_page = 1
     this.hasPreviousPage = true;
     this.hasNextPage = false;
     this.indexPage = 1;
-
+    this.getData();
   }
 
   goLastPage() {
-    this.getData();
+  
     this.hasPreviousPage = false;
     this.hasNextPage = true;
-    this.indexPage = this.last_page;
-
     this.current_page = this.last_page
+    this.indexPage = this.last_page;
+    this.getData();
+  
   }
 
   goPreviousPage() {

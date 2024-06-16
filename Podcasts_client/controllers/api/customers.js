@@ -3,7 +3,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const app = express();
 app.use(express.json());
-
+const moment = require('moment-timezone');
 exports.list = async (req, res, next) => {
     try {
     const page = req.query.page || 1;
@@ -20,7 +20,8 @@ exports.list = async (req, res, next) => {
             meta: {
                 current_page: page,
                 last_page: totalPages,
-                from: from
+                from: from,
+                count: totalProducts
             }
         });
     }else{
@@ -52,7 +53,7 @@ exports.create = async (req, res, next) => {
         if (existingUser.length > 0) {
         return  res.status(400).json({ error: "Username hoặc email đã tồn tại." });
         }
-
+        const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
         const hashedPassword = await bcrypt.hash(password, 10); 
         const customers = {
             username: username,
@@ -63,6 +64,7 @@ exports.create = async (req, res, next) => {
             gender: req.body.gender,
             images: req.body.images,
             isticket: req.body.isticket,
+            date: date_create
         };
 
         const addedCustomers = await Customers.createCustomers(customers);
@@ -179,9 +181,6 @@ exports.update = async (req, res, next) => {
 
 
 
-
-
-
 exports.delete = async (req, res, next) => {
     try {
         const id = req.params.id;
@@ -197,3 +196,40 @@ exports.delete = async (req, res, next) => {
         });
     }
 };
+
+exports.search = async (req, res, next) => {    
+    const key = req.query.messages; 
+    try {
+        const posts = await Customers.search(key);
+        res.status(200).json({
+            data: posts 
+        });
+    } catch (error) {
+        console.error("Error searching posts:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+exports.suggestKeywords = async (req, res, next) => {    
+    let key = req.query.keyword.toLowerCase();
+    try {
+        const keywords = await Customers.suggestCustomerKeywords(key);
+        res.status(200).json({
+            data: keywords
+        });
+    } catch (error) {
+        console.error("Error suggesting keywords:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+exports.chart = async (req, res, next) => {    
+    try {
+        const customerStats = await Customers.getData(); 
+        res.json(customerStats);
+      } catch (error) {
+        console.error('Error fetching customer stats:', error);
+        res.status(500).json({ error: 'Error fetching customer stats' });
+      }
+    }
+ 

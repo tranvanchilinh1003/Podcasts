@@ -13,7 +13,8 @@ exports.list = async (req, res, next) => {
         meta: {
             current_page: page,
             last_page: totalPages,
-            from: from
+            from: from,
+            count: totalProducts
         }
     })
     }else{

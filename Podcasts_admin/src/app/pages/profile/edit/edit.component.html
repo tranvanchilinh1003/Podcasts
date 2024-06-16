@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <nb-card class="row">
         <nb-card-body class="row mx-0 text-center">
-            <h2>Hồ Sơ</h2>
+            <h2>Sửa Hồ Sơ</h2>
             <div class="p-4">
                 <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -19,61 +19,79 @@
             </div>
             <form (ngSubmit)="onSubmit()" [formGroup]="formEdit">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="card status-basic shape-rectangle nb-transition" nbInput>
-
+                    <div class="col-lg-4">
+                    <div class="card mb-4 bg-transparent border">
+                        <div class="card-body text-center">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{inforAdmin[0].images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+                                alt="avatar" class="rounded-circle img-fluid" style="width: 140px;">
+                            <h5 class="my-3">{{inforAdmin[0].username}}</h5>
                         
-                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{inforAdmin[0].images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" alt="Profile Image" class="card-img-top">
-                        <label for="update_img" class="card-body text-center">
-                            Cập nhật ảnh
-                        </label>
-                        <input type="file" (change)="onImageChange($event)" name="images" formControlName="images" id="update_img">
-                        <progress class="w-100" *ngIf="uploadingImage"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" max="100"></progress>
+                            <p class=" mb-4">Lập trình web (Front-end)</p>
+                            <div class=" mb-2">
+                                <!-- <label for="update_img" class="card-body text-center">
+                                    Cập nhật ảnh
+                                </label> -->
+                                <input type="file" (change)="onImageChange($event)" class="w-75" name="images" formControlName="images" id="update_img"> <br> <br>
+                                <progress class="w-100" *ngIf="uploadingImage"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" max="100"></progress>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4 bg-transparent border">
+                        <div class="card-body">
+                            <div class="row ">
+                                <div class="col-sm-3" >
+                                    <p class="mb-0">Tài khoản:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" disabled  formControlName="username"  
+                                    class=" bg-transparent border-0 card invalid-feedback size-max status-basic shape-rectangle nb-transition" nbInput >
+                                </div>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Họ và tên:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text"  formControlName="full_name" 
+                                    class=" bg-transparent border-0 card invalid-feedback size-max status-basic shape-rectangle nb-transition" nbInput >
+                                </div>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="email" name="email" id="email" class="form-control" formControlName="email"
+                                class=" bg-transparent border-0 card invalid-feedback size-max status-basic shape-rectangle nb-transition" nbInput>
+                                </div>
+                                <span class="text-danger fst-italic" *ngIf="formEdit.get('email')!.invalid && 
+                                (formEdit.get('email')!.dirty || formEdit.get('email')!.touched)">Email không hợp lệ!!</span>
+                            </div>
+                            <hr class="border">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Giới tính:</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input type="text" formControlName="gender"  *ngIf="inforAdmin[0].gender == 0" value="Nam"
+                                    class=" bg-transparent border-0 card invalid-feedback size-max status-basic shape-rectangle nb-transition" nbInput>
+                                    <input type="text" formControlName="gender"  *ngIf="inforAdmin[0].gender == 1" value="Nữ"
+                                    class=" bg-transparent border-0 card invalid-feedback size-max status-basic shape-rectangle nb-transition" nbInput>
+                                </div>
+                            </div>
+                            <hr class="border">
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-outline-primary">Lưu thông tin</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="col-md-8">                    
-                        <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Tên tài khoản:</div>
-                            <div class="col-lg-9 col-md-8">
-                                <input type="text" disabled  formControlName="username"  
-                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput >
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Tên đầy đủ:</div>
-                            <div class="col-lg-9 col-md-8">
-                                <input type="text"  formControlName="full_name" 
-                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput >
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Giới tính:</div>
-                            <div class="col-lg-9 col-md-8">
-                                <input type="text" formControlName="gender"  *ngIf="inforAdmin[0].gender == 0" value="Nam"
-                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput>
-                                <input type="text" formControlName="gender"  *ngIf="inforAdmin[0].gender == 1" value="Nữ"
-                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput>
-                            </div>
-                            
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-lg-3 col-md-4 label">Email:</div>
-                            <div class="col-lg-9 col-md-8">
-                                <input type="email" name="email" id="email" class="form-control" formControlName="email"
-                                class="card invalid-feedback size-small status-basic shape-rectangle nb-transition" nbInput>
-                                
-                            </div>
-                            <span class="text-danger fst-italic" *ngIf="formEdit.get('email')!.invalid && 
-                                (formEdit.get('email')!.dirty || formEdit.get('email')!.touched)">Email không hợp lệ!!</span>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-outline-success">Lưu thông tin</button>
-                        </div>
-                    
-                </div>
             </div>
         </form>
         </nb-card-body>
