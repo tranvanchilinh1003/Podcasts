@@ -31,7 +31,7 @@ router.post('/form/insertUser' , form.createUser);
 // //info
 router.get('/form/info', form.getform);
 
-// router.get('/search', form_info.getsearch);
+router.get('/search', form.getsearch);
 // router.post('/update/:id', form_info.update);
 // // products
 router.get('/menu/product/:id', home.getMenu)

@@ -8,7 +8,7 @@ const API_URL = "http://localhost:3000/api";
 
 const app = express();
 app.use(express.json());
-
+const post = require('../../models/post')
 exports.login = async (req, res, next) => {
   let userId = req.session.userId;
   let info = null;
@@ -154,5 +154,51 @@ exports.getform = async (req, res, next) => {
       user: info,
       userId: userId
     });
+  }
+};
+
+
+exports.getsearch = async (req, res, next) => {
+  try {
+    let userId = req.session.userId;
+    let info = null;
+  
+    if (typeof userId !== 'undefined') {
+      try {
+        const response = await axios.get(`${API_URL}/customers/${userId}`);
+        info = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+    const categoriesResponse = await axios.get(`${API_URL}/categories/`);
+    const categoriesData = categoriesResponse.data;
+    const key = req.query.message;
+  
+    
+    const responseCate = await post.search(key)
+    if(key === ''){
+      res.redirect("/client/products");
+    }
+    if (!responseCate || responseCate.length === 0) {
+      const message = 'Không tìm thấy sản phẩm';
+      res.render("client/menu/product", {
+        user: info,
+        categories: categoriesData.data, 
+        post_cate: [],
+        message: message 
+      });
+      return; 
+    }
+    
+    res.render("client/menu/product", {
+      user: info,
+      categories: categoriesData.data, 
+
+      post_cate: responseCate
+    });
+  } catch (error) {
+    console.error("ERR", error);
+    res.status(500).send(error);
   }
 };

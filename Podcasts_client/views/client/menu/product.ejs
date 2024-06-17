@@ -83,7 +83,10 @@
                             <% } %>
                                 <% } else { %>
                                     <div class="col-12 text-center text-warning">
-                                        <p>Không có bài đăng nào cho thể loại này!</p>
+                                    <% if (typeof message !== 'undefined') {  %>    
+                                        <p><%= message  %></p>
+
+                                    <% } %>    
                                     </div>
                                     <% } %>
                 </div>

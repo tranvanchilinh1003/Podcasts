@@ -45,7 +45,6 @@ exports.getPostDetail = async (req, res, next) => {
     res.render('client/menu/product-single', {
       categories: [],
       post_cate: [],
-
       user: info,
       userId: userId
     });

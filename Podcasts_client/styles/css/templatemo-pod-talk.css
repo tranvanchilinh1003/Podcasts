@@ -605,6 +605,7 @@ main {
   overflow: hidden;
   padding: 30px;
   transition: all 0.3s ease;
+  /* height: 300px */
 }
 
 .custom-block:hover {

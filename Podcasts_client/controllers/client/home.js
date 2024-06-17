@@ -126,6 +126,7 @@ exports.getMenu = async (req, res, next) => {
     res.render("client/menu/product", {
       categories: categoriesData.data, 
       post_cate: post_categoriesData.data, 
+      message: "Không tìm thấy bài đăng nào với thể loại này",
 
     });
   } catch (error) {
