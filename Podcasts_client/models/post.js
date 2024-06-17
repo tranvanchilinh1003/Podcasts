@@ -90,10 +90,10 @@ module.exports = class Post {
         });
     }
     //get All Pots Cate
-    static async getAllPost() {
+    static async getAllPost(from, row) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id;`;
-            connect.query(sql, function (err, data) {
+            let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id LIMIT ?,?;`
+            connect.query(sql, [from, row], function (err, data) {
                 if (err) {
                     reject(err);
                 } else {
@@ -118,7 +118,7 @@ module.exports = class Post {
     // getUsername
     static async search(key) {
       return new Promise((resolve, reject) => {
-        let sql = `SELECT post.* FROM post WHERE LOWER(post.title) LIKE ?`;
+        let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id WHERE LOWER(post.title) LIKE ?`;
         connect.query(sql, [`%${key}%`], function (err, data) {
           if (err) {
             reject(err);

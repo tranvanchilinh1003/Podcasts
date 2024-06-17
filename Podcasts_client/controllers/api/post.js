@@ -105,10 +105,24 @@ exports.getPost = async (req, res, next) => {
 // get All Post
 exports.getAllPost = async (req, res, next) => {
     try {
-        var post = await Post.getAllPost();
+        const page = req.query.page || 1;
+        const row = 9;
+        const from = (page - 1) * row;
+        const totalProducts = await Post.coutCustomers();
+        if(totalProducts > 0){ 
+        const totalPages = Math.ceil(totalProducts / row);
+        var post = await Post.getAllPost(from, row);
         res.status(200).json({
-            data: post
+            data: post,
+            meta: {
+                current_page: page,
+                last_page: totalPages,
+                from: from,
+                count: totalProducts
+            }
         });
+    
+    }
     } catch (error) {
         console.error('Error updating users:', error);
         res.status(500).json({

@@ -177,12 +177,12 @@ exports.getsearch = async (req, res, next) => {
   
     
     const responseCate = await post.search(key)
-    if(key === ''){
-      res.redirect("/client/products");
+    if(key === ' '){
+      res.redirect("/client/menu/product-all");
     }
     if (!responseCate || responseCate.length === 0) {
       const message = 'Không tìm thấy sản phẩm';
-      res.render("client/menu/product", {
+      res.render("client/menu/product-all", {
         user: info,
         categories: categoriesData.data, 
         post_cate: [],
@@ -191,7 +191,7 @@ exports.getsearch = async (req, res, next) => {
       return; 
     }
     
-    res.render("client/menu/product", {
+    res.render("client/menu/product-all", {
       user: info,
       categories: categoriesData.data, 
 

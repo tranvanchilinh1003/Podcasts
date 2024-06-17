@@ -79,7 +79,10 @@
                             <% } %>
                                 <% } else { %>
                                     <div class="col-12 text-center text-warning">
-                                        <p>Không có bài đăng nào cho thể loại này!</p>
+                                        <% if (typeof message !== 'undefined') {  %>    
+                                        <p><%= message  %></p>
+
+                                    <% } %>    
                                     </div>
                                     <% } %>
                 </div>
@@ -88,14 +91,14 @@
             <nav aria-label="Page navigation example">
                 <ul class="border-0 justify-content-center pagination">
                     <li class="page-item ">
-                        <a class="page-link rounded-end" href="#" tabindex="-1"><i
+                        <a class="page-link rounded-end" href="?page=1" tabindex="-1"><i
                                 class="bi bi-caret-left-fill"></i></a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <% for (let i = 1; i <= last_page; i++) { %>
+                    <li class="page-item"><a class="page-link <%= ('?page=' + current_page) == ('?page=' + i) ? 'active' : '' %>" href="?page=<%= i %>"><%=i%></a></li>
+                    <% } %>
                     <li class="page-item ">
-                        <a class="page-link rounded-start" href="#"><i class="bi bi-caret-right-fill"></i></a>
+                        <a class="page-link rounded-start" href="?page=<%=last_page %>"><i class="bi bi-caret-right-fill"></i></a>
                     </li>
                 </ul>
             </nav>
