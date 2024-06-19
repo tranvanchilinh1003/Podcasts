@@ -146,6 +146,8 @@ exports.getform = async (req, res, next) => {
     const categoriesData = categoriesResponse.data;
     res.render("client/form/info", {
       categories: categoriesData.data,
+      user: info,
+      userId: userId
         });
   } catch (error) {
     console.error('ERR', error);
@@ -175,15 +177,24 @@ exports.getsearch = async (req, res, next) => {
     const categoriesData = categoriesResponse.data;
     const key = req.query.message;
   
-    
+    const page = req.query.page || 1;
+    const row = 9;
+    const from = (page - 1) * row;
+    const totalProducts = await post.coutCustomers();
+    const totalPages = Math.ceil(totalProducts / row);
     const responseCate = await post.search(key)
     if(key === ' '){
-      res.redirect("/client/menu/product-all");
+      res.redirect("/client/menu/product-all", {
+        
+      });
     }
     if (!responseCate || responseCate.length === 0) {
       const message = 'Không tìm thấy sản phẩm';
       res.render("client/menu/product-all", {
+        current_page: page,
+        last_page: totalPages,
         user: info,
+        userId: userId,
         categories: categoriesData.data, 
         post_cate: [],
         message: message 
@@ -192,9 +203,11 @@ exports.getsearch = async (req, res, next) => {
     }
     
     res.render("client/menu/product-all", {
-      user: info,
+      current_page: page,
+      last_page: totalPages,
       categories: categoriesData.data, 
-
+      user: info,
+      userId: userId,
       post_cate: responseCate
     });
   } catch (error) {

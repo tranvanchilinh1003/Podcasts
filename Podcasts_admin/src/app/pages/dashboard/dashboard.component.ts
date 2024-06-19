@@ -58,19 +58,13 @@ export class DashboardComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  async ngOnInit(): Promise<void> {
-    await this.fetchCustomerStats();
-    await this.fetchDataForChart();
+   ngOnInit(): void {
+     this.fetchCustomerStats();
+     this.fetchDataForChart();
   }
-  ngOnDestroy(): void {
-    if (this.customerStatsSubscription) {
-      this.customerStatsSubscription.unsubscribe();
-    }
   
-  }
-
   fetchCustomerStats(): void {
-this.customerStatsSubscription =  this.CustomersService.dataChart().subscribe(
+  this.customerStatsSubscription =  this.CustomersService.dataChart().subscribe(
       data => {
         data.forEach((item: any) => {
           if (item.month <= 12) {
@@ -84,7 +78,7 @@ this.customerStatsSubscription =  this.CustomersService.dataChart().subscribe(
       }
     );
 
-  this.customerStatsSubscription =    this.postService.Chart().subscribe(
+  this.customerStatsSubscription =  this.postService.Chart().subscribe(
       data => {
         data.forEach((item: any) => {
           if (item.month <= 12) {

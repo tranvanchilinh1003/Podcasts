@@ -45,6 +45,8 @@ router.get('/post_search', post.search);
 router.get('/suggest_keywords', post.suggestKeywords);
 router.get('/data', post.data);
 router.get('/data_post', post.chart)
+router.get('/post_home_client', post.getHome)
+
 
 router.get('/comment', comment.list);
 router.delete('/comment/:id', comment.delete);

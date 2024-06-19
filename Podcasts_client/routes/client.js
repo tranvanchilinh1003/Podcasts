@@ -17,6 +17,8 @@ app.use((req, res, next) => {
 router.get('/', home.homeClient);
 router.get('/about', home.getAbout);
 router.get('/contact', home.getContact);
+router.post('/contact_lienhe', home.messege);
+
 // //login
 // //login_form
 router.get('/logout', home.logout)

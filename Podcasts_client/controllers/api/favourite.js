@@ -7,7 +7,6 @@ exports.list = async (req, res, next) => {
     const totalProducts = await Favourite.countFavourite(); 
     if(totalProducts > 0) {
 
-    
     const totalPages = Math.ceil(totalProducts / row);
     var favourite = await Favourite.fetchAll(from, row);
     res.status(200).json({

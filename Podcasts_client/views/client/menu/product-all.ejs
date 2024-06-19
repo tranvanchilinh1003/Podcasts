@@ -91,14 +91,14 @@
             <nav aria-label="Page navigation example">
                 <ul class="border-0 justify-content-center pagination">
                     <li class="page-item ">
-                        <a class="page-link rounded-end" href="?page=1" tabindex="-1"><i
+                        <a class="page-link rounded-end" href="/client/menu/product-all?page=1" tabindex="-1"><i
                                 class="bi bi-caret-left-fill"></i></a>
                     </li>
                     <% for (let i = 1; i <= last_page; i++) { %>
-                    <li class="page-item"><a class="page-link <%= ('?page=' + current_page) == ('?page=' + i) ? 'active' : '' %>" href="?page=<%= i %>"><%=i%></a></li>
+                    <li class="page-item"><a class="page-link <%= ('?page=' + current_page) == ('?page=' + i) ? 'active' : '' %>" href="/client/menu/product-all?page=<%= i %>"><%=i%></a></li>
                     <% } %>
                     <li class="page-item ">
-                        <a class="page-link rounded-start" href="?page=<%=last_page %>"><i class="bi bi-caret-right-fill"></i></a>
+                        <a class="page-link rounded-start" href="/client/menu/product-all?page=<%=last_page %>"><i class="bi bi-caret-right-fill"></i></a>
                     </li>
                 </ul>
             </nav>

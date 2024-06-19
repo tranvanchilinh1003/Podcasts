@@ -203,3 +203,15 @@ exports.chart = async (req, res, next) => {
       }
     }
  
+exports.getHome = async (req, res, next) => {    
+    try {
+        const postHome = await Post.getPostClient(); 
+        res.status(200).json({
+            data: postHome 
+        });
+      } catch (error) {
+        console.error('Error fetching :', error);
+        res.status(500).json({ error: 'Error fetching customer stats' });
+      }
+    }
+ 

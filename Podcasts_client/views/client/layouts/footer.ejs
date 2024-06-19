@@ -91,10 +91,6 @@
                         <a href="/client/contact" class="site-footer-link">Liên hệ</a>
                     </li>
 
-                    <li class="site-footer-link-item">
-                        <a href="/client/form/login" class="site-footer-link">Đăng nhập</a>
-                    </li>
-
                 </ul>
             </div>
 
@@ -163,6 +159,47 @@
     $('#addPostModal').on('hide.bs.modal', function () {
         $('.backdrop').fadeOut();
     });
+
+</script>
+<script>
+    const searchInput = document.getElementById('message');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+
+    searchInput.addEventListener('input', async function () {
+        const inputValue = this.value.trim();
+
+        if (inputValue.length === 0) {
+            searchSuggestions.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/suggest_keywords?keyword=${inputValue}`);
+            const data = await response.json();
+
+            searchSuggestions.innerHTML = '';
+            data.data.forEach(keyword => {
+                const li = document.createElement('li');
+                const anchor = document.createElement('a');
+                anchor.classList.add('dropdown-item', 'keywordds', 'p-2', 'text-white');
+                anchor.textContent = keyword;
+                li.appendChild(anchor);
+                searchSuggestions.appendChild(li);
+                anchor.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    searchInput.value = anchor.textContent.trim();
+                    searchSuggestions.innerHTML = '';
+                });
+            });
+
+        } catch (error) {
+            console.error('Error fetching search suggestions:', error);
+            searchSuggestions.innerHTML = '<li><a class="dropdown-item p-3" href="#">Lỗi</a></li>';
+        }
+    });
+
+
+
 
 </script>
 </body>

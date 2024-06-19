@@ -2,11 +2,19 @@ var connect = require('./database');
 var Post = [];
 module.exports = class Post {
     constructor() { }
-    static fetchAll(from, row) {
+    static async fetchAll(from, row) {
         return new Promise((resolve, reject) => {
             connect.query('SELECT post.*, customers.images AS images_customers, customers.username, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN customers ON post.customers_id = customers.id LIMIT ?,?;', [from, row], (err, result) => {
                 if (err) reject(err);
                 resolve(result);
+            });
+        });
+    }
+    static async getPostClient() {
+        return new Promise((resolve, reject) => {
+            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN customers ON post.customers_id = customers.id  ORDER BY view DESC LIMIT 4;', (err, data) => {
+                if (err) reject(err);
+                resolve(data);
             });
         });
     }
@@ -103,16 +111,22 @@ module.exports = class Post {
         });
     }
     // Delete 
-    static deletePost(postId) {
+    static deletePost(id) {
         return new Promise((resolve, reject) => {
-            const sql = `DELETE FROM post WHERE id = ${postId}`;
-            connect.query(sql, [postId], (err, result) => {
+            const sql = `DELETE FROM post WHERE id = ${id} AND (SELECT COUNT(*) FROM comments WHERE comments.post_id = ${id}) = 0;`;
+            connect.query(sql, [id], (err, result) => {
                 if (err) {
-                    reject(err);
+                    reject(err); // Trả về lỗi nếu có lỗi xảy ra
                 } else {
-                    resolve(result);
+                    if (result.affectedRows > 0) {
+                        resolve(result); // Nếu có hàng bị ảnh hưởng, trả về kết quả
+                    } else {
+                        reject("Không thể xóa bài đăng vì có bài comment trong bài đăng này."); // Nếu không có hàng nào bị ảnh hưởng, trả về thông báo lỗi
+                    }
                 }
-            });
+            }
+        );
+    
         });
     }
     // getUsername

@@ -265,11 +265,11 @@
 									</div>
 									<div class="custom-block-bottom d-flex justify-content-between mt-3">
 
-										<a href="#" class="bi-headphones me-1">
+										<p  class="bi-headphones me-1">
 											<span>
 												<%= post.view %>
 											</span>
-										</a>
+										</p>
 
 										<a href="#" class="bi-heart me-1" onclick="handleLikeClick(event, '<%= post.id %>')">
 											<span>0</span>
@@ -286,7 +286,7 @@
 
 								<div class="d-flex flex-column ms-auto">
 									<a href="#" class="badge ms-auto">
-										<i class="bi-heart"></i>
+										<i class="bi bi-bookmark"></i>
 									</a>
 
 									<a href="#" class="badge ms-auto">
@@ -326,7 +326,7 @@
 					<div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
 						<div class="custom-block custom-block-overlay">
 							<a href="/client/menu/product/<%= cate.id %>" class="custom-block-image-wrap">
-								<img src="/styles/images/food/banner con 2.jpg" class="custom-block-image img-fluid"
+								<img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F<%=cate.images%>?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" class="custom-block-image img-fluid"
 									alt="">
 							</a>
 
