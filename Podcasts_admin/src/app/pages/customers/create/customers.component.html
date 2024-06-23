@@ -132,7 +132,7 @@
             </div>
           </div>           
             <div class="text-end">
-              <button type="submit" id="btn" nbButton 
+              <button type="submit" id="btn" nbButton  [disabled]="!validateForm.valid"
                 class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5 mx-3">
                 <i class="nb-plus"></i>Thêm mới
               </button>
