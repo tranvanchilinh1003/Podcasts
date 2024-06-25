@@ -13,9 +13,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ListComponent implements OnInit {
   post: IPost[] = [];
-  suggestedKeywords: string[] = [];
+  suggestedKeywords:[] = [];
   last_page: number = 0;
   current_page: number = 0;
+  from: number = 4;
+
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.post.post}`;
   query: string = '';
   newPost: IPost = {
@@ -35,13 +37,18 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getAll();
+
+    this.getAll();  
+    
   }
   getAll() {
     this.postService.getPost().subscribe(res =>{
       this.post = res.data
       this.current_page = res.meta.current_page;
       this.last_page = res.meta.last_page;
+    
+      console.log(this.current_page);
+      
       }, error => {
         console.log(error);
   
@@ -69,13 +76,16 @@ export class ListComponent implements OnInit {
   }
   getPage(event: any): void {
     this.post = event.data
+    this.current_page = event.meta.current_page;
+    this.last_page = event.meta.last_page;
   }
   searchPosts() {
     this.postService.getSearch(this.query)
       .subscribe(
         (data) => {
           this.post = data.data; 
-          // console.log(data.data);
+          this.current_page = data.meta.current_page;
+          this.last_page = data.meta.last_page;
           
           
         },
@@ -91,6 +101,8 @@ export class ListComponent implements OnInit {
         .subscribe(
           (data) => {
             this.suggestedKeywords = data.data;
+          
+
           },
           (error) => {
             console.error('Lỗi khi gợi ý từ khóa:', error);

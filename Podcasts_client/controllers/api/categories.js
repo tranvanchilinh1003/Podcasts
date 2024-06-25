@@ -1,4 +1,5 @@
 const Category = require("../../models/categories");
+const moment = require('moment-timezone');
 
 exports.list = async (req, res, next) => {
     const page = req.query.page || 1;
@@ -33,10 +34,12 @@ exports.list = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
     try {
+        const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
         const categoties = {
             name: req.body.name,
             images: req.body.images,
             description: req.body.description,
+            create_date: date_create
         };
         const addedCategory = await Category.createCategories(categoties);
         res.status(200).json({
@@ -71,11 +74,12 @@ exports.getId = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     let category_id = req.params.id;
     let name = req.body.name;
-
+    const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
     let category = {
         name: name,
         images: req.body.images,
         description: req.body.description,
+        update_date: date_create
     }
     let result = await Category.updateCategories(category, category_id);
 

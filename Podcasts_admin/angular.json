@@ -38,9 +38,15 @@
               "node_modules/@nebular/theme/styles/prebuilt/default.css",
               "node_modules/nebular-icons/scss/nebular-icons.scss",
               "node_modules/leaflet/dist/leaflet.css",
-              "src/app/@theme/styles/styles.scss"
+              "src/app/@theme/styles/styles.scss",
+              "node_modules/tinymce/skins/content/default/content.css",
+              "node_modules/tinymce/skins/ui/oxide/skin.css",
+              "node_modules/tinymce/skins/ui/oxide/content.css"
             ],
-            "scripts": []
+            "scripts": [ 
+              "node_modules/tinymce/tinymce.js",
+              "node_modules/tinymce/tinymce.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -103,7 +109,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [ ]
           }
         }
       }

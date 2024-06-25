@@ -14,8 +14,9 @@ export class ListComponent implements OnInit {
   customers: ICustomer[] = [];
   last_page: number = 0;
   current_page: number = 0;
+  from: number = 5;
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.customers.customers}`;
-  suggestedKeywords: string[] = [];
+  suggestedKeywords: [] = [];
   query: string = '';
   constructor(
     private dialog: DialogService,
@@ -47,6 +48,8 @@ export class ListComponent implements OnInit {
 
   getPage(event: any): void {
     this.customers = event.data
+    this.current_page = event.meta.current_page;
+    this.last_page = event.meta.last_page;
   }
 
   searchCustomer() {
@@ -54,7 +57,8 @@ export class ListComponent implements OnInit {
       .subscribe(
         (data) => {
           this.customers = data.data.data; 
-      
+          this.current_page = data.meta.current_page;
+          this.last_page = data.meta.last_page;
           
           
         },
@@ -70,6 +74,8 @@ export class ListComponent implements OnInit {
         .subscribe(
           (data) => {
             this.suggestedKeywords = data.data;
+
+            
           },
           (error) => {
             console.error('Lỗi khi gợi ý từ khóa:', error);

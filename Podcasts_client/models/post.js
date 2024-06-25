@@ -147,17 +147,36 @@ module.exports = class Post {
 
   static async suggestKeywords(key) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT DISTINCT title FROM post WHERE LOWER(title) LIKE ?`;
+      let sql = `SELECT DISTINCT images,  title FROM post WHERE LOWER(title) LIKE ?`;
       connect.query(sql, [`%${key}%`], function (err, data) {
         if (err) {
           reject(err);
         } else {
-          const keywords = data.map((item) => item.title);
-          resolve(keywords);
+            const suggestions = data.map(item => ({
+                title: item.title,
+                images: item.images
+            }));
+             resolve(suggestions)
         }
       });
     });
   }
+
+  static async countByKey(key) {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT COUNT(*) AS count 
+                   FROM post 
+                   WHERE LOWER(title) LIKE ?`;
+
+        connect.query(sql, [`%${key}%`], (err, results) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(results[0].count);
+            }
+        });
+    });
+}
 
   static async getData() {
     return new Promise((resolve, reject) => {
@@ -175,10 +194,10 @@ module.exports = class Post {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT 
-          MONTH(date) AS month,
+          MONTH(create_date) AS month,
           COUNT(*) AS post_count
         FROM post
-        GROUP BY MONTH(date)
+        GROUP BY MONTH(create_date)
         ORDER BY month ASC
       `;
       connect.query(query, (err, results) => {

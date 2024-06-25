@@ -62,26 +62,26 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="categories_id" class="fw-bold col-form-label">Thể loại</label> <br>
-                            <nb-select class="col-12" name="categories_id" id="categories_id"
-                                formControlName="categories_id" [(ngModel)]="postnew.categories_id" required>
+                            <nb-select [style.width.px]="6581" class="input-full-width" name="categories_id" id="categories_id" formControlName="categories_id" [(ngModel)]="postnew.categories_id" required >
                                 <nb-option value="" disabled>Vui lòng chọn loại</nb-option>
-                                <nb-option *ngFor="let category of categories"
-                                    [value]="category.id">{{category.name}}</nb-option>
+                                <nb-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</nb-option>
                             </nb-select>
                             <br>
-                            <span
-                                *ngIf="postForm.get('categories_id')!.errors?.required && (postForm.get('categories_id')!.dirty || postForm.get('categories_id')!.touched)"
-                                class="text-danger">Vui lòng chọn một thể loại!</span>
+                            <span *ngIf="postForm.get('categories_id')!.errors?.required && (postForm.get('categories_id')!.dirty || postForm.get('categories_id')!.touched)" class="text-danger">Vui lòng chọn một thể loại!</span>
                         </div>
-
+                        
+                        
                     </div>
                     <div class='row'>
                         <div class="col-sm-12">
                             <label for="description" class="fw-bold col-form-label">Mô tả</label>
-                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="description" name="description"
+                            <!-- <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="description" name="description"
                                 fullwidth="" shape="round" placeholder="Mô tả..."
                                 class="input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                formControlName="description" [(ngModel)]="postnew.description"></textarea>
+                                formControlName="description" [(ngModel)]="postnew.description">
+                            
+                                </textarea> -->
+                                <app-tinymce-editor [(editorContent)]="postnew.description"></app-tinymce-editor>
                         </div>
                     </div>
                     <div class="text-end">

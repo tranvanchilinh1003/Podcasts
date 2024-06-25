@@ -129,7 +129,10 @@ export class CreateComponent implements OnInit {
       this.postService.createPost(this.postnew).subscribe({
         next: (post: IPost) => {
           this.post.push(post);
-
+          console.log(post);
+          console.log(this.postnew.description);
+          
+          
           this.postForm.reset();
         },
         error: error => {

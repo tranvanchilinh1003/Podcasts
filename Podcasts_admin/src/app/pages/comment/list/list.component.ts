@@ -14,6 +14,7 @@ export class ListComponent implements OnInit {
   comment: IComment[] = [];
   last_page: number = 0;
   current_page: number = 0;
+  from: number = 5;
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.comment.comment}`;
   constructor(private router: Router,
     private commentService: CommentService,
@@ -38,5 +39,7 @@ export class ListComponent implements OnInit {
   }
   getPage(event: any): void {
     this.comment = event.data
+    this.current_page = event.meta.current_page;
+    this.last_page = event.meta.last_page;
   }
 }

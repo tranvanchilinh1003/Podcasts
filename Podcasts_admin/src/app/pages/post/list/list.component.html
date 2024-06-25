@@ -33,14 +33,16 @@
         </div>
       </div>
     </div>
-
-    <div *ngIf="suggestedKeywords.length > 0" class="dropdown-menu show" style="width: 100%; margin-top: 5px;">
+    <div *ngIf="suggestedKeywords.length > 0" class="dropdown-menu show" style="width: 100%">
         <ul class="list-group">
-          <li class="list-group-item" *ngFor="let keyword of suggestedKeywords" (click)="selectKeyword(keyword)">
-            {{ keyword }}
-          </li>
+            <li class="list-group-item" *ngFor="let keyword of suggestedKeywords" (click)="selectKeyword(keyword.title)">
+                <div class="keyword-item">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{keyword.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="30px" height="30px" alt="" class="rounded-circle">
+                    <span class="keyword-username">{{ keyword.title }}</span>
+                </div>
+            </li>
         </ul>
-      </div>
+    </div>
   </form>
   
         </nb-card-header>
@@ -68,7 +70,7 @@
                             <tr *ngFor="let list of post; index as i">
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    {{i+1}}</td>
+                                    {{ (current_page - 1) * from + i + 1 }}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     {{list.title}}</td>

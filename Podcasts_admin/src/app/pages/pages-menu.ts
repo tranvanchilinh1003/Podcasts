@@ -73,17 +73,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Bình luận',
     icon: 'message-circle-outline',
     link: '/pages/comment/list',
-  },
-  {
-    title: 'Chia sẻ',
-    icon: 'share',
-    link: '/pages/shares/list',
-  },
-  {
-    title: 'Yêu thích',
-    icon: 'heart-outline',
-    link: '/pages/favourite/list',
-  },
+  }
 
   
 ];

@@ -34,9 +34,11 @@
     "nebular-icons": "^1.1.0",
     "ng2-charts": "^2.4.0",
     "ng2-completer": "^9.0.1",
+    "ngx-quill": "^13.4.0",
     "rxjs": "~7.8.0",
     "sass-loader": "^13.3.2",
     "sweetalert2": "^11.11.0",
+    "tinymce": "^7.2.0",
     "tslib": "^2.5.0",
     "xng-breadcrumb": "^9.0.0",
     "zone.js": "~0.12.0"

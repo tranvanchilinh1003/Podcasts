@@ -11,11 +11,14 @@ import {
   NbDatepickerModule,
   NbDialogModule, NbWindowModule, NbToastrModule, NbChatModule
 } from '@nebular/theme';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {CoreModule} from "./@core/core.module";
 import {ThemeModule} from "./@theme/theme.module";
 import { PaginatorModule } from '../app/@theme/components/paginator/paginator.module';
 import { SharesModule } from './pages/shares/shares.module';
+import { JWTInterceptor } from './@core/interceptors';
+import { filterInterceptorRequest } from '../app/@core/interceptors/filter-endpoint.interceptor';
+import { EXCEPT_API_ENDPOINT } from './@core/config';
 
 
 
@@ -43,8 +46,24 @@ import { SharesModule } from './pages/shares/shares.module';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+    
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JWTInterceptor,
+      multi: true
+    },
+    {
+      provide: 'INTERCEPTOR_FILTER',
+      useValue: filterInterceptorRequest
+    },
+    {
+      provide: 'EXCEPT_API_ENDPOINT',
+      useValue: EXCEPT_API_ENDPOINT
+    }
+  ],
+  
   bootstrap: [AppComponent]
   
 })

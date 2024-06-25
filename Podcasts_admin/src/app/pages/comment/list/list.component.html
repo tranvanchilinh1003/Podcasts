@@ -34,7 +34,7 @@
                             <tr *ngFor="let list of comment, index as i">
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    {{i+1}}</td>
+                                    {{ (current_page - 1) * from + i + 1 }}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"

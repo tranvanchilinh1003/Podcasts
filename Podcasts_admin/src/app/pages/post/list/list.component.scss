@@ -111,21 +111,41 @@
     width: 2.8em;
   }
   .dropdown-menu {
-    max-width: max-content;
+    max-width: 250px;
     position: absolute;
     background-color: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-  }
+    padding: 0; 
+    max-height: 300px; 
+    overflow-y: auto;
+}
 
-  .list-group-item {
-    text-align: center;
+.list-group-item {
     padding: 10px;
     cursor: pointer;
-  }
-  
+    list-style: none; 
+}
+.list-group-item:hover {
+  background-color: rgb(230, 226, 226);
+    list-style: none;
+}
+
+.keyword-item {
+    display: flex;
+    align-items: center;
+}
+
+.keyword-item img {
+    margin-right: 10px; /* Adjust margin between image and text */
+}
+
+.keyword-username {
+    font-size: 14px; /* Adjust font size */
+}
+
   .list-group-item:hover {
     background-color: #f8f9fa;
   }

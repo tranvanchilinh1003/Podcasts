@@ -64,7 +64,7 @@ exports.create = async (req, res, next) => {
             gender: req.body.gender,
             images: req.body.images,
             isticket: req.body.isticket,
-            date: date_create
+            create_date: date_create
         };
 
         const addedCustomers = await Customers.createCustomers(customers);
@@ -141,6 +141,7 @@ exports.detail = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
     try {
+        const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
         const id = req.params.id;
         const currentCustomer = await Customers.getUpdateCustomers(id);
 
@@ -163,6 +164,7 @@ exports.update = async (req, res, next) => {
             gender: req.body.gender,
             images: req.body.images,
             isticket: req.body.isticket,
+            update_date: date_create
         };
 
         const result = await Customers.updateCustomers(customers, id);
@@ -199,11 +201,34 @@ exports.delete = async (req, res, next) => {
 
 exports.search = async (req, res, next) => {    
     const key = req.query.messages; 
+    const page = parseInt(req.query.page, 10) || 1; 
+    const row = 5;
+    const from = (page - 1) * row
     try {
+        const totalProducts = await Customers.countByKey({ key });
         const posts = await Customers.search(key);
+        const totalPages = Math.ceil(totalProducts / row);
+        if(totalProducts > 0){ 
         res.status(200).json({
-            data: posts 
+            data: posts,
+            meta: {
+                current_page: page,
+                last_page: totalPages,
+                from: from,
+                count: totalProducts
+            }
         });
+    }else {
+        res.status(200).json({
+            data: posts,
+            meta: {
+                current_page: page,
+                last_page: 1,
+                from: from,
+                count: totalProducts
+            }
+        });
+    }
     } catch (error) {
         console.error("Error searching posts:", error);
         res.status(500).json({ error: "Internal server error" });

@@ -16,6 +16,8 @@ import { environment } from '@environments/environment';
 
 
 
+
+
 @NgModule({
   imports: [
     PagesRoutingModule,
@@ -36,7 +38,7 @@ import { environment } from '@environments/environment';
     ProfileComponent,
     EditComponent,
     PagesComponent,
-
+    
 
 
   ],
