@@ -1,13 +1,14 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-tinymce-editor',
   template: `
-    <div class="editor-container" >
+    <div class="editor-container bg-transparent">
       <quill-editor [styles]="editorStyles" [modules]="editorModules" [(ngModel)]="editorContent"></quill-editor>
     </div>
-    <textarea class='d-is-none' id="mytextarea" [(ngModel)]="editorContent" (ngModelChange)="onEditorContentChange($event)"></textarea>
+    <textarea class="bg-transparent" id="mytextarea" [(ngModel)]="editorContent" (ngModelChange)="onEditorContentChange($event)"></textarea>
+
   `,
   providers: [
     {
@@ -15,14 +16,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/f
       useExisting: forwardRef(() => TinymceEditorComponent),
       multi: true
     }
-  ],
-  styles: []
+  ]
 })
 export class TinymceEditorComponent implements ControlValueAccessor {
-  @Input() editorContent: string = '';
+  @Input() editorContent: string = ' ';
   @Output() editorContentChange = new EventEmitter<string>();
 
-  editorModules = {
+  editorModules: any = {
     toolbar: [
       ['bold', 'italic', 'underline', 'strike'],
       ['blockquote', 'code-block'],
@@ -33,7 +33,7 @@ export class TinymceEditorComponent implements ControlValueAccessor {
       [{ 'direction': 'rtl' }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'color': [] }, { 'background': [] }],
+      [{ 'color': [] }],
       [{ 'font': [] }],
       [{ 'align': [] }],
       ['clean'],
@@ -64,8 +64,8 @@ export class TinymceEditorComponent implements ControlValueAccessor {
     this.editorContentChange.emit(newValue);
     this.onTouched();
   }
+
   editorStyles = {
-    height: '200px',
-    backgroundColor: '#ffffff'
+    height: '200px'
   };
 }

@@ -4,7 +4,7 @@ module.exports = class Post {
     constructor() { }
     static async fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN customers ON post.customers_id = customers.id LIMIT ?,?;', [from, row], (err, result) => {
+            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN customers ON post.customers_id = customers.id ORDER By  IFNULL(post.update_date, post.create_date) DESC LIMIT ?,?;', [from, row], (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             });

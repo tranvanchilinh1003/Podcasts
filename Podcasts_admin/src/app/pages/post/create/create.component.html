@@ -81,7 +81,8 @@
                                 formControlName="description" [(ngModel)]="postnew.description">
                             
                                 </textarea> -->
-                                <app-tinymce-editor [(editorContent)]="postnew.description"></app-tinymce-editor>
+                                <app-tinymce-editor  id="description" name="description" formControlName="description"  [(editorContent)]="postnew.description"></app-tinymce-editor>
+
                         </div>
                     </div>
                     <div class="text-end">

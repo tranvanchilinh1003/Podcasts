@@ -59,7 +59,7 @@ export class CreateComponent implements OnInit {
       audio: new FormControl('', [Validators.required]),
       customers_id: new FormControl(''),
     })
-    // console.log(newPost);
+  
   }
   onFileChange(event: any, fileType: string): void {
     const file = event.target.files[0];
@@ -125,14 +125,10 @@ export class CreateComponent implements OnInit {
       this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
       this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
       this.postnew.customers_id = customerId;
-
+      
       this.postService.createPost(this.postnew).subscribe({
         next: (post: IPost) => {
-          this.post.push(post);
-          console.log(post);
-          console.log(this.postnew.description);
-          
-          
+          this.post.push(post);          
           this.postForm.reset();
         },
         error: error => {

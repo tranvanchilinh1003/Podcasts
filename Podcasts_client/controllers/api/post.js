@@ -64,7 +64,7 @@ exports.update = async (req, res, next) => {
             update_date: date_create
         };
         const result = await Post.updatePost( updatedPost, id);
-        console.log(result);
+        
         res.status(200).json({
             message: 'Post updated successfully',
             data: result
