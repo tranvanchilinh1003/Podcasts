@@ -112,16 +112,14 @@ export class CreateComponent implements OnInit {
   async onCreate(): Promise<void> {
     const customerIdRaw = this.localStorageService.getItem(LOCALSTORAGE_KEY.userInfo);
     const customerId = customerIdRaw[0].id;
-
+    
     if (this.postForm.invalid) {
       return;
     }
 
 
     try {
-      // Chờ quá trình upload hoàn tất
       await this.upload();
-
       this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
       this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
       this.postnew.customers_id = customerId;
@@ -136,8 +134,6 @@ export class CreateComponent implements OnInit {
         }
       });
 
-      // Sử dụng this.fileExtensionImg và this.fileExtensionAudio để lấy tên file
-
     } catch (error) {
       console.error('Error uploading image', error);
     }
@@ -146,7 +142,6 @@ export class CreateComponent implements OnInit {
   getCate() {
     this.categoriesService.getCategories().subscribe(res => {
       this.categories = res.data
-      // console.log(res.data);
     }, error => {
       console.log(error);
 

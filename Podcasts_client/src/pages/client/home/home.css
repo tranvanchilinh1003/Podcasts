@@ -1,0 +1,33 @@
+a:hover {
+    text-decoration: none !important;
+    
+  }
+
+.bi-play-fill{
+    color: white;
+}
+.img-podcast{
+    width: 112px !important;
+    height: 112px !important;
+}
+
+.shadow {
+    font-family: inherit;
+    font-size: 18px;
+    background: linear-gradient(to bottom, #4dc7d9 0%, #66a6ff 100%);
+    color: white;
+    padding: 0.8em 1.2em;
+    display: flex;
+    border: none;
+    border-radius: 25px;
+    transition: all 0.3s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+button:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}

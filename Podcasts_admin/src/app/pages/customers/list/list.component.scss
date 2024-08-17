@@ -12,6 +12,7 @@
     margin: 0 auto;
     width: auto;
     max-width: 224px;
+    position: relative;
   }
   
   .searchbar:hover {
@@ -92,7 +93,8 @@
     flex: 0 0 auto;
     margin-top: -5px;
     align-items: stretch;
-    flex-direction: row
+    flex-direction: row;
+    margin-left: auto;
   }
   
   .searchbar-clear-icon {
@@ -113,15 +115,18 @@
   .dropdown-menu {
     max-width: 250px;
     position: absolute;
+    top: 100%; /* Hiển thị dropdown dưới thanh tìm kiếm */
     background-color: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    padding: 0; 
-    max-height: 300px; 
+    padding: 0;
+    max-height: 300px;
     overflow-y: auto;
+    transform: translateY(0); /* Đảm bảo không dịch chuyển không mong muốn */
 }
+
 
 .list-group-item {
     padding: 10px;

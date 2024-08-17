@@ -3,7 +3,7 @@ export const environment = {
   dev: false,
   stage: false,
   production: false,
-  apiBaseUrl: 'http://localhost:3000',
+  apiBaseUrl: 'http://localhost:8080',
   firebaseConfig : {
     apiKey: "AIzaSyAVqh4jP3U6ditXJuDKaOPOMiG4je8Jdck",
     authDomain: "podcast-ba34e.firebaseapp.com",

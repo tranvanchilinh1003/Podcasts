@@ -1,0 +1,106 @@
+
+.account-settings .user-profile {
+    margin: 0 0 1rem 0;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+
+.account-settings .user-profile .user-avatar {
+    margin: 0 0 1rem 0;
+}
+
+.account-settings .user-profile .user-avatar img {
+    width: 90px;
+    height: 90px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+}
+
+.account-settings .user-profile h5.user-name {
+    margin: 0 0 0.5rem 0;
+}
+
+.account-settings .user-profile h6.user-email {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.account-settings .about {
+    margin: 1rem 0 0 0;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.card {
+    background: #e7e5e5;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 0;
+    margin-bottom: 1rem;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1040; 
+    display: none;
+    backdrop-filter: blur(5px); /* Làm mờ nền */
+}
+
+.modal.fade.show {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal {
+    position: fixed;
+    z-index: 1050;
+}
+
+body.modal-open .backdrop {
+    display: block; 
+}
+
+
+body {
+    color: #6c7293;
+    background-color: #f0f2f5;
+}
+
+.profile-navbar .nav-item .nav-link {
+  color: #6c7293;
+}
+
+.profile-navbar .nav-item .nav-link.active {
+  color: #464dee;
+}
+
+.profile-navbar .nav-item .nav-link i {
+  font-size: 1.25rem;
+}
+
+.profile-feed-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #e9e9e9;
+}
+.img-sm {
+    width: 43px;
+    height: 43px;
+}
+
+.body-profile{
+    margin-bottom: 200px;
+}
+
+.card{
+    background-color: white;
+}

@@ -1,0 +1,16 @@
+.custom-search {
+    position: relative;
+}
+
+#searchSuggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: none; /* Initially hidden */
+}
+
+.dropdown-menu.show {
+    display: block; /* Show when there are suggestions */
+}
