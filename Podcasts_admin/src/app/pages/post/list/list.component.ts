@@ -16,7 +16,7 @@ export class ListComponent implements OnInit {
   suggestedKeywords:[] = [];
   last_page: number = 0;
   current_page: number = 0;
-  from: number = 4;
+  from: number = 5;
 
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.post.post}`;
   query: string = '';

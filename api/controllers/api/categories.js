@@ -8,7 +8,7 @@ exports.list = async (req, res, next) => {
     const totalProducts = await Category.countCategories();
     if(totalProducts > 0) {
     const totalPages = Math.ceil(totalProducts / row);
-    var categories = await Category.fetchAll();
+    var categories = await Category.fetchAll(from, row);
 
 
     res.status(200).json({
@@ -30,6 +30,18 @@ exports.list = async (req, res, next) => {
         }
     })
 }
+};
+exports.listall = async (req, res, next) => {
+
+    var categories = await Category.fetchAllCate();
+
+    res.status(200).json({
+        data: categories,
+        
+    })
+
+    
+
 };
 
 exports.create = async (req, res, next) => {

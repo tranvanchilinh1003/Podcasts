@@ -27,7 +27,7 @@ exports.login = async (req, res, next) => {
                 if (result[0].role === 'user') {
                     return res.status(200).json({ data: [{id: result[0].id, username: result[0].username, images: result[0].images, email: result[0].email, role: result[0].role}], token, success: true, message: 'Đăng nhập thành công (user)' });
                 } else if (result[0].role === 'admin') {
-                    return res.status(200).json({ data: [{id: result[0].id, username: result[0].username, images: result[0].images, email: result[0].email, role: result[0].role}], token, success: true, message: 'Đăng nhập thành công (admin)' });
+                    return res.status(200).json({ data: [{id: result[0].id, username: result[0].username, full_name: result[0].full_name, gender: result[0].gender , images: result[0].images, email: result[0].email, role: result[0].role}], token, success: true, message: 'Đăng nhập thành công (admin)' });
                 }
             } else {
                 return res.status(401).json({ success: false, message: 'Mật khẩu không chính xác' });

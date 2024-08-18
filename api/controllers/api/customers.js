@@ -15,7 +15,7 @@ exports.list = async (req, res, next) => {
 
     
     const totalPages = Math.ceil(totalProducts / row);
-    const customers = await Customers.fetchAll();
+    const customers = await Customers.fetchAll(from,row);
         res.status(200).json({
             data: customers,
             meta: {

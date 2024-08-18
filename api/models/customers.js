@@ -3,10 +3,10 @@ var connect = require('./database');
 
 module.exports = class Customers {
     constructor() { }
-    static fetchAll() {
+    static fetchAll(from, row) {
       return new Promise((resolve, reject) => {
-        let sql = `SELECT * FROM customers ORDER By customers.create_date DESC`;
-        connect.query(sql,  function (err, data) {
+        let sql = `SELECT * FROM customers ORDER By customers.create_date DESC LIMIT ?, ?`;
+        connect.query(sql,[from, row],   function (err, data) {
           if (err) {
             reject(err);
           } else {
@@ -196,6 +196,7 @@ module.exports = class Customers {
       });
     }
     
+
 
 
     

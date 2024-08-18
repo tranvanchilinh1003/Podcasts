@@ -10,7 +10,7 @@ function CategoriesHome() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/categories');
+        const response = await axios.get('http://localhost:8080/api/categories_All');
         if (Array.isArray(response.data.data)) {
           setCategories(response.data.data);
           setDisplayedCategories(response.data.data.slice(0, 3)); 

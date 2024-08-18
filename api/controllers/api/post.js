@@ -4,12 +4,12 @@ const moment = require('moment-timezone');
 // All List 
 exports.list = async (req, res, next) => {
     const page = req.query.page || 1;
-    const row = 6;
+    const row = 5;
     const from = (page - 1) * row;
     const totalProducts = await Post.coutCustomers();
     if(totalProducts > 0){ 
     const totalPages = Math.ceil(totalProducts / row);
-    var post = await Post.fetchAll();
+    var post = await Post.fetchAll(from, row);
     res.status(200).json({
         data: post,
         meta: {
@@ -156,16 +156,17 @@ exports.delete = async (req, res, next) => {
     
 };
 exports.search = async (req, res, next) => {    
-    const key = req.query.query; 
+    const key = req.query.messages; 
     const page = parseInt(req.query.page, 10) || 1; 
     const row = 4;
-    const from = (page - 1) * row;
+    const from = (page - 1) * row
     try {
-        const totalProducts = await Post.countByKey(key);
+        const totalProducts = await Post.countByKey({ key });
         const posts = await Post.search(key);
         const totalPages = Math.ceil(totalProducts / row);
+        if(totalProducts > 0){     
         res.status(200).json({
-            data: posts,
+            data: posts ,
             meta: {
                 current_page: page,
                 last_page: totalPages,
@@ -173,6 +174,17 @@ exports.search = async (req, res, next) => {
                 count: totalProducts
             }
         });
+    }else {
+        res.status(200).json({
+            data: posts ,
+            meta: {
+                current_page: page,
+                last_page: 1,
+                from: from,
+                count: totalProducts
+            }
+        });
+    }
     } catch (error) {
         console.error("Error searching posts:", error);
         res.status(500).json({ error: "Internal server error" });

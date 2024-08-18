@@ -21,6 +21,7 @@ function Post() {
   const [viewUpdated, setViewUpdated] = useState(false);
   const [sharesToday, setSharesToday] = useState([]);
   const [customer_id, setCustomer] = useState(null);
+  const [expandedPostId, setExpandedPostId] = useState(null); // New state for expanded post ID
 
   const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
@@ -33,10 +34,11 @@ function Post() {
       console.error("Error fetching posts:", error);
     }
   };
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get("/api/shares/today");
+        const response = await axios.get("/api/shares/today");
         setSharesToday(response.data.data);
       } catch (error) {
         console.error("Error fetching shares today:", error);
@@ -79,10 +81,7 @@ function Post() {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
-      2,
-      "0"
-    )}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
   const fetchAllPosts = async () => {
@@ -184,36 +183,32 @@ function Post() {
   const postsToDisplay = data.slice(0, visibleCount);
 
   const handleShareClick = async (postId) => {
-    const customer = localStorage.getItem('customer');
-    setCustomer(JSON.parse(customer));
-    // console.log(customerId);
-    
     try {
+      const customer = localStorage.getItem('customer');
+      setCustomer(JSON.parse(customer));
       const response = await axios.post('http://localhost:8080/api/shares', {
         post_id: postId,
         customers_id: customer_id[0].id
       });
       console.log("Share count updated:", response.data);
 
-      // Hiển thị thông báo thành công
       Toastify({
         text: "Chia sẻ thành công!",
         duration: 3000,
-        gravity: "bottom", // can be top or bottom
-        position: "right", // can be left, center or right
-        backgroundColor: "#4caf50", // green
-        stopOnFocus: true, // Prevents dismissing of toast on hover
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "#4caf50",
+        stopOnFocus: true,
       }).showToast();
     } catch (error) {
       console.error("Error updating share count:", error);
 
-      // Hiển thị thông báo lỗi
       Toastify({
         text: "Vui lòng đăng nhập để chia sẻ",
         duration: 3000,
         gravity: "bottom",
         position: "right",
-        backgroundColor: "#f44336", // red
+        backgroundColor: "#f44336",
         stopOnFocus: true,
       }).showToast();
     }
@@ -222,8 +217,6 @@ function Post() {
   const handleFavouriteClick = async (postId) => {
     const customer = localStorage.getItem('customer');
     setCustomer(JSON.parse(customer));
-    // console.log(customer);
-    
 
     try {
       const response = await axios.post('http://localhost:8080/api/favourite', {
@@ -244,7 +237,7 @@ function Post() {
       console.error("Error updating favourite count:", error);
 
       Toastify({
-        text: "Đăng nhập để để lưu",
+        text: "Đăng nhập để lưu",
         duration: 3000,
         gravity: "bottom",
         position: "right",
@@ -255,10 +248,7 @@ function Post() {
   };
 
   return (
-    <section
-      className="latest-podcast-section section-padding pb-0"
-      id="section_2"
-    >
+    <section className="latest-podcast-section section-padding pb-0" id="section_2">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-12 col-12">
@@ -270,14 +260,14 @@ function Post() {
           <div className="row">
             {postsToDisplay.map((post) => (
               <div className="col-lg-12 col-12 mb-4" key={post.id}>
-                <div className="custom-block d-flex">
-                  <div className="col-lg-3 col-4">
+                <div className="custom-block d-flex flex-column flex-md-row">
+                  <div className="col-lg-3 col-12">
                     <div className="custom-block-icon-wrap">
                       <div className="section-overlay"></div>
                       <a className="custom-block-image-wrap">
                         <img
                           src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                          className="custom-block-image img-fluid"                      
+                          className="custom-block-image img-fluid"
                           alt=""
                         />
                         <span
@@ -296,7 +286,7 @@ function Post() {
                         </span>
                       </a>
                     </div>
-                    <div className="custom-block-bottom justify-content-around d-flex ms-3 mt-3">
+                    <div className="custom-block-bottom justify-content-around d-flex mt-3 ">
                       <p className="bi-headphones me-1">
                         <span>{post.view}</span>
                       </p>
@@ -315,8 +305,7 @@ function Post() {
                       </Link>
                     </div>
                   </div>
-                  <div className="custom-block-info">
-                    <div className="custom-block-top d-flex mb-1"></div>
+                  <div className="custom-block-info col-lg-8 col-12">
                     <h4 className="mb-2">
                       <Link to={`/getId_post/${post.id}`}>{post.title}</Link>
                     </h4>
@@ -339,7 +328,19 @@ function Post() {
                         <strong>Người đăng</strong>
                       </p>
                     </div>
-                    <p>{truncateText(post.description, 100)}</p>
+                    <p className="description-text">
+                      {expandedPostId === post.id 
+                        ? post.description 
+                        : truncateText(post.description, 100)} {/* Adjust the 100 to the desired max length */}
+                      {post.description.length > 100 && (  /* Show 'Read More' only if text is longer than 100 characters */
+                        <span 
+                          className="read-more-toggle" 
+                          onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)}
+                        >
+                          {expandedPostId === post.id ? "Ẩn bớt" : "Xem thêm"}
+                        </span>
+                      )}
+                    </p>
                   </div>
                   <div className="d-flex flex-column ms-auto">
                     <a
@@ -350,8 +351,7 @@ function Post() {
                         handleFavouriteClick(post.id);
                       }}
                     >
-                    
-                      <i class="bi bi-bookmark"></i>
+                      <i className="bi bi-bookmark"></i>
                     </a>
                     <a
                       href="#"

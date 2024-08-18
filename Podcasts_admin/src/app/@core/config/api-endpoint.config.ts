@@ -22,7 +22,8 @@ export const API_ENDPOINT: IAPIEndpoint = {
   },
   comment: {
     base: API_BASE_URL + '/' + 'api',
-    comment: '/api/comment',
+    comment: '/api/comments',
+    list: '/api/listcomments'
   },
   customers: {
     base: API_BASE_URL + '/' + 'api',

@@ -2,9 +2,21 @@ var connect = require('./database');
 var categories = [];
 module.exports = class Categories {
     constructor() {}
-    static fetchAll() {
+    static fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM categories`;
+            let sql = `SELECT * FROM categories ORDER By create_date LIMIT ?, ?` ;
+            connect.query(sql,[from, row],  function (err, data) {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(data);
+              }
+            });
+          });
+    }
+    static fetchAllCate() {
+        return new Promise((resolve, reject) => {
+            let sql = `SELECT * FROM categories ` ;
             connect.query(sql,  function (err, data) {
               if (err) {
                 reject(err);

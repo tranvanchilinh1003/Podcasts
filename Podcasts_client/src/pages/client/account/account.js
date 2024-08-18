@@ -89,7 +89,7 @@ function Account() {
         setValue('username', user.username);
         setValue('full_name', user.full_name);
         setValue('email', user.email);
-        setValue('gender', user.gender.toString());
+        // setValue('gender', user.gender.toString());
       } catch (err) {
         console.error('Failed to fetch user info:', err);
         setError(err);

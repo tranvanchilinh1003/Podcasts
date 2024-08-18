@@ -283,7 +283,7 @@ main {
 }
 
 .navbar .logo-image {
-  width: 70px;
+  width: 50px;
 }
 
 .logo-image {
@@ -307,8 +307,9 @@ main {
   color: var(--section-bg-color);
   letter-spacing: 0.5px;
   position: relative;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 20px;
+  padding-bottom: 15px; 
+
 }
 
 .navbar-expand-lg .navbar-nav .nav-link {
@@ -602,6 +603,7 @@ main {
   padding: 30px;
   transition: all 0.3s ease;
   max-height:max-content;
+
 }
 
 .custom-block:hover {
@@ -1007,8 +1009,8 @@ main {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  margin-top: -80px;
-  padding-top: 100px;
+  margin-top: -20px;
+  padding-top: 20px;
   padding-bottom: 150px;
 }
 
@@ -1454,4 +1456,21 @@ main {
   bottom: unset;
   /* transform: translateY(-30px); */
   transition-duration: 0.3s;
+}
+.truncated-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.read-more-toggle {
+  color: blue; 
+  cursor: pointer;
+
+}
+
+.read-more-toggle:hover {
+  text-decoration: underline; /* Optional: underline the text for a link-like appearance */
+  color: darkblue; /* Change color when hovered */
 }

@@ -69,6 +69,7 @@ function GoogleAuth({ onLogin }) {
           role,
           create_date,
           password,
+          isticket: 'inactive'
         });
         const data = {
           username,

@@ -82,6 +82,7 @@ router.post('/update_view/:id', post.view)
 
 router.post('/categories', cate.create);
 router.get('/categories', cate.list);
+router.get('/categories_All', cate.listall);
 router.delete('/categories/:id', cate.delete);
 router.get('/categories/:id', cate.detail);
 router.get('/product/:id', cate.getId);

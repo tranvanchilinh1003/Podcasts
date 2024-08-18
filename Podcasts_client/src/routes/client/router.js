@@ -13,7 +13,7 @@ import Account from '../../pages/client/account/account';
 import SearchResults from '../../pages/client/search/SearchResult';
 
 
-
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../../assets/client/styles/css/bootstrap.min.css'
 import '../../assets/client/styles/css/bootstrap-icons.css'
 import '../../assets/client/styles/css/owl.theme.default.min.css'
@@ -22,6 +22,9 @@ import '../../assets/client/styles/css/owl.carousel.min.css'
 import '../../assets/client/styles/css/main.css'
 import '../../assets/client/styles/css/login.css'
 import '../../assets/client/styles/css/templatemo-pod-talk.css'
+
+import '../../assets/client/styles/vendor/fontawesome-free/css/all.min.css';
+import '../../assets/client/styles/vendor/bootstrap/css/bootstrap.min.css';
 import ScrollToTop from '../../layouts/client/component/ScrollToTop';
 
 

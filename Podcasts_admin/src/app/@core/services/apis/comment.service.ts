@@ -28,7 +28,7 @@ export class CommentService extends ApiService {
     }
 
     getPost(): Observable<any> {
-        return this._http.get<{ data: IComment[] }>(API_BASE_URL + API_ENDPOINT.comment.comment, {
+        return this._http.get<{ data: IComment[] }>(API_BASE_URL + API_ENDPOINT.comment.list, {
             headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
         });
     

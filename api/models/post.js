@@ -2,9 +2,10 @@ var connect = require('./database');
 var Post = [];
 module.exports = class Post {
     constructor() { }
-    static fetchAll() {
+    static fetchAll(from , row) {
         return new Promise((resolve, reject) => {
-            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id GROUP BY post.id ORDER By post.create_date DESC',  (err, result) => {
+            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id GROUP BY post.id ORDER By post.create_date DESC LIMIT ?,?', [from, row], 
+                  (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             });
@@ -100,7 +101,7 @@ module.exports = class Post {
     //get All Pots Cate
     static async getAllPost() {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id GROUP BY post.id ORDER BY view DESC ;`
+            let sql = `SELECT post.*, customers.images AS images_customers, customers.username, customers.isticket, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id GROUP BY post.id ORDER BY view DESC ;`
             connect.query(sql, function (err, data) {
                 if (err) {
                     reject(err);
