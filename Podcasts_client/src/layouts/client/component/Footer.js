@@ -35,7 +35,7 @@ function Footer({ userId, user, categories }) {
           </button>
         </div>
       )}
-      <footer className="site-footer">
+      <footer className="site-footer text-center">
         <div className="container pt-5">
           <div className="row align-items-center">
             <div className="col-lg-2 col-md-12 d-flex justify-content-center mb-3 mb-md-0">

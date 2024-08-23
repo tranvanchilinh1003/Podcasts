@@ -40,4 +40,13 @@ nb-checkbox {
   .demo-items {
     flex: 1 0 33%;
   }
+
+  .input-container {
+    display: flex;
+    align-items: center; 
+  }
+  
+  .input-container img {
+    margin-left: 10px;
+  }
   

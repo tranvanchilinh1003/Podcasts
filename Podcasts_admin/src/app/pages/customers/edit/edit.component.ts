@@ -5,6 +5,7 @@ import { CustomerService } from 'app/@core/services/apis/customers.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormGroup, FormControl, Validators, ValidationErrors } from '@angular/forms';
 import { DialogService } from 'app/@core/services/common/dialog.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit',
@@ -12,11 +13,6 @@ import { DialogService } from 'app/@core/services/common/dialog.service';
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit {
-  file: File | null = null;
-  newFileName: string = '';
-  oldImagePath: string | null = null; 
-  oldPassword: string = '';  
-  validateForm!: FormGroup;
   editingCustomer: ICustomer = {
     id: '',
     username: '',
@@ -28,6 +24,14 @@ export class EditComponent implements OnInit {
     images: '',
     isticket: 'active',
   };
+  newFileName: string = '';
+  file: File | null = null;
+  imgUpload: string = '';
+  oldImagePath: string | null = null;
+  oldPassword: string = '';
+  validateForm!: FormGroup;
+  showImagePreview: boolean = true;
+  isUploading: boolean = false;
 
   constructor(
     private dialog: DialogService,
@@ -63,8 +67,8 @@ export class EditComponent implements OnInit {
         Validators.pattern('.+@.+\..+')
       ]),
       images: new FormControl(''),
-    }, 
-    { validators: this.passwordMatchValidator });
+    },
+      { validators: this.passwordMatchValidator });
   }
 
   passwordMatchValidator(formGroup: FormGroup): ValidationErrors | null {
@@ -82,6 +86,15 @@ export class EditComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       this.file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imgUpload = e.target.result;
+      };
+      reader.readAsDataURL(this.file);
+
+      this.validateForm.get('images')!.setValue(this.file.name);
+      this.validateForm.get('images')!.markAsDirty();
+      this.validateForm.get('images')!.markAsTouched();
     }
   }
 
@@ -89,15 +102,25 @@ export class EditComponent implements OnInit {
     if (!this.file) {
       throw new Error('Chưa chọn file nào');
     }
-  
+
     const fileExtension = this.file.name.split('.').pop();
     const currentDate = new Date();
     this.newFileName = `${currentDate.toISOString().trim()}.${fileExtension}`;
+    this.isUploading = true;
+    this.imgUpload = `https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${this.newFileName}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9`;
     const path = `upload/${this.newFileName}`;
     const fileRef = this.af.ref(path);
-  
-    await this.af.upload(path, this.file);
-console.log('Cập nhật thành công, new file name:', this.newFileName);
+
+    const task = this.af.upload(path, this.file);
+
+    await task.snapshotChanges().pipe(
+      finalize(() => {
+        this.isUploading = false;
+        this.showImagePreview = false;
+      })
+    ).toPromise();
+
+    console.log('Cập nhật thành công, new file name:', this.newFileName);
   }
 
   loadEditingCustomer(): void {
@@ -110,7 +133,8 @@ console.log('Cập nhật thành công, new file name:', this.newFileName);
         }
 
         this.oldImagePath = this.editingCustomer.images;
-        this.oldPassword = this.editingCustomer.password;  
+        this.imgUpload = `https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${this.editingCustomer.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9`;
+        this.oldPassword = this.editingCustomer.password;
 
         this.validateForm.patchValue({
           username: this.editingCustomer.username,
@@ -119,7 +143,6 @@ console.log('Cập nhật thành công, new file name:', this.newFileName);
           gender: this.editingCustomer.gender,
           email: this.editingCustomer.email,
         });
-  
       },
       error: error => {
         console.error('Error fetching editing Customer', error);
@@ -128,37 +151,46 @@ console.log('Cập nhật thành công, new file name:', this.newFileName);
   }
 
   async onUpdate(): Promise<void> {
+    const id = this.route.snapshot.params['id'];
     if (this.validateForm.invalid) {
       return;
     }
-  
-    const id = this.route.snapshot.params['id'];
-    this.editingCustomer.id = id;
-  
-    const passwordControl = this.validateForm.controls['password'];
-    if (passwordControl.value) {
-      this.editingCustomer.password = passwordControl.value;
-    } else {
-      this.editingCustomer.password = this.oldPassword || '';  
-    }
-  
+
+    this.isUploading = true;
 
     try {
       if (this.file) {
         await this.capNhatAnh();
         this.editingCustomer.images = this.newFileName;
+      } else {
+        this.editingCustomer.images = this.oldImagePath;
       }
+
+      const passwordControl = this.validateForm.controls['password'];
+      if (passwordControl.value) {
+        this.editingCustomer.password = passwordControl.value;
+      } else {
+        this.editingCustomer.password = this.oldPassword || '';
+      }
+
       this.customerService.update(id, this.editingCustomer).subscribe({
         next: () => {
           this.dialog.success('Đã cập nhật thành công!');
+          this.loadEditingCustomer();
+          this.file = null;
         },
         error: error => {
           console.error('Error updating Customer', error);
+        },
+        complete: () => {
+          this.isUploading = false;
+          this.showImagePreview = true; 
         }
       });
     } catch (error) {
       console.error('Error during the update process', error);
+      this.isUploading = false;
     }
-}
+  }
 
 }

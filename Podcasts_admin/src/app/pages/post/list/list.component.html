@@ -2,52 +2,54 @@
     <div class="col-lg-12">
         <nb-card>
             <nb-card-header class="d-flex justify-content-between align-content-center">
-                Danh sách    
-        
-<form action="">
-    <div class="searchbar bg-transparent">
-      <div class="searchbar-wrapper">
-        <div class="searchbar-left">
-          <div class="search-icon-wrapper">
-            <span class="search-icon searchbar-icon" (click)="searchPosts()">
-              <nb-icon icon="search-outline" pack="eva" class="fs-4"></nb-icon>
-            </span>
-          </div>
-        </div>
-        <div class="searchbar-center">
-          <div class="searchbar-input-spacer"></div>
-          <input type="text" class="searchbar-input status-basic" maxlength="2048" name="query" nbInput
-            autocapitalize="off" autocomplete="off" title="Search" role="combobox" placeholder="Tìm kiếm"
-            [(ngModel)]="query" (input)="suggestKeywords()">
-        </div>
-        <div class="searchbar-right">
-          <svg class="voice-search" role="button" xmlns="" viewBox="0 0 24 24">
-            <path fill="#4285f4" d="m12 15c1.66 0 3-1.31 3-2.97v-7.02c0-1.66-1.34-3.01-3-3.01s-3 1.34-3 3.01v7.02c0 1.66 1.34 2.97 3 2.97z">
-            </path>
-            <path fill="#34a853" d="m11 18.08h2v3.92h-2z"></path>
-            <path fill="#fbbc05" d="m7.05 16.87c-1.27-1.33-2.05-2.83-2.05-4.87h2c0 1.45 0.56 2.42 1.47 3.38v0.32l-1.15 1.18z">
-            </path>
-            <path fill="#ea4335" d="m12 16.93a4.97 5.25 0 0 1 -3.54 -1.55l-1.41 1.49c1.26 1.34 3.02 2.13 4.95 2.13 3.87 0 6.99-2.92 6.99-7h-1.99c0 2.92-2.24 4.93-5 4.93z">
-            </path>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="suggestedKeywords.length > 0" class="dropdown-menu show" style="width: 100%">
-        <ul class="list-group">
-            <li class="list-group-item" *ngFor="let keyword of suggestedKeywords" (click)="selectKeyword(keyword.title)">
-                <div class="keyword-item">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{keyword.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="30px" height="30px" alt="" class="rounded-circle">
-                    <span class="keyword-username">{{ keyword.title }}</span>
-                </div>
-            </li>
-        </ul>
-    </div>
-  </form>
-  
-        </nb-card-header>
+                Danh sách
+                <form action="">
+                    <div class="searchbar bg-transparent">
+                        <div class="searchbar-wrapper">
+                            <div class="searchbar-left">
+                                <div class="search-icon-wrapper">
+                                    <span class="search-icon searchbar-icon" (click)="searchPosts()">
+                                        <nb-icon icon="search-outline" pack="eva" class="fs-4"></nb-icon>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="searchbar-center">
+                                <div class="searchbar-input-spacer"></div>
+                                <input type="text" class="searchbar-input status-basic" maxlength="2048" name="query"
+                                    nbInput autocapitalize="off" autocomplete="off" title="Search" role="combobox"
+                                    placeholder="Tìm kiếm" [(ngModel)]="query" (input)="suggestKeywords()">
+                            </div>
+                            <div class="searchbar-right">
+                                <svg class="voice-search" role="button" xmlns="" viewBox="0 0 24 24">
+                                    <path fill="#4285f4"
+                                        d="m12 15c1.66 0 3-1.31 3-2.97v-7.02c0-1.66-1.34-3.01-3-3.01s-3 1.34-3 3.01v7.02c0 1.66 1.34 2.97 3 2.97z">
+                                    </path>
+                                    <path fill="#34a853" d="m11 18.08h2v3.92h-2z"></path>
+                                    <path fill="#fbbc05"
+                                        d="m7.05 16.87c-1.27-1.33-2.05-2.83-2.05-4.87h2c0 1.45 0.56 2.42 1.47 3.38v0.32l-1.15 1.18z">
+                                    </path>
+                                    <path fill="#ea4335"
+                                        d="m12 16.93a4.97 5.25 0 0 1 -3.54 -1.55l-1.41 1.49c1.26 1.34 3.02 2.13 4.95 2.13 3.87 0 6.99-2.92 6.99-7h-1.99c0 2.92-2.24 4.93-5 4.93z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="suggestedKeywords.length > 0" class="dropdown-menu show"
+                        style="width: 100%; margin-top: 5px;">
+                        <ul class="list-group">
+                            <li class="list-group-item" *ngFor="let keyword of suggestedKeywords"
+                                (click)="selectKeyword(keyword)">
+                                {{ keyword }}
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+
+            </nb-card-header>
             <nb-card-body>
-            
+
                 <div class="table-responsive pt-3">
                     <table class="table border text-center">
                         <ng-container>
@@ -63,6 +65,15 @@
                                     Hình ảnh</th>
                                 <th
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Tổng yêu thích</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Tổng bình luận</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Tổng chia sẻ</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                 </th>
                             </tr>
                         </ng-container>
@@ -70,14 +81,27 @@
                             <tr *ngFor="let list of post; index as i">
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    {{ (current_page - 1) * from + i + 1 }}</td>
+                                    {{i+1}}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     {{list.title}}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
-                                        width="100px" alt="" class="rounded-circle"></td>
+                                        width="100px" alt="" class="rounded-circle">
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.total_favorites}}
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.total_comments}}
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.total_shares}}
+                                </td>
                                 <td
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
                                     <button nbButton

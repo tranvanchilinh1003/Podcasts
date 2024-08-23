@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { IPost } from 'app/@core/interfaces/post.interface';
 import { PostService } from 'app/@core/services/apis/post.service';
+import { SpinnerService } from "../../../@theme/components/spinner/spinner.service";
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 import { HttpClient } from '@angular/common/http';
@@ -13,11 +14,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ListComponent implements OnInit {
   post: IPost[] = [];
-  suggestedKeywords:[] = [];
+  suggestedKeywords: string[] = [];
   last_page: number = 0;
   current_page: number = 0;
-  from: number = 5;
-
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.post.post}`;
   query: string = '';
   newPost: IPost = {
@@ -31,27 +30,24 @@ export class ListComponent implements OnInit {
   };
   constructor(
     private dialog: DialogService,
+    private spinner: SpinnerService,
     private postService: PostService,
     private route: ActivatedRoute,
     private http: HttpClient
   ) { }
 
   ngOnInit(): void {
-
-    this.getAll();  
-    
+    this.getAll();
   }
   getAll() {
+    this.spinner.show();
     this.postService.getPost().subscribe(res =>{
       this.post = res.data
       this.current_page = res.meta.current_page;
       this.last_page = res.meta.last_page;
-    
-      console.log(this.current_page);
-      
+      this.spinner.hide();
       }, error => {
         console.log(error);
-  
       })
   }
   deletePost(postId: string) {
@@ -76,16 +72,13 @@ export class ListComponent implements OnInit {
   }
   getPage(event: any): void {
     this.post = event.data
-    this.current_page = event.meta.current_page;
-    this.last_page = event.meta.last_page;
   }
   searchPosts() {
     this.postService.getSearch(this.query)
       .subscribe(
         (data) => {
           this.post = data.data; 
-          this.current_page = data.meta.current_page;
-          this.last_page = data.meta.last_page;
+          // console.log(data.data);
           
           
         },
@@ -101,8 +94,6 @@ export class ListComponent implements OnInit {
         .subscribe(
           (data) => {
             this.suggestedKeywords = data.data;
-          
-
           },
           (error) => {
             console.error('Lỗi khi gợi ý từ khóa:', error);

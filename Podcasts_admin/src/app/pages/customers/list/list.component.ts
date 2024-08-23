@@ -4,6 +4,7 @@ import { CustomerService } from 'app/@core/services/apis/customers.service';
 import { ICustomer } from 'app/@core/interfaces/customers.interface';  
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config'; 
+import { SpinnerService } from 'app/@theme/components/spinner/spinner.service';
 
 @Component({
   selector: 'app-list',
@@ -14,11 +15,11 @@ export class ListComponent implements OnInit {
   customers: ICustomer[] = [];
   last_page: number = 0;
   current_page: number = 0;
-  from: number = 5;
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.customers.customers}`;
-  suggestedKeywords: [] = [];
+  suggestedKeywords: string[] = [];
   query: string = '';
   constructor(
+    private spinner: SpinnerService,
     private dialog: DialogService,
     private CustomersService: CustomerService
     ){}
@@ -28,7 +29,9 @@ export class ListComponent implements OnInit {
   }
 
   getAll() {
+    this.spinner.show();
     this.CustomersService.getCustomer().subscribe(res =>{
+      this.spinner.hide();
       this.customers = res.data
       this.current_page = res.meta.current_page;
       this.last_page = res.meta.last_page;
@@ -48,8 +51,6 @@ export class ListComponent implements OnInit {
 
   getPage(event: any): void {
     this.customers = event.data
-    this.current_page = event.meta.current_page;
-    this.last_page = event.meta.last_page;
   }
 
   searchCustomer() {
@@ -57,8 +58,7 @@ export class ListComponent implements OnInit {
       .subscribe(
         (data) => {
           this.customers = data.data.data; 
-          this.current_page = data.meta.current_page;
-          this.last_page = data.meta.last_page;
+      
           
           
         },
@@ -74,8 +74,6 @@ export class ListComponent implements OnInit {
         .subscribe(
           (data) => {
             this.suggestedKeywords = data.data;
-
-            
           },
           (error) => {
             console.error('Lỗi khi gợi ý từ khóa:', error);

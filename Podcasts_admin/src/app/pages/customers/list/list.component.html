@@ -15,7 +15,7 @@
                             </div>
                             <div class="searchbar-center">
                                 <div class="searchbar-input-spacer"></div>
-                                <input type="text" class="searchbar-input status-basic popup " maxlength="2048" name="query"
+                                <input type="text" class="searchbar-input status-basic" maxlength="2048" name="query"
                                     nbInput autocapitalize="off" autocomplete="off" title="Search" role="combobox"
                                     placeholder="Tìm kiếm" [(ngModel)]="query" (input)="suggestKeywords()">
                             </div>
@@ -35,18 +35,16 @@
                             </div>
                         </div>
                     </div>
-                
-                    <div *ngIf="suggestedKeywords.length > 0" class="dropdown-menu show" style="width: 100%">
+
+                    <div *ngIf="suggestedKeywords.length > 0" class="dropdown-menu show"
+                        style="width: 100%; margin-top: 5px;">
                         <ul class="list-group">
-                            <li class="list-group-item" *ngFor="let keyword of suggestedKeywords" (click)="selectKeyword(keyword.username)">
-                                <div class="keyword-item">
-                                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{keyword.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="30px" height="30px" alt="" class="rounded-circle">
-                                    <span class="keyword-username">{{ keyword.username }}</span>
-                                </div>
+                            <li class="list-group-item" *ngFor="let keyword of suggestedKeywords"
+                                (click)="selectKeyword(keyword)">
+                                {{ keyword }}
                             </li>
                         </ul>
                     </div>
-                    
                 </form>
 
             </nb-card-header>
@@ -79,12 +77,11 @@
                             <tr *ngFor="let item of customers; index as i">
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    {{ (current_page - 1) * from + i + 1 }}</td>
+                                    {{i + 1}}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{item.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
-                                        width="80px" height="80px" alt="" class="rounded-circle">
-                                </td>
+                                        width="80px" height="80px" alt="" class="rounded-circle"></td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     {{item.username}}</td>

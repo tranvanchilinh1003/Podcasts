@@ -1,75 +1,61 @@
 <div class="row">
     <div class="col-lg-12">
-        <nb-card>
-            <nb-card-header>Thêm danh mục</nb-card-header>
-            <nb-card-body>
-                <form (ngSubmit)="onCreate()" [formGroup]="validateForm">
-                    <div class="mb-3 row">
-                        <div class="col-md-6">
-                            <label for="name" class="fw-bold col-form-label">Tên loại</label>
-                            <input type="text" nbInput fullWidth formControlName="name" name="name" id="name"
-                                placeholder="Tên loại..."
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                [(ngModel)]="newCategories.name" required>
-                            <div *ngIf="validateForm.get('name')!.invalid &&
-                            (validateForm.get('name')!.dirty || validateForm.get('name')!.touched)">
-                                <small *ngIf="validateForm.get('name').hasError('required')">
-                                    <i class="text-danger">Vui lòng nhập tên loại.</i>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
-                            <div class="messageBox">
-                                <div class="fileUploadWrapper bg-transparent" >
-                                    <label for="img" >
-                                Chọn ảnh
-                                        <span class="tooltip">Thêm ảnh</span>
-                                    </label>
-                                    <input type="file" id="img" name="file" class="bg-transparent"  />
-                                </div>
-                                </div>
-                            
-                                <input (change)="OnFileChange($event)" type="file" formControlName="images"
-                                    class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                    nbInput fullWidth id="img" accept="image/*" name="image">
-                                <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressImage}}"
-                                    max="100"></progress>
-                                <div
-                                    *ngIf="validateForm.get('images').invalid && (validateForm.get('images').dirty || validateForm.get('images').touched)">
-                                    <small *ngIf="validateForm.get('images').hasError('required')">
-                                        <i class="text-danger">Vui lòng chọn hình ảnh.</i>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class='row mb-3'>
-                            <div class="col-sm-6">
-                                <label for="description" class="fw-bold col-form-label">Mô tả</label>
-                                <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="description" name="description"
-                                    fullwidth="" shape="round" placeholder="Mô tả..."
-                                    class="input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                    formControlName="description" [(ngModel)]="newCategories.description"></textarea>
-                            </div>
-                            <div class="col-sm-6 m-auto ">
-                                <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F2024-06-23T13%3A34%3A52.516Z.jpg?alt=media&token=ad3c3962-1889-4043-82e3-979b534bbff5"
-                                    width="100%" height="140px" class="mt-4" alt="">
-                            </div>
-                        </div>
-
-
-                        <div class="mb-3 text-end d-flex ">
-                            <button type="submit" nbButton name="" value=""
-                                class="mat-ripple size-small shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition mx-3 ">
-                                <i class="nb-plus mr-3"></i> Thêm mới </button>
-                            <button type="reset" nbButton
-                                class="mat-ripple size-small shape-rectangle appearance-hero status-warning ng-star-inserted nb-transition mr-3"
-                                (click)="newCategories.name = ''">
-                                Nhập lại
-                            </button>
-                        </div>
-                </form>
-            </nb-card-body>
-        </nb-card>
+      <nb-card>
+        <nb-card-header>Thêm danh mục</nb-card-header>
+        <nb-card-body>
+          <form (ngSubmit)="onCreate()" [formGroup]="validateForm">
+            <div class="mb-3 row">
+              <div class="col-md-12">
+                <label for="name" class="fw-bold col-form-label">Tên loại</label>
+                <input type="text" nbInput fullWidth formControlName="name" name="name" id="name" placeholder="Tên loại..." class="input-full-width size-medium status-basic shape-rectangle nb-transition" required>
+                <div *ngIf="validateForm.get('name')!.invalid && (validateForm.get('name')!.dirty || validateForm.get('name')!.touched)">
+                  <small *ngIf="validateForm.get('name').hasError('required')">
+                    <i class="text-danger">Vui lòng nhập tên loại.</i>
+                  </small>
+                </div>
+              </div>
+              <div class="col-md-12 ">              
+                <label for="img" class="fw-bold col-form-label">Hình ảnh</label>      
+                <div class="col-md-12">
+                  <img *ngIf="imgUpload" [src]="imgUpload" style="width: auto; height: 350px;" alt="Image preview" class="img-thumbnail mt-2 mb-2">
+                </div>  
+              
+                <div class="messageBox">  
+                  <div class="fileUploadWrapper bg-transparent" >
+                      <label for="img" >
+                        Chọn ảnh
+                          <span class="tooltip">Thêm ảnh</span>
+                      </label>
+                      <input (change)="OnFileChange($event)" type="file" class="p-1 btn  size-medium status-basic shape-rectangle nb-transition" nbInput fullWidth id="img" accept="image/*" name="image">             
+                  </div>
+                  </div>
+                <progress class="w-100" *ngIf="isUploading" max="100"></progress>
+                <div *ngIf="validateForm.get('images').invalid && (validateForm.get('images').dirty || validateForm.get('images').touched)">
+                  <small *ngIf="validateForm.get('images').hasError('required')">
+                    <i class="text-danger">Vui lòng chọn hình ảnh.</i>
+                  </small>
+                </div>
+              </div>
+            </div>
+            <div class='row mb-3'>
+              <div class="col-sm-12">
+                <label for="description" class="fw-bold col-form-label">Mô tả</label>
+                <textarea rows="5" nbInput id="description" name="description" fullWidth shape="round" placeholder="Mô tả..." class="input-full-width size-medium status-basic shape-rectangle nb-transition" formControlName="description"></textarea>
+              </div>
+            </div>
+            <div class="mb-3 text-end">
+              <button type="submit" [disabled]="!validateForm.valid" nbButton class="mat-ripple size-small shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition mx-3">
+                <i class="nb-plus mr-3"></i> Thêm mới
+              </button>
+              <button type="reset" nbButton class="mat-ripple size-small shape-rectangle appearance-hero status-warning ng-star-inserted nb-transition mr-3" (click)="validateForm.reset()">
+                Nhập lại
+              </button>
+            </div>
+          </form>
+        </nb-card-body>
+      </nb-card>
     </div>
-</div>
+    
+  </div>
+
+  

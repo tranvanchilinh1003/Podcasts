@@ -4,7 +4,7 @@ module.exports = class Categories {
     constructor() {}
     static fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM categories ORDER By create_date LIMIT ?, ?` ;
+            let sql = `SELECT * FROM categories ORDER By create_date DESC LIMIT ?, ?` ;
             connect.query(sql,[from, row],  function (err, data) {
               if (err) {
                 reject(err);

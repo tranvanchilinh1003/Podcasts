@@ -5,6 +5,7 @@ import { ICategories } from 'app/@core/interfaces/categories.interface';
 import { PostService } from 'app/@core/services/apis/post.service';
 import { CategoriesService } from 'app/@core/services/apis/categories.service';
 import { DialogService } from 'app/@core/services/common/dialog.service';
+import { SpinnerService } from "../../../@theme/components/spinner/spinner.service";
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { LocalStorageService } from "../../../@core/services/common/local-storage.service";
 import { LOCALSTORAGE_KEY } from "../../../@core/config";
@@ -42,6 +43,7 @@ export class EditComponent {
   constructor(
     private localStorageService: LocalStorageService,
     private dialog: DialogService,
+    private spinner: SpinnerService,
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
     private router: Router,
@@ -68,9 +70,11 @@ export class EditComponent {
   }
   // list cate
   getCate()  {
+    this.spinner.show();
     this.categoriesService.getCategories().subscribe(res => {
       this.categories = res.data
       console.log(this.categories);
+      this.spinner.hide();
     }, error => {
       console.log(error);
 
@@ -79,6 +83,7 @@ export class EditComponent {
   // get id post and cate 
    getIdCate() {
     let id = this.route.snapshot.params['id'];
+    this.spinner.show();
     this.postService.getPostById(id).subscribe({
       next: (response: { data: IPost[] }) => {
         this.postnew = response.data[0];
@@ -88,6 +93,7 @@ export class EditComponent {
           next: (category: { data: ICategories[] }) => {
             this.editingCategory = category.data[0];
             console.log(this.editingCategory);
+            this.spinner.hide();
           },
           error: error => {
             console.error('Error fetching editing category', error);
@@ -101,6 +107,69 @@ export class EditComponent {
   }
 
 
+  // Đã xử lý bấc đồng bộ load được dữ liệu cate mà bị lỗi cái khác
+  // async ngOnInit(): Promise<void> {
+  //   await this.loadData();
+  //   this.initializeForm();
+  // }
+
+  // async loadData(): Promise<void> {
+  //   try {
+  //     await this.getCate();
+  //     await this.getIdCate();
+  //   } catch (error) {
+  //     console.error('Error loading data', error);
+  //   }
+  // }
+
+  // async getCate(): Promise<void> {
+  //   try {
+  //     const res = await this.categoriesService.getCategories().toPromise();
+  //     this.categories = res.data;
+  //     console.log(this.categories);
+  //   } catch (error) {
+  //     console.log('Error fetching categories', error);
+  //   }
+  // }
+
+  // async getIdCate(): Promise<void> {
+  //   try {
+  //     let id = this.route.snapshot.params['id'];
+  //     const response = await this.postService.getPostById(id).toPromise();
+  //     this.postnew = response.data[0];
+  //     console.log(this.postnew);
+  //     const categoryId = this.postnew.categories_id;
+  //     const category = await this.categoriesService.edit(categoryId).toPromise();
+  //     this.editingCategory = category.data[0];
+  //     console.log(this.editingCategory);
+  //   } catch (error) {
+  //     console.error('Error fetching post or editing category', error);
+  //   }
+  // }
+
+
+  // initializeForm(): void {
+  //     this.postForm = new FormGroup({
+  //       title: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  //       description: new FormControl(''),
+  //       categories_id: new FormControl('', [Validators.required]),
+  //       images: new FormControl(''),
+  //       audio: new FormControl(''),
+  //       customers_id: new FormControl(''),
+  //     })
+  //   }
+
+
+
+
+
+
+
+
+
+
+
+  
   onFileChange(event: any, fileType: string): void {
     const file = event.target.files[0];
     if (fileType === 'audio') {
