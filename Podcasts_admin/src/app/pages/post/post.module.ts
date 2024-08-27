@@ -11,6 +11,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { EditComponent } from './edit/edit.component';
 // import{CreateComponent} from './create/create.component';
 import { PaginatorModule } from '../../@theme/components/paginator/paginator.module';
+import { TinymceModule } from 'app/@theme/components/tinymce/tinymce.module';
 @NgModule({
   imports: [
     NbCardModule,
@@ -23,7 +24,8 @@ import { PaginatorModule } from '../../@theme/components/paginator/paginator.mod
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireStorageModule,
-    PaginatorModule
+    PaginatorModule,
+    TinymceModule
   ],
   declarations: [
     ...routedComponents,

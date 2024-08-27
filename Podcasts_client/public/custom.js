@@ -53,4 +53,18 @@
     });
   
   })(window.jQuery);
+  $(document).ready(function () {
+    // Toggle menu when hamburger button is clicked
+    $('.navbar-toggler').click(function () {
+      $('.navbar-collapse').toggleClass('show');
+    });
+  
+    // Close the menu when clicking outside of it
+    $(document).click(function (event) {
+      // Check if the click is outside the menu
+      if (!$(event.target).closest('.navbar-toggler, .navbar-collapse').length) {
+        $('.navbar-collapse').removeClass('show');
+      }
+    });
+  });
   

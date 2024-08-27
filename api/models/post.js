@@ -133,49 +133,52 @@ module.exports = class Post {
     // getUsername
     static async search(key) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id WHERE LOWER(post.title) LIKE ?`;
-            connect.query(sql, [`%${key}%`], function (err, data) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(data);
-                }
-            });
-        });
-    }
-
-  static async suggestKeywords(key) {
-    return new Promise((resolve, reject) => {
-      let sql = `SELECT DISTINCT images,  title FROM post WHERE LOWER(title) LIKE ?`;
-      connect.query(sql, [`%${key}%`], function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-            const suggestions = data.map(item => ({
-                title: item.title,
-                images: item.images
-            }));
-             resolve(suggestions)
-        }
-      });
-    });
-  }
-
-  static async countByKey(key) {
-    return new Promise((resolve, reject) => {
-        let sql = `SELECT COUNT(*) AS count 
-                   FROM post 
-                   WHERE LOWER(title) LIKE ?`;
-
-        connect.query(sql, [`%${key}%`], (err, results) => {
+          let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id WHERE LOWER(post.title) LIKE ?`;
+          connect.query(sql, [`%${key}%`], function (err, data) {
             if (err) {
-                reject(err);
+              reject(err);
             } else {
-                resolve(results[0].count);
+              resolve(data);
+              const keywords = data.map((item) => item.title);
+              resolve(keywords);
             }
+          });
         });
-    });
-}
+      }
+  
+    static async suggestKeywords(key) {
+      return new Promise((resolve, reject) => {
+        let sql = `SELECT DISTINCT images,  title FROM post WHERE LOWER(title) LIKE ?`;
+        connect.query(sql, [`%${key}%`], function (err, data) {
+          if (err) {
+            reject(err);
+          } else {
+              const suggestions = data.map(item => ({
+                  title: item.title,
+                  images: item.images
+              }));
+               resolve(suggestions)
+          }
+        });
+      });
+    }
+  
+    static async countByKey(key) {
+      return new Promise((resolve, reject) => {
+          let sql = `SELECT COUNT(*) AS count 
+                     FROM post 
+                     WHERE LOWER(title) LIKE ?`;
+  
+          connect.query(sql, [`%${key}%`], (err, results) => {
+              if (err) {
+                  reject(err);
+              } else {
+                  resolve(results[0].count);
+              }
+          });
+      });
+  }
+  
 
   static async getData() {
     return new Promise((resolve, reject) => {

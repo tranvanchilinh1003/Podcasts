@@ -107,32 +107,54 @@ module.exports = class Customers {
       }
       static async forgotPassword(email, otp) {
         return new Promise((resolve, reject) => {
-            let sql = `UPDATE customers SET otp = '${otp}' WHERE email = '${email}'`;
-            connect.query(sql, function (err, data) {
-                if (err) {
-                    reject(err);
+          const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP hết hạn sau 5 phút
+          let sql = `UPDATE customers SET otp = ?, otp_expires_at = ? WHERE email = ?`;
+          connect.query(sql, [otp, expiresAt, email], function (err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              if (data.affectedRows > 0) {
+                resolve(data);
+              } else {
+                reject(new Error('Email không tồn tại'));
+              }
+            }
+          });
+        });
+      }
+      
+      static async OTP(email, otp) {
+        return new Promise((resolve, reject) => {
+          // Truy vấn để lấy OTP và thời gian hết hạn
+          let sql = `SELECT otp, otp_expires_at FROM customers WHERE email = ?`;
+          connect.query(sql, [email], function (err, data) {
+            if (err) {
+              reject(err);
+            } else {
+              if (data.length > 0) {
+                const otpRecord = data[0];
+                const now = new Date();
+
+                const storedOtp = String(otpRecord.otp).trim();
+                const inputOtp = String(otp).trim();
+
+                if (storedOtp === inputOtp) {
+                  if (new Date(otpRecord.otp_expires_at) > now) {
+                    resolve({ success: true, message: 'OTP đúng' });
+                  } else {
+                    resolve({ success: false, message: 'OTP đã hết hạn' });
+                  }
                 } else {
-                    if (data.affectedRows > 0) {
-                        resolve(data);
-                    } else {
-                        reject(new Error('Email không tồn tại'));
-                    }
+                  resolve({ success: false, message: 'Sai OTP' });
                 }
-            });
+              } else {
+                resolve({ success: false, message: 'Email không tồn tại' });
+              }
+            }
+          });
         });
-    }
-    static async OTP(email, otp) {
-      return new Promise((resolve, reject) => {
-        let sql = `SELECT * FROM customers WHERE email = ? AND otp = ?`;
-        connect.query(sql, [email, otp], function (err, data) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
-      });
-    }
+      }
+      
     static async changePassword(password, email) {
       return new Promise((resolve, reject) => {
         let sql = `UPDATE customers SET password = ? WHERE email = ?`;

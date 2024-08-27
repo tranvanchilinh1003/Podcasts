@@ -10,7 +10,8 @@ export const API_ENDPOINT: IAPIEndpoint = {
     logout: '/api/logout',
     forgotPassword: '/api/forgotPassword',
     otp: '/api/otp',
-    changePassword: '/api/changepassword'
+    changePassword: '/api/changepassword',
+  
   },
   post: {
     base: API_BASE_URL + '/' + 'api',
@@ -35,6 +36,7 @@ export const API_ENDPOINT: IAPIEndpoint = {
   categories: {
     base: API_BASE_URL + '/' + 'api',
     categories: '/api/categories',
+    getAllCate: '/api/categories_All'
   },
   shares: {
     base: API_BASE_URL + '/' + 'api',

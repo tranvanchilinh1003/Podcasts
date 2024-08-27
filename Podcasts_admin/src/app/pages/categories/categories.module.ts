@@ -9,7 +9,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { EditComponent } from './edit/edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PaginatorModule } from '../../@theme/components/paginator/paginator.module';
-
+import { TinymceModule } from 'app/@theme/components/tinymce/tinymce.module';
 
 
 @NgModule({
@@ -25,7 +25,8 @@ import { PaginatorModule } from '../../@theme/components/paginator/paginator.mod
     NbEvaIconsModule,
     NbIconModule,
     ReactiveFormsModule,
-    PaginatorModule
+    PaginatorModule,
+    TinymceModule
   ],
   declarations: [
    ...routedComponents,

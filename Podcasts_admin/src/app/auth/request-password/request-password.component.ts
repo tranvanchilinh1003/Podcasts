@@ -102,14 +102,17 @@ export class RequestPasswordComponent {
           this.spinner.hide();
         })
       ).subscribe({
-        next: (response) => {
-          
-          this.otp = false;
-          this.changePassword = true
-          this.dialog.success('Thành công');
+        next: (response) => {      
+          if (response.success) {
+            this.otp = false;
+            this.changePassword = true;
+            this.dialog.success('Thành công');
+          } else {
+            this.handleOTPFailed(response);
+          }
         },
         error: (error) => {
-          this.handleOTPFailed();
+          this.handleOTPFailed(error);
         }
       });
     
@@ -164,9 +167,9 @@ export class RequestPasswordComponent {
     this.spinner.hide();
     this.alertMessages = [{status: 'danger', message: 'Email không tồn tại'}];
   }
-  protected handleOTPFailed() {
+  protected handleOTPFailed(err) {
     this.spinner.hide();
-    this.alertMessages = [{status: 'danger', message: 'OTP không trùng khớp'}];
+    this.alertMessages = [{status: 'danger', message: err.message}];
   }
   protected handlePasswordChangeFailed() {
     this.spinner.hide();

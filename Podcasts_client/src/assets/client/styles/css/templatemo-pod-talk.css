@@ -1473,4 +1473,72 @@ main {
 .read-more-toggle:hover {
   text-decoration: underline; /* Optional: underline the text for a link-like appearance */
   color: darkblue; /* Change color when hovered */
+}.custom-search {
+  position: relative;
+}
+
+#searchSuggestions {
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu-customers {
+  padding: 0.5rem 0;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  max-height: 280px; /* Adjust height as necessary */
+  overflow-y: auto; /* Add scrollbar if content overflows */
+  transition: max-height 0.3s ease;
+}
+
+.dropdown-menu-customers.expanded {
+  max-height: 500px; /* Allow it to expand fully */
+}
+
+.dropdown-menu-customers li {
+  list-style: none;
+}
+
+.dropdown-item-customers {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: #212529;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  word-break: break-word; 
+  overflow-wrap: break-word; 
+}
+
+.dropdown-item-customers img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.dropdown-item-customers:hover {
+  background-color: #d1d4d7;
+  color: #fff;
+}
+
+.show-all-button {
+  display: block;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0 0 0.25rem 0.25rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.show-all-button:hover {
+  background-color: #0056b3;
 }

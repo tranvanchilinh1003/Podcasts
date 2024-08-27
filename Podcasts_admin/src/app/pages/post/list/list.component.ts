@@ -78,7 +78,7 @@ export class ListComponent implements OnInit {
       .subscribe(
         (data) => {
           this.post = data.data; 
-          // console.log(data.data);
+          console.log(data.data);
           
           
         },
@@ -94,6 +94,7 @@ export class ListComponent implements OnInit {
         .subscribe(
           (data) => {
             this.suggestedKeywords = data.data;
+            console.log(data.data);
           },
           (error) => {
             console.error('Lỗi khi gợi ý từ khóa:', error);

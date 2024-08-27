@@ -62,7 +62,7 @@ export class AuthService extends ApiService {
     });
   }
   checkOTP(form: ILogin): Observable<any> {
-    return this.post(API_BASE_URL + API_ENDPOINT.auth.otp, {
+    return this.post<any>(API_BASE_URL + API_ENDPOINT.auth.otp, {
       email: form.email,
       otp: form.otp
     });

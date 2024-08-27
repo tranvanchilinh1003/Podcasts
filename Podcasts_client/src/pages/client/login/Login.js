@@ -97,6 +97,7 @@ function Login() {
                     },
                   })}
                 />
+                <p className="text-end " style={{fontSize: 12}}>        <Link to='' className="text-warning">Quên mật khẩu?</Link></p>
                 <label htmlFor="password">Mật khẩu</label>
                 {errors.password && (
                   <span
@@ -109,7 +110,8 @@ function Login() {
                 )}
               </div>
               <div className="text-right d-flex justify-content-sm-end">
-                <button className="btn_submit bg-transparent" type="submit">
+        
+                <button className="btn_submit w-100 bg-transparent" type="submit">
                   <span></span>
                   <span></span>
                   <span></span>
@@ -118,6 +120,7 @@ function Login() {
                 </button>
               </div>
               <div className="text-center mt-5">
+  
                 <p className="text-white">
                   Bạn đã có tài khoản chưa?{" "}
                   <Link className="text-sm-start" to="/register">

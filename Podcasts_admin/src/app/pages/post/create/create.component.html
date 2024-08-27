@@ -75,12 +75,9 @@
                         </div>
                     </div>
                     <div class='row'>
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 mt-2">
                             <label for="description" class="fw-bold col-form-label">Mô tả</label>
-                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="description" name="description"
-                                fullwidth="" shape="round" placeholder="Mô tả..."
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                formControlName="description" [(ngModel)]="postnew.description"></textarea>
+                        <app-tinymce-editor name="description" id="description " ></app-tinymce-editor>
                         </div>
                     </div>
                     <div class="text-end">

@@ -57,6 +57,7 @@ export class ListComponent implements OnInit {
     this.CustomersService.getSearch(this.query)
       .subscribe(
         (data) => {
+          console.log(data)
           this.customers = data.data.data; 
       
           
@@ -73,6 +74,8 @@ export class ListComponent implements OnInit {
       this.CustomersService.suggestKeywords(this.query)
         .subscribe(
           (data) => {
+            console.log(data.data);
+            
             this.suggestedKeywords = data.data;
           },
           (error) => {
@@ -81,7 +84,7 @@ export class ListComponent implements OnInit {
           }
         );
     } else {
-      this.suggestedKeywords = []; // Xóa danh sách gợi ý nếu không có từ khóa
+      this.suggestedKeywords = [];
     }
   }
 

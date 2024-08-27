@@ -73,13 +73,14 @@ function sendEmail(email, otp) {
       pass: 'clnj hmwa zwfh gfcl', 
     },
   });
-
+  const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // Thời gian hết hạn 5 phút
+  const expiresAt = otpExpires.toLocaleTimeString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
   async function main() {
     const mailOptions = {
       from: '"Foodcast Forum" <foodcast440@gmail.com>', // Địa chỉ người gửi
       to: email, 
       subject: "Foodcast Forum Gửi Mã OTP", // Chủ đề email
-      text: `Mã OTP của bạn là: ${otp}`, // Nội dung văn bản
+      text: `Mã OTP của bạn là: ${otp}\nHết hạn vào: ${expiresAt}`,
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #f9f9f9; padding: 20px; text-align: center; border-radius: 10px;">
@@ -88,12 +89,12 @@ function sendEmail(email, otp) {
           <p style="color: #666;">Mã OTP của bạn là:</p>
           <h1 style="background-color: #007bff; color: #fff; padding: 10px; border-radius: 5px; margin: 20px 0;">${otp}</h1>
           <p style="color: #666;">Vui lòng sử dụng mã này để hoàn thành thao tác xác thực.</p>
+          <p style="color: #666;">Mã OTP này sẽ hết hạn vào: <strong>${expiresAt.toLocaleString()}</strong></p>
         </div>
         <p style="text-align: center; margin-top: 20px; color: #888;">Đây là email tự động, vui lòng không phản hồi.</p>
       </div>
     `,
-    };
-
+  };
     try {
       const info = await transporter.sendMail(mailOptions);
       console.log("Message sent: %s", info.messageId);
@@ -112,13 +113,14 @@ function sendEmail(email, otp) {
 exports.forgotPassword = async (req, res, next) => {
     const email = req.body.email;
     const otp = Math.floor(10000 + Math.random() * 90000);
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
     try {
         const result = await Customers.forgotPassword(email, otp);
         if (result.affectedRows > 0) {
             // Gửi OTP đến email của người dùng ở đây
             // Có thể sử dụng thư viện như nodemailer để gửi email
             // Ví dụ: sendEmail(email, 'OTP: ' + otp);
-            sendEmail(email, otp)
+            sendEmail(email, otp, otpExpires)
             // Trong trường hợp này, bạn không cần kiểm tra role, vì chỉ cập nhật OTP
             return res.status(200).json({data: email,  success: true, message: 'OTP đã được gửi đến email của bạn.' });
         } else {
@@ -134,19 +136,21 @@ exports.forgotPassword = async (req, res, next) => {
 
 exports.otp = async (req, res, next) => {
     try {
-        const otp = req.body.otp;
-        const email = req.body.email;
-        const result = await Customers.OTP(email, otp);
-        if (result.length > 0) {
-            return res.status(200).json({ success: true, message: 'OTP Đúng' });
-        } else {
-            return res.status(404).json({ success: false, message: 'Sai OTP' });
-        }
+      const { otp, email } = req.body;
+      const result = await Customers.OTP(email, otp);
+  
+      if (result.success) {
+        return res.status(200).json({ success: true, message: result.message });
+      } else {
+        return res.status(200).json({ success: false, message: result.message });
+      }
     } catch (err) {
-        console.error(err);
+        console.error(err); // Ghi lại lỗi để kiểm tra
         return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
+      
     }
-};
+  };
+
 exports.changePassword = async (req, res, next) => {
     try {
         const password = await bcrypt.hash((req.body.password), 10)
@@ -158,6 +162,7 @@ exports.changePassword = async (req, res, next) => {
         return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
     }
 };
+
 exports.checkmail = async (req, res, next) => {
     try {
         

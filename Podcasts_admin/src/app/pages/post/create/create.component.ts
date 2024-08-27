@@ -11,7 +11,6 @@ import { DialogService } from 'app/@core/services/common/dialog.service';
 import { LocalStorageService } from "../../../@core/services/common/local-storage.service";
 import { LOCALSTORAGE_KEY } from "../../../@core/config";
 
-
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -147,7 +146,7 @@ export class CreateComponent implements OnInit {
   }
 
   getCate() {
-    this.categoriesService.getCategories().subscribe(res => {
+    this.categoriesService.getAllCategories().subscribe(res => {
       this.categories = res.data
       // console.log(res.data);
     }, error => {
