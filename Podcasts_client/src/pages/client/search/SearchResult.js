@@ -5,12 +5,12 @@ import axios from 'axios';
 function SearchResults() {
     const [results, setResults] = useState([]);
     const location = useLocation();
-    const query = new URLSearchParams(location.search).get('query');
+    const query = new URLSearchParams(location.search).get('messages');
 
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/post_search?query=${query}`);
+                const response = await axios.get(`http://localhost:8080/api/post_search?messages=${query}`);
                 setResults(response.data.data);
             } catch (error) {
                 console.error('Error fetching search results:', error);

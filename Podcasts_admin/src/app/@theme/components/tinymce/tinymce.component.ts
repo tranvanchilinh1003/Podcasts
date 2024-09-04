@@ -7,7 +7,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     <div class="editor-container bg-transparent">
       <quill-editor [styles]="editorStyles" [modules]="editorModules" [(ngModel)]="editorContent"></quill-editor>
     </div>
-    <textarea class="bg-transparent" id="mytextarea" [(ngModel)]="editorContent" (ngModelChange)="onEditorContentChange($event)"></textarea>
+    <input  type="hidden" class=" bg-transparent" id="mytextarea" [(ngModel)]="editorContent" (ngModelChange)="onEditorContentChange($event)" />
 
   `,
   providers: [

@@ -251,3 +251,15 @@ exports.view = async (req, res, next) => {
       }
     }
  
+    exports.customerId = async (req, res, next) => {    
+        try {
+            
+            const postcostomer = await Post.postCustomerId(req.params.id); 
+            res.status(200).json({
+                data: postcostomer
+            });
+          } catch (error) {
+            console.error('Error fetching :', error);
+            res.status(500).json({ error: 'Error fetching customer stats' });
+          }
+        }

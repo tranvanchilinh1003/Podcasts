@@ -73,7 +73,7 @@ function sendEmail(email, otp) {
       pass: 'clnj hmwa zwfh gfcl', 
     },
   });
-  const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // Thời gian hết hạn 5 phút
+  const otpExpires = new Date(Date.now() + 1 * 60 * 1000); 
   const expiresAt = otpExpires.toLocaleTimeString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
   async function main() {
     const mailOptions = {

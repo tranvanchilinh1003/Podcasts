@@ -107,7 +107,7 @@ module.exports = class Customers {
       }
       static async forgotPassword(email, otp) {
         return new Promise((resolve, reject) => {
-          const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP hết hạn sau 5 phút
+          const expiresAt = new Date(Date.now() + 1 * 60 * 1000); // OTP hết hạn sau 5 phút
           let sql = `UPDATE customers SET otp = ?, otp_expires_at = ? WHERE email = ?`;
           connect.query(sql, [otp, expiresAt, email], function (err, data) {
             if (err) {

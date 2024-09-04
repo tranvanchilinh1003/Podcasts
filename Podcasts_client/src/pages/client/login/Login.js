@@ -34,15 +34,7 @@ function Login() {
 
   return (
     <>
-      <header className="site-header d-flex flex-column justify-content-center align-items-center">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12 col-12 text-center">
-              <h2 className="mb-2">Đăng nhập</h2>
-            </div>
-          </div>
-        </div>
-      </header>
+    
 
       <section className="about-section section-padding" id="section_2">
         <div className="container">
@@ -97,7 +89,7 @@ function Login() {
                     },
                   })}
                 />
-                <p className="text-end " style={{fontSize: 12}}>        <Link to='' className="text-warning">Quên mật khẩu?</Link></p>
+                <p className="text-end " style={{fontSize: 12}}>        <Link to='/forgotPassword' className="text-warning">Quên mật khẩu?</Link></p>
                 <label htmlFor="password">Mật khẩu</label>
                 {errors.password && (
                   <span

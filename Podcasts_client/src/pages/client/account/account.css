@@ -71,7 +71,26 @@ body.modal-open .backdrop {
 } */
 
 
+
+.custom-block-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute; /* Giúp căn giữa dựa trên vị trí */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Đưa phần tử về trung tâm */
+    cursor: pointer; /* Thay đổi con trỏ khi hover */
+  }
+  
+  .image-container {
+    position: relative; /* Để các phần tử con có thể sử dụng position:absolute */
+    display: inline-block; /* Hoặc block, tùy thuộc vào layout của bạn */
+  }
+  
+
 /*  */
+
 
 .profile-header {
     position: relative;

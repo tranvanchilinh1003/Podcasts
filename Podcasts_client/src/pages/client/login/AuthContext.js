@@ -17,18 +17,22 @@ export const AuthProviderClient = ({ children }) => {
     
   }, []);
 
-  const login =  async (customerData) => {
-
-    const response = await authLogin(customerData);
-    const { token, userInfo } = response;
-    localStorage.setItem('customer', JSON.stringify(response.data));
-    localStorage.setItem('userToken', token);
-    setCustomer(response.data);
-    setIsLoggedIn(true);
-    return response; 
-
-    
+  const login = async (customerData) => {
+    try {
+      const response = await authLogin(customerData);
+      console.log('Login response:', response); // Debugging
+      const { token, userInfo } = response;
+      localStorage.setItem('customer', JSON.stringify(response.data));
+      localStorage.setItem('userToken', token);
+      setCustomer(response.data);
+      setIsLoggedIn(true);
+      return response;
+    } catch (error) {
+      console.error('Login error:', error); // Debugging
+      throw error;
+    }
   };
+  
   const loginGoogle = (user) => {
     setIsLoggedIn(true);
     setCustomer(user)

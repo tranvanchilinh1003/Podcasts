@@ -310,14 +310,16 @@ function Post() {
                       <Link to={`/getId_post/${post.id}`}>{post.title}</Link>
                     </h4>
                     <div className="profile-block d-flex">
+                    <Link to={`/follow/${post.customers_id}`}>
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
                         className="profile-block-image"
                         style={{ borderRadius: "50%" }}
                         alt=""
                       />
+                      </Link>
                       <p>
-                        {post.username}
+                      <Link to={`/follow/${post.customers_id}`}>{post.username}</Link>  
                         {post.isticket === "active" && (
                           <img
                             src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"

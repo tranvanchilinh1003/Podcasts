@@ -217,7 +217,7 @@ import CategoriesHome from "../categories/CategoriesHome";
 
      {/* categories */}
      <Post />
-     <CategoriesHome />
+    
 
     </>
   );

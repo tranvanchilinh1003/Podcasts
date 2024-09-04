@@ -99,6 +99,8 @@ function Header() {
     try {
       const response = await axios.get(`http://localhost:8080/api/suggest_keywords?keyword=${value}`);
       setSuggestions(response.data.data);
+  
+      
       setShowAll(false);
     } catch (error) {
       console.error('Error fetching search suggestions:', error);
@@ -109,7 +111,9 @@ function Header() {
   const handleSearchSubmit = async (event) => {
     event.preventDefault();
     if (searchTerm.trim() !== '') {
-      navigate(`/search?query=${searchTerm}`);
+  
+      navigate(`/post_search?messages=${searchTerm}`);
+    
     }
   };
 
@@ -134,7 +138,7 @@ function Header() {
         </Link>
 
         <div className="custom-search">
-          <form onSubmit={handleSearchSubmit} className="custom-form search-form flex-fill me-3" role="search">
+          <form onSubmit={handleSearchSubmit} method='get' className="custom-form search-form flex-fill me-3" role="search">
             <div className="input-group input-group-lg">
               <input
                 name="search"
@@ -160,16 +164,16 @@ function Header() {
                       src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${suggestion.images}?alt=media`} 
                       alt={suggestion.title}
                     />
-                    <Link to={`/search?query=${suggestion.title}`} className="keywordds p-2">
+                    <Link to={`/getId_post/${suggestion.id}`} className="keywordds p-2">
                       {suggestion.title}
                     </Link>
                   </li>
                 ))}
                 {suggestions.length > 5 && (
                   <li>
-                    <button className="show-all-button m-auto" onClick={handleShowAll}>
+                    <p className="show-all-text text-center m-auto" onClick={handleShowAll}>
                       {showAll ? 'Ẩn bớt' : 'Xem tất cả'}
-                    </button>
+                    </p>
                   </li>
                 )}
               </ul>

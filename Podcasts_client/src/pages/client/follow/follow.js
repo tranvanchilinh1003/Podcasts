@@ -5,11 +5,11 @@ import axiosInstance from '../firebase/axiosConfig';
 import { DialogService } from "../../../services/common/DialogService";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import './account.css';
+
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebase/firebase';
 
-function Account() {
+function Follow() {
   const { id } = useParams();
   const { register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm();
   const [userInfo, setUserInfo] = useState(null);
@@ -276,10 +276,10 @@ function formatTimeDate(dateString) {
                   </div>
                   <ul className="profile-header-tab nav nav-tabs mt-5">
                     <li className="nav-item">
-                      <a id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false" className="nav-link ">BÀI VIẾT</a>
+                      <a id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false" className="nav-link active ">BÀI VIẾT</a>
                     </li>
                     <li className="nav-item">
-                      <a id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true" target="__blank" className="nav-link show active">THÔNG TIN</a>
+                      <a id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true" target="__blank" className="nav-link show ">THÔNG TIN</a>
                     </li>
                     <li className="nav-item">
                       <a id="shares-tab" data-bs-toggle="tab" href="#shares" role="tab" aria-controls="shares" aria-selected="false" className="nav-link">CHIA SẺ</a>
@@ -298,96 +298,7 @@ function formatTimeDate(dateString) {
                       <div className="col-md-12">
                         <div className="card border-0 shadow-sm">
                           <div className="card-body">
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                              <div className="mb-3">
-                                <label htmlFor="username" className="form-label">Tên Người Dùng:</label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  id="username"
-                                  disabled
-                                  value={userInfo ? userInfo.username : 'Đang Tải...'}
-                                />
-                              </div>
-                              <div className="mb-3">
-                                <label htmlFor="full_name" className="form-label">Họ Tên:</label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  id="full_name"
-                                  {...register('full_name', { required: 'Họ tên là bắt buộc' })}
-                                />
-                                {errors.full_name && <span className="text-danger">{errors.full_name.message}</span>}
-                              </div>
-                              <div className="mb-3">
-                                <label htmlFor="email" className="form-label">Email:</label>
-                                <input
-                                  type="email"
-                                  className="form-control"
-                                  id="email"
-                                  {...register('email', { required: 'Email là bắt buộc', pattern: { value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/, message: 'Địa chỉ email không hợp lệ' } })}
-                                />
-                                {errors.email && <span className="text-danger">{errors.email.message}</span>}
-                              </div>
-                              <div className="mb-3">
-                                <label htmlFor="password" className="form-label">Mật Khẩu:</label>
-                                <input
-                                  type="password"
-                                  className="form-control"
-                                  id="password"
-                                  {...register('password')}
-                                />
-                                {errors.password && <span className="text-danger">{errors.password.message}</span>}
-                              </div>
-                              <div className="mb-3">
-                                <label htmlFor="confirm_password" className="form-label">Xác Nhận Mật Khẩu:</label>
-                                <input
-                                  type="password"
-                                  className="form-control"
-                                  id="confirm_password"
-                                  {...register('confirm_password', { validate: value => value === watch('password') || 'Mật khẩu không khớp' })}
-                                />
-                                {errors.confirm_password && <span className="text-danger">{errors.confirm_password.message}</span>}
-                              </div>
-                              <div className="mb-3">
-                                <label htmlFor="images" className="form-label">Hình Đại Diện:</label>
-                                <input
-                                  type="file"
-                                  className="form-control"
-                                  id="images"
-                                  accept="image/*"
-                                  onChange={(e) => setFile(e.target.files[0])}
-                                />
-                              </div>
-                              <div className="mb-3">
-                                <label className="form-label">Giới Tính:</label><br />
-                                <div className="form-check form-check-inline">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    id="male"
-                                    value="0"
-                                    {...register('gender')}
-                                    defaultChecked={userInfo && userInfo.gender === '0'}
-                                  />
-                                  <label className="form-check-label" htmlFor="male">Nam</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    id="female"
-                                    value="1"
-                                    {...register('gender')}
-                                    defaultChecked={userInfo && userInfo.gender === '1'}
-                                  />
-                                  <label className="form-check-label" htmlFor="female">Nữ</label>
-                                </div>
-                              </div>
-                              <div className="text-end">
-                                <button type="submit" className="btn btn-primary" disabled={isUploading}>Cập Nhật Hồ Sơ</button>
-                              </div>
-                            </form>
+                
                           </div>
                         </div>
                       </div>
@@ -400,96 +311,7 @@ function formatTimeDate(dateString) {
                         <div className="col-md-12">
                           <div className="card border-0 shadow-sm">
                             <div className="card-body">
-                              <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="mb-3">
-                                  <label htmlFor="username" className="form-label">Tên Người Dùng:</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="username"
-                                    disabled
-                                    value={userInfo ? userInfo.username : 'Đang Tải...'}
-                                  />
-                                </div>
-                                <div className="mb-3">
-                                  <label htmlFor="full_name" className="form-label">Họ Tên:</label>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    id="full_name"
-                                    {...register('full_name', { required: 'Họ tên là bắt buộc' })}
-                                  />
-                                  {errors.full_name && <span className="text-danger">{errors.full_name.message}</span>}
-                                </div>
-                                <div className="mb-3">
-                                  <label htmlFor="email" className="form-label">Email:</label>
-                                  <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    {...register('email', { required: 'Email là bắt buộc', pattern: { value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/, message: 'Địa chỉ email không hợp lệ' } })}
-                                  />
-                                  {errors.email && <span className="text-danger">{errors.email.message}</span>}
-                                </div>
-                                <div className="mb-3">
-                                  <label htmlFor="password" className="form-label">Mật Khẩu:</label>
-                                  <input
-                                    type="password"
-                                    className="form-control"
-                                    id="password"
-                                    {...register('password')}
-                                  />
-                                  {errors.password && <span className="text-danger">{errors.password.message}</span>}
-                                </div>
-                                <div className="mb-3">
-                                  <label htmlFor="confirm_password" className="form-label">Xác Nhận Mật Khẩu:</label>
-                                  <input
-                                    type="password"
-                                    className="form-control"
-                                    id="confirm_password"
-                                    {...register('confirm_password', { validate: value => value === watch('password') || 'Mật khẩu không khớp' })}
-                                  />
-                                  {errors.confirm_password && <span className="text-danger">{errors.confirm_password.message}</span>}
-                                </div>
-                                <div className="mb-3">
-                                  <label htmlFor="images" className="form-label">Hình Đại Diện:</label>
-                                  <input
-                                    type="file"
-                                    className="form-control"
-                                    id="images"
-                                    accept="image/*"
-                                    onChange={(e) => setFile(e.target.files[0])}
-                                  />
-                                </div>
-                                <div className="mb-3">
-                                  <label className="form-label">Giới Tính:</label><br />
-                                  <div className="form-check form-check-inline">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      id="male"
-                                      value="0"
-                                      {...register('gender')}
-                                      defaultChecked={userInfo && userInfo.gender === '0'}
-                                    />
-                                    <label className="form-check-label" htmlFor="male">Nam</label>
-                                  </div>
-                                  <div className="form-check form-check-inline">
-                                    <input
-                                      className="form-check-input"
-                                      type="radio"
-                                      id="female"
-                                      value="1"
-                                      {...register('gender')}
-                                      defaultChecked={userInfo && userInfo.gender === '1'}
-                                    />
-                                    <label className="form-check-label" htmlFor="female">Nữ</label>
-                                  </div>
-                                </div>
-                                <div className="text-end">
-                                  <button type="submit" className="btn btn-primary" disabled={isUploading}>Cập Nhật Hồ Sơ</button>
-                                </div>
-                              </form>
+                            <table></table>
                             </div>
                           </div>
                         </div>
@@ -526,48 +348,7 @@ function formatTimeDate(dateString) {
                                       </div>
                                     </div>
 
-                                    {/* Component Modal */}
-                                    <Modal show={showModal} onHide={handleClose} size="lg">
-                                      <Modal.Header closeButton>
-                                        <Modal.Title>Thêm bài viết</Modal.Title>
-                                      </Modal.Header>
-                                      <Modal.Body>
-                                        {/* Nội dung của Modal */}
-                                        {/* <p>Hãy nhập nội dung bài viết của bạn ở đây.</p> */}
-                                        <div className='row'>
-                                          <div className='col-6'>
-                                            <label>Tiêu đề</label>
-                                            <input type='text' className='form-control' />
-                                          </div>
-                                          <div className='col-6'>
-                                            <label>Hình ảnh</label>
-                                            <input type='file' className='form-control' />
-                                          </div>
-                                          <div className='col-6'>
-                                            <label>Audio</label>
-                                            <input type='file' className='form-control' />
-                                          </div>
-                                          <div className='col-6'>
-                                            <label>Thể loại</label>
-                                            <select className='form-control' style={{ width: '100%', height: '2.5rem', fontSize: '1rem' }}>
-                                              <option disabled selected>Vui lòng chọn loại!</option>
-                                            </select>
-                                          </div>
-                                          <div className='col-12'>
-                                            <label>Audio</label>
-                                            <textarea className='form-control' placeholder='Mô tả...'></textarea>
-                                          </div>
-                                        </div>
-                                      </Modal.Body>
-                                      <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose}>
-                                          Hủy
-                                        </Button>
-                                        <Button variant="primary" onClick={handleClose}>
-                                          Thêm
-                                        </Button>
-                                      </Modal.Footer>
-                                    </Modal>
+                              
                                   </div>
                                   {data.map(post => (
                                     <li key={post.id}>
@@ -792,4 +573,4 @@ function formatTimeDate(dateString) {
   );
 }
 
-export default Account;
+export default Follow;

@@ -85,7 +85,18 @@ module.exports = class Post {
             });
         });
     }
-    //getCate và Post
+    static async postCustomerId(id) {
+        return new Promise((resolve, reject) => {
+            let sql = `SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id WHERE post.customers_id = ${id} GROUP BY post.id ORDER By post.create_date DESC`;
+            connect.query(sql, [id], function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
     static async getIdPost(postId) {
         return new Promise((resolve, reject) => {
             let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id WHERE post.id = ${postId};`;
@@ -148,14 +159,15 @@ module.exports = class Post {
   
     static async suggestKeywords(key) {
       return new Promise((resolve, reject) => {
-        let sql = `SELECT DISTINCT images,  title FROM post WHERE LOWER(title) LIKE ?`;
+        let sql = `SELECT DISTINCT images,  title, id FROM post WHERE LOWER(title) LIKE ?`;
         connect.query(sql, [`%${key}%`], function (err, data) {
           if (err) {
             reject(err);
           } else {
               const suggestions = data.map(item => ({
                   title: item.title,
-                  images: item.images
+                  images: item.images,
+                  id: item.id
               }));
                resolve(suggestions)
           }

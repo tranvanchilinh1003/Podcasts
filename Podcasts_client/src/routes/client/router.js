@@ -26,7 +26,10 @@ import '../../assets/client/styles/css/templatemo-pod-talk.css'
 import '../../assets/client/styles/vendor/fontawesome-free/css/all.min.css';
 import '../../assets/client/styles/vendor/bootstrap/css/bootstrap.min.css';
 import ScrollToTop from '../../layouts/client/component/ScrollToTop';
-
+import Email from '../../pages/client/forgotPassword/Email'
+import OTPForm from '../../pages/client/forgotPassword/OtpForm';
+import ChangePassword from '../../pages/client/forgotPassword/ChangePassword';
+import Follow from '../../pages/client/follow/follow';
 
 
 const AppRouter = () => {
@@ -47,8 +50,10 @@ const AppRouter = () => {
         <Route path="/categories/:id" element={<Categories />} />
        <Route path="/getId_post/:id" element={<CategoriesDetail />} />
        <Route path="/post_search" element={<SearchResults />} /> 
-       
-        {/* Add more routes here */}
+       <Route path="/forgotPassword" element={<Email/>} />
+      <Route path='/otp' element={<OTPForm />}/>
+      <Route path='/changepassword' element={<ChangePassword />}/>
+      <Route path="/follow/:id" element={<Follow />}/>
       </Routes>
   
       </main>

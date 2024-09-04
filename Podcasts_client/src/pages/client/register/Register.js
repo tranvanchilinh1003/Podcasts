@@ -29,15 +29,7 @@ function Register() {
 
   return (
     <>
-      <header className="site-header d-flex flex-column justify-content-center align-items-center">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12 col-12 text-center">
-              <h2 className="mb-0">Đăng ký</h2>
-            </div>
-          </div>
-        </div>
-      </header>
+  
 
       <section className="about-section section-padding" id="section_2">
         <div className="container">
