@@ -1,14 +1,15 @@
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { HttpClient } from '@angular/common/http'; // Chỉ import HttpClient tại đây
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-tinymce-editor',
   template: `
     <div class="editor-container bg-transparent">
-      <quill-editor [styles]="editorStyles" [modules]="editorModules" [(ngModel)]="editorContent"></quill-editor>
+      <quill-editor [styles]="editorStyles" [modules]="editorModules" [(ngModel)]="editorContent" (ngModelChange)="onEditorContentChange($event)"></quill-editor>
     </div>
-    <input  type="hidden" class=" bg-transparent" id="mytextarea" [(ngModel)]="editorContent" (ngModelChange)="onEditorContentChange($event)" />
-
   `,
   providers: [
     {
@@ -44,7 +45,7 @@ export class TinymceEditorComponent implements ControlValueAccessor {
   private onChange: (value: string) => void = () => {};
   private onTouched: () => void = () => {};
 
-  constructor() {}
+  constructor(private http: HttpClient) {} // Thêm HttpClient ở đây
 
   writeValue(value: string): void {
     this.editorContent = value;
@@ -63,7 +64,22 @@ export class TinymceEditorComponent implements ControlValueAccessor {
     this.onChange(newValue);
     this.editorContentChange.emit(newValue);
     this.onTouched();
+    this.saveContent(newValue); // Gọi hàm lưu dữ liệu khi có thay đổi
   }
+
+  // Hàm để lưu dữ liệu vào cơ sở dữ liệu
+  saveContent(content: string): void {
+    const apiUrl = 'http://localhost:8080/api/post'; // Thay bằng đúng URL của bạn
+    this.http.post(apiUrl, { description: content }).pipe(
+      catchError(error => {
+        console.error('Error saving content', error);
+        return throwError(error);
+      })
+    ).subscribe(response => {
+      console.log('Content saved successfully', response);
+    });
+  }
+
 
   editorStyles = {
     height: '200px'

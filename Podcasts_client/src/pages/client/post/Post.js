@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css"; 
+import "toastify-js/src/toastify.css";
 
 function Post() {
   const [data, setData] = useState([]);
@@ -34,7 +34,7 @@ function Post() {
       console.error("Error fetching posts:", error);
     }
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -81,7 +81,10 @@ function Post() {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   const fetchAllPosts = async () => {
@@ -184,11 +187,11 @@ function Post() {
 
   const handleShareClick = async (postId) => {
     try {
-      const customer = localStorage.getItem('customer');
+      const customer = localStorage.getItem("customer");
       setCustomer(JSON.parse(customer));
-      const response = await axios.post('http://localhost:8080/api/shares', {
+      const response = await axios.post("http://localhost:8080/api/shares", {
         post_id: postId,
-        customers_id: customer_id[0].id
+        customers_id: customer_id[0].id,
       });
       console.log("Share count updated:", response.data);
 
@@ -215,13 +218,13 @@ function Post() {
   };
 
   const handleFavouriteClick = async (postId) => {
-    const customer = localStorage.getItem('customer');
+    const customer = localStorage.getItem("customer");
     setCustomer(JSON.parse(customer));
 
     try {
-      const response = await axios.post('http://localhost:8080/api/favourite', {
+      const response = await axios.post("http://localhost:8080/api/favourite", {
         post_id: postId,
-        customers_id: customer_id[0].id
+        customers_id: customer_id[0].id,
       });
       console.log("Favourite count updated:", response.data);
 
@@ -248,7 +251,7 @@ function Post() {
   };
 
   return (
-    <section className="latest-podcast-section section-padding pb-0" id="section_2">
+    <section className="latest-podcast-section pb-0" id="section_2">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-12 col-12">
@@ -310,16 +313,18 @@ function Post() {
                       <Link to={`/getId_post/${post.id}`}>{post.title}</Link>
                     </h4>
                     <div className="profile-block d-flex">
-                    <Link to={`/follow/${post.customers_id}`}>
-                      <img
-                        src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                        className="profile-block-image"
-                        style={{ borderRadius: "50%" }}
-                        alt=""
-                      />
+                      <Link to={`/follow/${post.customers_id}`}>
+                        <img
+                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                          className="profile-block-image"
+                          style={{ borderRadius: "50%" }}
+                          alt=""
+                        />
                       </Link>
                       <p>
-                      <Link to={`/follow/${post.customers_id}`}>{post.username}</Link>  
+                        <Link to={`/follow/${post.customers_id}`}>
+                          {post.username}
+                        </Link>
                         {post.isticket === "active" && (
                           <img
                             src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
@@ -331,13 +336,25 @@ function Post() {
                       </p>
                     </div>
                     <p className="description-text">
-                      {expandedPostId === post.id 
-                        ? post.description 
-                        : truncateText(post.description, 100)} {/* Adjust the 100 to the desired max length */}
-                      {post.description.length > 100 && (  /* Show 'Read More' only if text is longer than 100 characters */
-                        <span 
-                          className="read-more-toggle" 
-                          onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)}
+                      {expandedPostId === post.id ? (
+                        <span
+                          dangerouslySetInnerHTML={{ __html: post.description }}
+                        />
+                      ) : (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: truncateText(post.description, 100),
+                          }}
+                        />
+                      )}
+                      {post.description.length > 100 && (
+                        <span
+                          className="read-more-toggle"
+                          onClick={() =>
+                            setExpandedPostId(
+                              expandedPostId === post.id ? null : post.id
+                            )
+                          }
                         >
                           {expandedPostId === post.id ? "Ẩn bớt" : "Xem thêm"}
                         </span>

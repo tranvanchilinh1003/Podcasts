@@ -30,7 +30,7 @@ module.exports = class Post {
                 }
             });
         });
-    }
+    } 
     // Add 
     static createPost(post) {
         return new Promise((resolve, reject) => {

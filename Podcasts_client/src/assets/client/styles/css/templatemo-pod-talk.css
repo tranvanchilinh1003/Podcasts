@@ -345,6 +345,7 @@ main {
   position: absolute;
   top: -10px;
   left: 10px;
+  transform: translateX(400%);
 }
 
 .navbar .dropdown-item {
@@ -1477,6 +1478,20 @@ main {
   position: relative;
 }
 
+.custom-search .input-group {
+  width: 100%; /* Chiều rộng 100% của container */
+  max-width: 600px; /* Chiều rộng tối đa (có thể điều chỉnh theo nhu cầu) */
+}
+.custom-search .input-group input {
+  flex: 1; /* Chiếm không gian còn lại */
+}
+
+.custom-search .input-group button {
+  display: flex; /* Đảm bảo nút tìm kiếm nằm ngang hàng */
+  align-items: center; /* Căn giữa nội dung của nút */
+}
+
+
 #searchSuggestions {
   position: absolute;
   width: 100%;
@@ -1492,6 +1507,8 @@ main {
   max-height: 280px; /* Adjust height as necessary */
   overflow-y: auto; /* Add scrollbar if content overflows */
   transition: max-height 0.3s ease;
+  z-index: 1000; /* Đảm bảo dropdown nằm trên các phần tử khác */
+  margin-top: 0.5rem; /* Tạo khoảng cách giữa dropdown và thanh tìm kiếm */
 }
 
 .dropdown-menu-customers.expanded {
@@ -1540,4 +1557,7 @@ main {
 .show-all-text:hover {
 text-decoration: underline;
 color: red;
+}
+.button-home:hover{
+  transform: scale(1.1);
 }

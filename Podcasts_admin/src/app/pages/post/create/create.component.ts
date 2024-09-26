@@ -126,6 +126,9 @@ export class CreateComponent implements OnInit {
       this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
       this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
       this.postnew.customers_id = customerId;
+      this.postnew.description = this.postForm.get('description')!.value;
+
+
 
       this.postService.createPost(this.postnew).subscribe({
         next: (post: IPost) => {
