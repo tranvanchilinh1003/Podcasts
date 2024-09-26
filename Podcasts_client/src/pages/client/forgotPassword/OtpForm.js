@@ -1,14 +1,14 @@
 import React from 'react';
-import {Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import './css.css'; // Ensure you have proper CSS for the form
 import { checkOTP as check } from '../../../services/apis/login';
 import { DialogService } from '../../../services/common/DialogService';
 
 const OTPForm = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const { control, handleSubmit, formState: { errors, isValid }, getValues } = useForm({
-    mode: 'onChange', 
+    mode: 'onChange',
   });
 
   const getOTPValue = () => {
@@ -21,23 +21,25 @@ const OTPForm = () => {
 
   const checkOTP = async (form) => {
     const email = localStorage.getItem('email');
-    const otp = getOTPValue(); 
-    console.log('Concatenated OTP:', otp); 
+    const otp = getOTPValue();
+    console.log('Concatenated OTP:', otp);
 
     const value = {
       email,
-      otp
+      otp,
     };
 
     try {
       const response = await check(value);
-        if(response.success){
-          DialogService.success(response.message);
-        }else{
-          DialogService.error(response.message)
-        }
-        
-
+      console.log(response);
+      
+      if (response.success) {
+        DialogService.success(response.message);
+        return true; 
+      } else {
+        DialogService.error(response.message);
+        return false; 
+      }
     } catch (error) {
       DialogService.error('OTP không đúng');
       throw error;
@@ -46,9 +48,10 @@ const OTPForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      await checkOTP(data);
-      navigate('/changepassword');
-
+      const isValidOTP = await checkOTP(data);
+      if (isValidOTP) {
+        navigate('/changepassword'); 
+      }
     } catch (error) {
       console.error("Submission failed: ", error);
     }
@@ -57,45 +60,44 @@ const OTPForm = () => {
   return (
     <>
       <section className="about-section section-padding" id="section_2">
-    <form onSubmit={handleSubmit(onSubmit)} className="container container_login mt-5">
-        <Link to='/forgotPassword'>
-        <i className="bi bi-arrow-left-short fs-3"></i>
-      </Link>
-      <h1 id="title" className="title text-center">Nhập OTP</h1>
-      <p className="sub-title text-center text-danger fst-italic">Vui lòng check email nhập OTP</p>
-      <div className="form-control-group mb-3">
-        <label className="label" htmlFor="otp">Nhập OTP:</label>
-        <div className="inputs responsive">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Controller
-              key={index}
-              name={`otp[${index}]`}
-              control={control}
-              defaultValue=""
-              rules={{ required: "Vui lòng nhập OTP" }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  className="bg-transparent otp-input"
-                  type="text"
-                  maxLength="1"
-                  tabIndex={index + 1}
-                  autoFocus={index === 0}
+        <form onSubmit={handleSubmit(onSubmit)} className="container container_login mt-5">
+          <Link to='/forgotPassword'>
+            <i className="bi bi-arrow-left-short fs-3"></i>
+          </Link>
+          <h1 id="title" className="title text-center">Nhập OTP</h1>
+          <p className="sub-title text-center text-danger fst-italic">Vui lòng check email nhập OTP</p>
+          <div className="form-control-group mb-3">
+            <label className="label" htmlFor="otp">Nhập OTP:</label>
+            <div className="inputs responsive">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Controller
+                  key={index}
+                  name={`otp[${index}]`}
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Vui lòng nhập OTP" }}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      className="bg-transparent otp-input"
+                      type="text"
+                      maxLength="1"
+                      tabIndex={index + 1}
+                      autoFocus={index === 0}
+                    />
+                  )}
                 />
-              )}
-            />
-          ))}
-        </div>
-        {/* Display a general error message if any field is empty */}
-        {Object.keys(errors).length > 0 && (
-          <small className="text-danger">Vui lòng nhập đầy đủ OTP.</small>
-        )}
-      </div>
-      <button type="submit" className="mb-3 w-100 btn btn-primary" disabled={!isValid}>
-        Gửi OTP
-      </button>
-    </form>
-    </section>
+              ))}
+            </div>
+            {Object.keys(errors).length > 0 && (
+              <small className="text-danger">Vui lòng nhập đầy đủ OTP.</small>
+            )}
+          </div>
+          <button type="submit" className="mb-3 w-100 btn btn-primary" disabled={!isValid}>
+            Gửi OTP
+          </button>
+        </form>
+      </section>
     </>
   );
 };

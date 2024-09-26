@@ -20,7 +20,7 @@ export const AuthProviderClient = ({ children }) => {
   const login = async (customerData) => {
     try {
       const response = await authLogin(customerData);
-      console.log('Login response:', response); // Debugging
+  
       const { token, userInfo } = response;
       localStorage.setItem('customer', JSON.stringify(response.data));
       localStorage.setItem('userToken', token);

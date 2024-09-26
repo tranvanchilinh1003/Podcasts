@@ -239,7 +239,7 @@ function formatTimeDate(dateString) {
         setValue('username', user.username);
         setValue('full_name', user.full_name);
         setValue('email', user.email);
-        // setValue('gender', user.gender.toString());
+        setValue('gender', user.gender.toString());
       } catch (err) {
         console.error('Failed to fetch user info:', err);
         setError(err);
@@ -267,6 +267,7 @@ function formatTimeDate(dateString) {
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                         alt="Hồ sơ"
+                        style={{maxWidth: 'auto', height: '100%', borderRadius: '50%'}}
                       />
                     </div>
                     <div className="profile-header-info">

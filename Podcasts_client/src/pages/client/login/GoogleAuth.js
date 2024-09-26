@@ -7,10 +7,16 @@ import { useAuthClient } from "./AuthContext";
 import { DialogService } from "../../../services/common/DialogService";
 import { storage } from "../firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-const CLIENT_ID =
-  "973247984258-riadtumd7jcati9d9g9ip47tuqfqdkhc.apps.googleusercontent.com";
+const CLIENT_ID = "973247984258-riadtumd7jcati9d9g9ip47tuqfqdkhc.apps.googleusercontent.com";
 const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
-const API_BASE_URL = "http://localhost:8080"; // Thay thế bằng URL của bạn
+const API_BASE_URL = "http://localhost:8080"; 
+
+function removeDiacriticsAndSpaces(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '');
+}
 
 function GoogleAuth({ onLogin }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,7 +51,7 @@ function GoogleAuth({ onLogin }) {
       const user = await authInstance.signIn();
       const profile = user.getBasicProfile();
       const email = profile.getEmail();
-      const username = profile.getName().toLowerCase();
+     const username = removeDiacriticsAndSpaces(profile.getName().toLowerCase());
       const images = profile.getImageUrl();
 
       const role = "user";
@@ -55,7 +61,11 @@ function GoogleAuth({ onLogin }) {
       const response = await fetch(images);
       const blob = await response.blob();
       await uploadBytes(imageRef, blob);
+
+      
       const imageUrl = await getDownloadURL(imageRef);
+
+
       const checkResponse = await axios.post(
         `${API_BASE_URL}/api/check_email`,
         { email }
@@ -69,7 +79,8 @@ function GoogleAuth({ onLogin }) {
           role,
           create_date,
           password,
-          isticket: 'inactive'
+          isticket: 'inactive',
+          gender: 0
         });
         const data = {
           username,
@@ -89,7 +100,7 @@ function GoogleAuth({ onLogin }) {
       //   navigate('/');
       // }
 
-      if (!checkResponse.data.exists) {
+    else {
         if (onLogin) {
           await onLogin(checkResponse.data.data);
           await loginGoogle(checkResponse.data.data); 
@@ -101,9 +112,7 @@ function GoogleAuth({ onLogin }) {
           await DialogService.success("Đăng nhập thành công");
           await navigate("/");
         }
-      } else {
-        console.error("Login failed:", loginResponse.data.message);
-      }
+      } 
     } catch (error) {
       console.error("Error during sign-in", error);
     }
@@ -124,7 +133,11 @@ function GoogleAuth({ onLogin }) {
       {isLoggedIn ? (
     ''
       ) : (
-        <i className="bi bi-google" onClick={handleLogin}></i>
+        <svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512"  onClick={handleLogin}>
+        <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+      
+      </svg>
+    
       )}
     </div>
   );

@@ -138,7 +138,8 @@ exports.otp = async (req, res, next) => {
     try {
       const { otp, email } = req.body;
       const result = await Customers.OTP(email, otp);
-  
+    
+        
       if (result.success) {
         return res.status(200).json({ success: true, message: result.message });
       } else {

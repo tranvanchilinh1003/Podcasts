@@ -1,17 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Modal, Button } from 'react-bootstrap';
-import axiosInstance from '../firebase/axiosConfig';
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
+import axiosInstance from "../firebase/axiosConfig";
 import { DialogService } from "../../../services/common/DialogService";
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
-
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../firebase/firebase';
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase/firebase";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 function Follow() {
   const { id } = useParams();
-  const { register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+    watch,
+  } = useForm();
   const [userInfo, setUserInfo] = useState(null);
   const [data, setData] = useState([]);
   const [isAudioVisible, setIsAudioVisible] = useState(false);
@@ -30,41 +39,40 @@ function Follow() {
   const [error, setError] = useState(null);
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [oldImage, setOldImage] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
+  const [oldImage, setOldImage] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [expandedPostId, setExpandedPostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
+  const currentUserId = localStorage.getItem("userId");
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const handleCommentClick = (postId) => {
-    // Toggle the visibility of the comment box for the clicked post
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
   };
 
   function formatDate(dateString) {
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric'
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     };
     const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN', options);
-}
+    return date.toLocaleDateString("vi-VN", options);
+  }
 
-function formatTimeDate(dateString) {
-  const options = { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit', 
-      hour12: false 
-  };
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('vi-VN', options);
-}
-
+  function formatTimeDate(dateString) {
+    const options = {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("vi-VN", options);
+  }
 
   const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) return text;
@@ -76,17 +84,22 @@ function formatTimeDate(dateString) {
       ) + "..."
     );
   };
+
   const fetchPost = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/post-customer/${id}`);
+      const response = await axios.get(
+        `http://localhost:8080/api/post-customer/${id}`
+      );
       setData(response.data.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
   };
+
   useEffect(() => {
     fetchPost();
   }, []);
+
   const handlePlayAudio = (url, title, artist, coverImage, postId) => {
     setAudioUrl(url);
     setSongTitle(title);
@@ -134,14 +147,11 @@ function formatTimeDate(dateString) {
 
   const handleMuteClick = () => {
     if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.volume = 1;
-      } else {
-        audioRef.current.volume = 0;
-      }
+      audioRef.current.volume = isMuted ? 1 : 0;
       setIsMuted(!isMuted);
     }
   };
+
   const updateViewCount = async (postId) => {
     try {
       await axios.post(`http://localhost:8080/api/update_view/${postId}`);
@@ -175,86 +185,105 @@ function formatTimeDate(dateString) {
       }
     };
   }, [audioUrl, currentPostId, viewUpdated]);
+
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   };
-  const onSubmit = async (data) => {
-    setIsUploading(true);
-    if (file) {
-      const fileExtension = file.name.split('.').pop();
-      const currentDate = new Date();
-      const newFileName = `${currentDate.toISOString().replace(/[:.]/g, '-')}.${fileExtension}`;
-      const path = `upload/${newFileName}`;
-      const storageRef = ref(storage, path);
 
-      try {
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        data.images = newFileName; // Set the new image URL
-      } catch (error) {
-        console.error('Upload failed:', error);
-        DialogService.error('Upload failed. Please try again.');
-        setIsUploading(false);
-        return;
-      }
-    } else {
-      data.images = oldImage;
+  const getUserFromLocalStorage = () => {
+    const userArray = JSON.parse(localStorage.getItem("customer"));
+    return userArray && userArray.length > 0 ? userArray[0] : null;
+  };
+
+  const handleFollow = async (userIdToFollow) => {
+    const user = getUserFromLocalStorage();
+    if (!user) {
+      navigate("/login");
+      return;
     }
-    data.isticket = 'inactive';
-    data.date = new Date().toISOString();
-    data.password = data.password || oldPassword;
-    console.log('Data to submit:', data);
 
     try {
-      data.role = 'user';
-      // data.gender = 0;
-      const response = await axiosInstance.patch(`/api/customers/${id}`, data);
-      if (response.status === 200) {
-        DialogService.success('Cập nhật tài khoản thành công');
-      }
+      const response = await axios.post(
+        `http://localhost:8080/api/follow/${userIdToFollow}`,
+        {
+          follower_id: user.id,
+        }
+      );
+      console.log("Follow successful:", response.data);
+      setIsFollowing(true);
+      fetchUserInfo();
     } catch (error) {
-      console.error('Update failed:', error.response ? error.response.data : error.message);
-      if (error.response && error.response.status === 400) {
-        DialogService.error('Username or email already exists.');
-      } else {
-        DialogService.error('Update failed. Please try again.');
-      }
-    } finally {
-      setIsUploading(false);
+      console.error("Error following user:", error);
     }
   };
 
-  useEffect(() => {
-    console.log("Fetching user info...");
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
-        console.log("User info received:", response.data.data);
-        const user = response.data.data[0];
-        setUserInfo(user);
-        setOldImage(user.images);
-        setOldPassword(user.password);
-        setValue('username', user.username);
-        setValue('full_name', user.full_name);
-        setValue('email', user.email);
-        // setValue('gender', user.gender.toString());
-      } catch (err) {
-        console.error('Failed to fetch user info:', err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleUnfollow = async (userIdToUnfollow) => {
+    const user = getUserFromLocalStorage();
+    if (!user) {
+      console.error("No user information found in localStorage.");
+      return;
+    }
 
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/unfollow/${userIdToUnfollow}`,
+        {
+          follower_id: user.id,
+        }
+      );
+      console.log("Unfollow successful:", response.data);
+      setIsFollowing(false);
+      fetchUserInfo();
+    } catch (error) {
+      console.error("Error unfollowing user:", error);
+    }
+  };
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/customers/${id}`
+      );
+      const user = response.data.data[0];
+      setUserInfo(user);
+      setOldImage(user.images);
+      setOldPassword(user.password);
+      setValue("username", user.username);
+      setValue("full_name", user.full_name);
+      setValue("email", user.email);
+
+      const currentUser = getUserFromLocalStorage();
+      if (currentUser) {
+        const followResponse = await axios.get(
+          `http://localhost:8080/api/check-follow/${currentUser.id}?followed_id=${id}`
+        );
+        setIsFollowing(followResponse.data.isFollowing);
+      } else {
+        setIsFollowing(false);
+      }
+    } catch (err) {
+      console.error("Failed to fetch user info:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchUserInfo();
   }, [id, setValue]);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <section className="latest-podcast-section section-padding pb-0" id="section_2">
+    <section
+      className="latest-podcast-section section-padding pb-0"
+      id="section_2"
+    >
       <div className="container">
         <div className="row mt-3">
           <div className="col-md-12">
@@ -266,235 +295,273 @@ function formatTimeDate(dateString) {
                     <div className="profile-header-img rounded-circle">
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                        alt="Hồ sơ"
+                        alt="Profile"
                       />
                     </div>
-                    <div className="profile-header-info">
-                      <h4 className="m-t-10 m-b-5">{userInfo?.username}</h4>
-                      <p className="m-b-10 text-white">Frontend</p>
+                    <div className="profile-header-info d-flex justify-content-between align-items-center">
+                      <h4 className="m-t-10 mt-2 m-b-5 fw-bold ">
+                        {userInfo?.username}
+                        {userInfo.isticket === "active" && (
+                          <img
+                            src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                            className="verified-image img-fluid"
+                            alt="Verified"
+                          />
+                        )}
+                        <p className="m-b-10 mt-2 ">
+                          Số người theo dõi:{" "}
+                          <label className="text-white fw-bold">
+                            {userInfo?.followersCount}
+                          </label>
+                        </p>
+                      </h4>
+                      <div>
+                        {getUserFromLocalStorage()?.id != id && (
+                          <Button
+                            className="text-white fw-bold py-2 px-5"
+                            variant={isFollowing ? "secondary" : "danger"}
+                            onClick={() =>
+                              isFollowing
+                                ? handleUnfollow(id)
+                                : handleFollow(id)
+                            }
+                          >
+                            {isFollowing ? "Hủy theo dõi" : "+ Theo dõi"}
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <ul className="profile-header-tab nav nav-tabs mt-5">
                     <li className="nav-item">
-                      <a id="posts-tab" data-bs-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false" className="nav-link active ">BÀI VIẾT</a>
+                      <a
+                        id="posts-tab"
+                        data-bs-toggle="tab"
+                        href="#posts"
+                        role="tab"
+                        aria-controls="posts"
+                        aria-selected="true"
+                        className="nav-link active"
+                      >
+                        Bài đăng
+                      </a>
                     </li>
                     <li className="nav-item">
-                      <a id="info-tab" data-bs-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true" target="__blank" className="nav-link show ">THÔNG TIN</a>
-                    </li>
-                    <li className="nav-item">
-                      <a id="shares-tab" data-bs-toggle="tab" href="#shares" role="tab" aria-controls="shares" aria-selected="false" className="nav-link">CHIA SẺ</a>
-                    </li>
-                    <li className="nav-item">
-                      <a id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false" className="nav-link">YÊU THÍCH</a>
+                      <a
+                        id="info-tab"
+                        data-bs-toggle="tab"
+                        href="#info"
+                        role="tab"
+                        aria-controls="info"
+                        aria-selected="false"
+                        className="nav-link"
+                      >
+                        Thông tin
+                      </a>
                     </li>
                   </ul>
-
                 </div>
               </div>
               <div className="profile-content">
                 <div className="tab-content p-0">
-                  <div className="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-                    <div className="row gutters">
-                      <div className="col-md-12">
-                        <div className="card border-0 shadow-sm">
-                          <div className="card-body">
-                
+                  <div
+                    className="tab-pane fade show active"
+                    id="posts"
+                    role="tabpanel"
+                    aria-labelledby="posts-tab"
+                  >
+                    <ul className="timeline">
+                      {data.map((post) => (
+                        <li key={post.id}>
+                        
+                          <div className="timeline-time">
+                            <span className="time text-center">
+                              {formatTimeDate(post.create_date)}
+                            </span>
+                            <span className="time">
+                              {formatDate(post.create_date)}
+                            </span>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* nội dung thông tin */}
-                  <div className="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-                    <div className="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-                      <div className="row gutters">
-                        <div className="col-md-12">
-                          <div className="card border-0 shadow-sm">
-                            <div className="card-body">
-                            <table></table>
+                        
+                          <div className="timeline-icon">
+                            <a href="javascript:;">&nbsp;</a>
+                          </div>
+                        
+                          <div className="timeline-body border">
+                            <div className="timeline-header">
+                              <span className="userimage">
+                                <img
+                                  src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                                  alt="Hồ sơ"
+                                />
+                              </span>
+                              <span className="username mx-1">
+                                <a href="javascript:;">{userInfo?.username}</a>
+                              </span>
+                              <span className="pull-right text-muted">
+                                {post.view} Lượt xem
+                              </span>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* nôi dung bài đăng */}
-                  <div className="tab-pane fade" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div id="content" className="content content-full-width">
-                          <div className="profile-content">
-                            {/* bắt đầu nội dung tab */}
-                            <div className="tab-content p-0">
-                              {/* bắt đầu tab #profile-post */}
-                              <div className="tab-pane fade active show" id="profile-post">
-                                {/* bắt đầu timeline */}
-
-                                <ul className="timeline">
-                                  <div className="timeline-body rounded">
-                                    <div className="timeline-comment-box">
-                                      <div className="user">
-                                        <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
-                                      </div>
-                                      <div className="input">
-                                        <form action="">
-                                          <div className="input-group">
-                                            <input type="text" className="form-control rounded-corner" onClick={handleShow} placeholder="Thêm một bài viết..." />
-                                            <span className="input-group-btn p-l-10">
-                                              <button className="btn btn-primary f-s-12 rounded-corner" type="button" onClick={handleShow}>Thêm bài viết</button>
-                                            </span>
-                                          </div>
-                                        </form>
-                                      </div>
-                                    </div>
-
-                              
-                                  </div>
-                                  {data.map(post => (
-                                    <li key={post.id}>
-                                      {/* Bắt đầu thời gian trên timeline */}
-                                      <div className="timeline-time">
-                                        <span className="time text-center">{formatTimeDate(post.create_date)}</span>
-                                        <span className="time">{formatDate(post.create_date)}</span>
-                                      </div>
-                                      {/* Bắt đầu biểu tượng timeline */}
-                                      <div className="timeline-icon">
-                                        <a href="javascript:;">&nbsp;</a>
-                                      </div>
-                                      {/* Bắt đầu nội dung timeline */}
-                                      <div className="timeline-body border">
-                                        <div className="timeline-header">
-                                          <span className="userimage">
-                                            <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
-                                          </span>
-                                          <span className="username mx-1">
-                                            <a href="javascript:;">{userInfo?.username}</a>
-                                          </span>
-                                          <span className="pull-right text-muted">{post.view} Lượt xem</span>
-                                        </div>
-                                        <div className="timeline-content">
-                                          <h4>{post.title}</h4>
-                                          <p className="description-text">
-                                            {expandedPostId === post.id
-                                              ? post.description
-                                              : truncateText(post.description, 100)} {/* Adjust the 100 to the desired max length */}
-                                            {post.description.length > 100 && (  /* Show 'Read More' only if text is longer than 100 characters */
-                                              <span
-                                                className="read-more-toggle"
-                                                onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)}
-                                              >
-                                                {expandedPostId === post.id ? "Ẩn bớt" : "Xem thêm"}
-                                              </span>
-                                            )}
-                                          </p>
-                                          <div className="image-container">
-                                            <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`} alt="Your image description" className="border rounded" />
-                                            <span
-                                              className="custom-block-icon"
-                                              onClick={() =>
-                                                handlePlayAudio(
-                                                  post.audio,
-                                                  post.title,
-                                                  post.username,
-                                                  post.images,
-                                                  post.id
-                                                )
-                                              }
-                                            >
-                                              <i className="bi-play-fill fs-2"></i>
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <div className="timeline-likes">
-                                          <div className="stats-right">
-                                            <span className="stats-text mx-1">259 Chia sẻ</span>
-                                            <a href='#'>
-                                              <span className="stats-text">{post.total_comments} Bình luận</span>
-                                            </a>
-                                          </div>
-                                          <div className="stats">
-                                            <span className="fa-stack fa-fw stats-icon">
-                                              <i className="fa fa-circle fa-stack-2x text-danger"></i>
-                                              <i className="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
-                                            </span>
-                                            <span className="fa-stack fa-fw stats-icon">
-                                              <i className="fa fa-circle fa-stack-2x text-primary"></i>
-                                              <i className="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                            <span className="stats-total">{post.total_favorites}</span>
-                                          </div>
-                                        </div>
-                                        <div className="timeline-footer">
-                                          <a href="javascript:;" className="m-r-15 text-inverse-lighter mx-1">
-                                            <i className="bi bi-hand-thumbs-up"></i> Thích
-                                          </a>
-                                          <a
-                                            href="javascript:;"
-                                            className="m-r-15 text-inverse-lighter mx-1"
-                                            onClick={() => handleCommentClick(post.id)}
-                                          >
-                                            <i className="bi bi-chat"></i> Bình luận
-                                          </a>
-                                          <a href="javascript:;" className="m-r-15 text-inverse-lighter mx-1">
-                                            <i className="bi bi-share"></i> Chia sẻ
-                                          </a>
-                                        </div>
-                                        {/* Khu vực nhập bình luận */}
-                                        {visibleCommentBox === post.id && (
-                                          <div className="timeline-comment-box">
-                                            <div className="user">
-                                              <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
-                                            </div>
-                                            <div className="input">
-                                              <form action="">
-                                                <div className="input-group">
-                                                  <input type="text" className="form-control rounded-corner" placeholder="Viết một bình luận..." />
-                                                  <span className="input-group-btn p-l-10">
-                                                    <button className="btn btn-primary f-s-12 rounded-corner" type="button">Bình luận</button>
-                                                  </span>
-                                                </div>
-                                              </form>
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </li>
-                                  ))}
-
-
-                                </ul>
-
+                            <div className="timeline-content">
+                              <h4>{post.title}</h4>
+                              <p className="description-text">
+                                {expandedPostId === post.id
+                                  ? post.description
+                                  : truncateText(post.description, 100)}{" "}
+                                {/* Adjust the 100 to the desired max length */}
+                                {post.description.length >
+                                  100  && (
+                                  <span
+                                    className="read-more-toggle"
+                                    onClick={() =>
+                                      setExpandedPostId(
+                                        expandedPostId === post.id
+                                          ? null
+                                          : post.id
+                                      )
+                                    }
+                                  >
+                                    {expandedPostId === post.id
+                                      ? "Ẩn bớt"
+                                      : "Xem thêm"}
+                                  </span>
+                                )}
+                              </p>
+                              <div className="image-container">
+                                <img
+                                  src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                                  alt="Your image description"
+                                  className="border rounded"
+                                />
+                                <span
+                                  className="custom-block-icon"
+                                  onClick={() =>
+                                    handlePlayAudio(
+                                      post.audio,
+                                      post.title,
+                                      post.username,
+                                      post.images,
+                                      post.id
+                                    )
+                                  }
+                                >
+                                  <i className="bi-play-fill fs-2"></i>
+                                </span>
                               </div>
-
                             </div>
-
+                            <div className="timeline-likes">
+                              <div className="stats-right">
+                                <span className="stats-text mx-1">
+                                  259 Chia sẻ
+                                </span>
+                                <a href="#">
+                                  <span className="stats-text">
+                                    {post.total_comments} Bình luận
+                                  </span>
+                                </a>
+                              </div>
+                              <div className="stats">
+                                <span className="fa-stack fa-fw stats-icon">
+                                  <i className="fa fa-circle fa-stack-2x text-danger"></i>
+                                  <i className="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
+                                </span>
+                                <span className="fa-stack fa-fw stats-icon">
+                                  <i className="fa fa-circle fa-stack-2x text-primary"></i>
+                                  <i className="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                                </span>
+                                <span className="stats-total">
+                                  {post.total_favorites}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="timeline-footer">
+                              <a
+                                href="javascript:;"
+                                className="m-r-15 text-inverse-lighter mx-1"
+                              >
+                                <i className="bi bi-hand-thumbs-up"></i> Thích
+                              </a>
+                              <a
+                                href="javascript:;"
+                                className="m-r-15 text-inverse-lighter mx-1"
+                                onClick={() => handleCommentClick(post.id)}
+                              >
+                                <i className="bi bi-chat"></i> Bình luận
+                              </a>
+                              <a
+                                href="javascript:;"
+                                className="m-r-15 text-inverse-lighter mx-1"
+                              >
+                                <i className="bi bi-share"></i> Chia sẻ
+                              </a>
+                            </div>
+                            {/* Khu vực nhập bình luận */}
+                            {visibleCommentBox === post.id && (
+                              <div className="timeline-comment-box">
+                                <div className="user">
+                                  <img
+                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                                    alt="Hồ sơ"
+                                  />
+                                </div>
+                                <div className="input">
+                                  <form action="">
+                                    <div className="input-group">
+                                      <input
+                                        type="text"
+                                        className="form-control rounded-corner"
+                                        placeholder="Viết một bình luận..."
+                                      />
+                                      <span className="input-group-btn p-l-10">
+                                        <button
+                                          className="btn btn-primary f-s-12 rounded-corner"
+                                          type="button"
+                                        >
+                                          Bình luận
+                                        </button>
+                                      </span>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            )}
                           </div>
-
-                        </div>
-                      </div>
-                    </div>
-
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
-                  <div className="tab-pane fade" id="shares" role="tabpanel" aria-labelledby="shares-tab">
-                    <h3 className="mb-4">Chia sẻ</h3>
-                    <p>hihi1</p>
-                  </div>
-
-                  <div className="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
-                    <h3 className="mb-4">Yêu thích</h3>
-                    <p>hihi?</p>
+                  <div
+                    className="tab-pane fade"
+                    id="info"
+                    role="tabpanel"
+                    aria-labelledby="info-tab"
+                  >
+                    <table className="table table-striped">
+                      <tbody>
+                        <tr>
+                          <td>Họ Và Tên:</td>
+                          <td>{userInfo?.full_name}</td>
+                        </tr>
+                        <tr>
+                          <td>Email:</td>
+                          <td>{userInfo?.email}</td>
+                        </tr>
+                        <tr>
+                          <td>Số lượng người theo dõi:</td>
+                          <td>{userInfo?.followersCount}</td>
+                        </tr>
+                        <tr>
+                          <td>Tham gia:</td>
+                          <td>{formatDate(userInfo?.create_date)}</td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
       {isAudioVisible && (
         <div
@@ -534,8 +601,9 @@ function formatTimeDate(dateString) {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                    }`}
+                  className={`bi ${
+                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                  }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input

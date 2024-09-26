@@ -113,6 +113,7 @@ exports.getAllPost = async (req, res, next) => {
         const totalProducts = await Post.coutCustomers();
         if(totalProducts > 0){ 
         const totalPages = Math.ceil(totalProducts / row);
+
         var post = await Post.getAllPost();
         res.status(200).json({
             data: post,

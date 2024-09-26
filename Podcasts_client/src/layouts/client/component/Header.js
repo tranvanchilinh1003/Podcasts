@@ -116,8 +116,9 @@ function Header() {
     
     }
   };
-
-  // Toggle show all suggestions
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const handleShowAll = () => {
     setShowAll(!showAll);
   };
@@ -129,7 +130,7 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-lg" style={{ position: 'fixed' }}>
       <div className="container">
-        <Link className="navbar-brand me-lg-5 me-0" to="/">
+        <Link className="navbar-brand me-lg-5 me-0" to="/" onClick={scrollToTop}>
           <img
             src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e"
             className="logo-image img-fluid"

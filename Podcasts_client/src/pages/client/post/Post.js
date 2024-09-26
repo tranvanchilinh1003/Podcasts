@@ -1,8 +1,45 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css"; 
+import "toastify-js/src/toastify.css";
+import Spinner from "../Spinner/Spinner";
+
+const StarRating = ({ rating }) => {
+  const percent = (rating / 5) * 100;
+  console.log( (4 / 5) *100);
+  
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "inline-block",
+        width: "35px",
+        height: "35px",
+      }}
+    >
+      <svg width="35" height="35" fill="lightgray" viewBox="0 0 25 25">
+        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+      </svg>
+      {percent > 0 && (
+        <svg
+          width="35"
+          height="35"
+          fill="gold"
+          viewBox="0 0 25 25"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            clipPath: `inset(0 ${100 - percent}% 0 0)`,
+          }}
+        >
+          <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+        </svg>
+      )}
+    </div>
+  );
+};
 
 function Post() {
   const [data, setData] = useState([]);
@@ -19,34 +56,49 @@ function Post() {
   const [duration, setDuration] = useState(0);
   const [currentPostId, setCurrentPostId] = useState(null);
   const [viewUpdated, setViewUpdated] = useState(false);
-  const [sharesToday, setSharesToday] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [customer_id, setCustomer] = useState(null);
-  const [expandedPostId, setExpandedPostId] = useState(null); // New state for expanded post ID
-
+  const [expandedPostId, setExpandedPostId] = useState(null);
+  const [isLike, setIsLike] = useState(false);
   const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
+  const navigate = useNavigate();
 
   const fetchPost = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/get_All");
-      setData(response.data.data);
+      const customer = getUserFromLocalStorage();
+      const userId = customer ? customer.id : null;
+      const response = await axios.get(
+        "http://localhost:5000/api/top_podcasts"
+      );
+      const data = response.data.data || [];
+
+      if (userId) {
+        // Kiểm tra các bài viết đã được thích
+        const likeResponse = await axios.get(
+          "http://localhost:8080/api/check-likes",
+          {
+            params: { userId },
+          }
+        );
+
+        const likedPostIds = likeResponse.data.map((item) => item.post_id);
+
+        const updatedData = data.map((post) => ({
+          ...post,
+          isLiked: likedPostIds.includes(post.data.id),
+        }));
+
+        setData(updatedData);
+      } else {
+        setData(data);
+      }
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      console.error("Error fetching all posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/shares/today");
-        setSharesToday(response.data.data);
-      } catch (error) {
-        console.error("Error fetching shares today:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     fetchPost();
@@ -81,29 +133,19 @@ function Post() {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-  };
-
-  const fetchAllPosts = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/get_All");
-      setAllData(response.data.data);
-    } catch (error) {
-      console.error("Error fetching all posts:", error);
-    }
-  };
-
-  const handleLikeClick = (event, postId) => {
-    event.preventDefault();
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   };
 
   const handleLoadMoreToggle = () => {
-    if (!isExpanded) {
-      fetchAllPosts();
-    }
-    setVisibleCount(isExpanded ? 6 : data.length);
-    setIsExpanded(!isExpanded);
+    const newVisibleCount = visibleCount + 6;
+    setVisibleCount(newVisibleCount);
   };
+
+  const postsToDisplay = data.slice(0, visibleCount);
+  const shouldShowLoadMore = postsToDisplay.length < data.length;
 
   const handlePlayAudio = (url, title, artist, coverImage, postId) => {
     setAudioUrl(url);
@@ -180,15 +222,16 @@ function Post() {
     );
   };
 
-  const postsToDisplay = data.slice(0, visibleCount);
-
   const handleShareClick = async (postId) => {
     try {
-      const customer = localStorage.getItem('customer');
-      setCustomer(JSON.parse(customer));
-      const response = await axios.post('http://localhost:8080/api/shares', {
+      const customer = getUserFromLocalStorage();
+      if (!customer) {
+        navigate("/login");
+        return;
+      }
+      const response = await axios.post("http://localhost:8080/api/shares", {
         post_id: postId,
-        customers_id: customer_id[0].id
+        customers_id: customer.id,
       });
       console.log("Share count updated:", response.data);
 
@@ -214,41 +257,73 @@ function Post() {
     }
   };
 
-  const handleFavouriteClick = async (postId) => {
-    const customer = localStorage.getItem('customer');
-    setCustomer(JSON.parse(customer));
-
+  const handleLikeClick = async (event, postId) => {
+    event.preventDefault();
+  
+    const customer = getUserFromLocalStorage();
+    if (!customer) {
+      navigate("/login");
+      return;
+    }
+  
+    const post = data.find((post) => post.data.id === postId);
+    const isLiked = post?.isLiked;
+  
+    const updatedData = data.map((p) =>
+      p.data.id === postId 
+        ? { ...p, isLiked: !isLiked, data: { ...p.data, total_likes: isLiked ? p.data.total_likes - 1 : p.data.total_likes + 1 } }
+        : p
+    );
+  
+    setData(updatedData);
+  
     try {
-      const response = await axios.post('http://localhost:8080/api/favourite', {
-        post_id: postId,
-        customers_id: customer_id[0].id
-      });
-      console.log("Favourite count updated:", response.data);
-
-      Toastify({
-        text: "Lưu thành công!",
-        duration: 3000,
-        gravity: "bottom",
-        position: "right",
-        backgroundColor: "#4caf50",
-        stopOnFocus: true,
-      }).showToast();
+  
+      if (isLiked) {
+        await axios.delete("http://localhost:8080/api/like", {
+          data: {
+            post_id: postId,
+            customers_id: customer.id,
+          },
+        });
+      } else {
+        await axios.post("http://localhost:8080/api/like", {
+          post_id: postId,
+          customers_id: customer.id,
+        });
+      }
+  
+      
+      fetchPost();
     } catch (error) {
-      console.error("Error updating favourite count:", error);
-
-      Toastify({
-        text: "Đăng nhập để lưu",
-        duration: 3000,
-        gravity: "bottom",
-        position: "right",
-        backgroundColor: "#f44336",
-        stopOnFocus: true,
-      }).showToast();
+      console.error("Lỗi khi cập nhật trạng thái thích:", error);
+      
+    
+      setData(data); 
     }
   };
+  
 
+  const getUserFromLocalStorage = () => {
+    const userArray = JSON.parse(localStorage.getItem("customer"));
+    return userArray && userArray.length > 0 ? userArray[0] : null;
+  };
+  const profileLink = (id) => {
+    return id == getUserFromLocalStorage()?.id
+      ? `/account/${id}`
+      : `/follow/${id}`;
+  };
+
+  // Usage
+
+  if (loading) {
+    return <Spinner />;
+  }
   return (
-    <section className="latest-podcast-section section-padding pb-0" id="section_2">
+    <section
+      className="latest-podcast-section section-padding pb-0"
+      id="section_2"
+    >
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-12 col-12">
@@ -259,14 +334,14 @@ function Post() {
 
           <div className="row">
             {postsToDisplay.map((post) => (
-              <div className="col-lg-12 col-12 mb-4" key={post.id}>
+              <div className="col-lg-12 col-12 mb-4" key={post.data.id}>
                 <div className="custom-block d-flex flex-column flex-md-row">
                   <div className="col-lg-3 col-12">
                     <div className="custom-block-icon-wrap">
                       <div className="section-overlay"></div>
                       <a className="custom-block-image-wrap">
                         <img
-                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.data.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
                           className="custom-block-image img-fluid"
                           alt=""
                         />
@@ -274,11 +349,11 @@ function Post() {
                           className="custom-block-icon"
                           onClick={() =>
                             handlePlayAudio(
-                              post.audio,
-                              post.title,
-                              post.username,
-                              post.images,
-                              post.id
+                              post.data.audio,
+                              post.data.title,
+                              post.data.username,
+                              post.data.images,
+                              post.data.id
                             )
                           }
                         >
@@ -288,39 +363,52 @@ function Post() {
                     </div>
                     <div className="custom-block-bottom justify-content-around d-flex mt-3 ">
                       <p className="bi-headphones me-1">
-                        <span>{post.view}</span>
+                        <span>{post.data.view}</span>
                       </p>
+
                       <a
                         href="#"
-                        className="bi-heart me-1"
-                        onClick={(e) => handleLikeClick(e, post.id)}
+                        id='like-icon'
+                        className={
+                          post.isLiked
+                            ? "bi-heart-fill fs-6"
+                            : "bi-heart me-1 fs-6"
+                        }
+                        onClick={(e) => handleLikeClick(e, post.data.id)}
                       >
-                        <span>{post.total_favorites}</span>
+                        <span>{post.data.total_likes}</span>
                       </a>
+
                       <Link
-                        to={`/getId_post/${post.id}`}
+                        to={`/getId_post/${post.data.id}`}
                         className="bi-chat me-1"
                       >
-                        <span>{post.total_comments}</span>
+                        <span className="me-1">{post.data.total_comments}</span>
+
+                      
                       </Link>
                     </div>
                   </div>
                   <div className="custom-block-info col-lg-8 col-12">
                     <h4 className="mb-2">
-                      <Link to={`/getId_post/${post.id}`}>{post.title}</Link>
+                      <Link to={`/getId_post/${post.data.id}`}>
+                        {post.data.title}
+                      </Link>
                     </h4>
                     <div className="profile-block d-flex">
-                    <Link to={`/follow/${post.customers_id}`}>
-                      <img
-                        src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                        className="profile-block-image"
-                        style={{ borderRadius: "50%" }}
-                        alt=""
-                      />
+                      <Link to={profileLink(post.data.customers_id)}>
+                        <img
+                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.data.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                          className="profile-block-image"
+                          style={{ borderRadius: "50%" }}
+                          alt=""
+                        />
                       </Link>
                       <p>
-                      <Link to={`/follow/${post.customers_id}`}>{post.username}</Link>  
-                        {post.isticket === "active" && (
+                        <Link to={profileLink(post.data.customers_id)}>
+                          {post.data.username}
+                        </Link>
+                        {post.data.isticket === "active" && (
                           <img
                             src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
                             className="verified-image img-fluid"
@@ -330,37 +418,43 @@ function Post() {
                         <strong>Người đăng</strong>
                       </p>
                     </div>
-                    <p className="description-text">
-                      {expandedPostId === post.id 
-                        ? post.description 
-                        : truncateText(post.description, 100)} {/* Adjust the 100 to the desired max length */}
-                      {post.description.length > 100 && (  /* Show 'Read More' only if text is longer than 100 characters */
-                        <span 
-                          className="read-more-toggle" 
-                          onClick={() => setExpandedPostId(expandedPostId === post.id ? null : post.id)}
+                    <p className="description-text ">
+                      {expandedPostId === post.data.id
+                        ? post.data.description
+                        : truncateText(post.data.description, 100)}{" "}
+                      {post.data.description.length > 100 && (
+                        <span
+                          className="read-more-toggle"
+                          onClick={() =>
+                            setExpandedPostId(
+                              expandedPostId === post.data.id
+                                ? null
+                                : post.data.id
+                            )
+                          }
                         >
-                          {expandedPostId === post.id ? "Ẩn bớt" : "Xem thêm"}
+                          {expandedPostId === post.data.id
+                            ? "Ẩn bớt"
+                            : "Xem thêm"}
                         </span>
                       )}
                     </p>
                   </div>
                   <div className="d-flex flex-column ms-auto">
-                    <a
+                
+                    <label
                       href="#"
-                      className="badge ms-auto"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleFavouriteClick(post.id);
-                      }}
+                      className=" ms-auto"
+          
                     >
-                      <i className="bi bi-bookmark"></i>
-                    </a>
+                    {post.data.average_comment_rating}/5  <StarRating rating={post.data.average_comment_rating} />
+                    </label>
                     <a
                       href="#"
                       className="badge ms-auto"
                       onClick={(e) => {
                         e.preventDefault();
-                        handleShareClick(post.id);
+                        handleShareClick(post.data.id);
                       }}
                     >
                       <i className="bi bi-share-fill"></i>
@@ -373,11 +467,11 @@ function Post() {
         </div>
       </div>
       <div className="d-flex justify-content-center mt-4">
-        <button className="shadow" onClick={handleLoadMoreToggle}>
-          <span className="text-center">
-            {isExpanded ? "Ẩn bớt" : "Xem thêm"}
-          </span>
-        </button>
+        {shouldShowLoadMore && (
+          <button className="shadow" onClick={handleLoadMoreToggle}>
+            <span className="text-center">Xem thêm</span>
+          </button>
+        )}
       </div>
 
       {isAudioVisible && (

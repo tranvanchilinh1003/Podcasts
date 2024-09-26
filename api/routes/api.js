@@ -9,6 +9,7 @@ const repcommentController = require('../controllers/api/repComment');
 const cate = require('../controllers/api/categories');
 const shares = require('../controllers/api/shares');
 const favourite = require('../controllers/api/favourite');
+const follow = require('../controllers/api/follow');
 const router = express.Router();
 // router.post('/categories_insert', cate.create);
 
@@ -102,6 +103,14 @@ router.get('/data_customers', customers.chart)
 router.get('/favourite', favourite.list);
 router.get('/favourite/:id', favourite.listDetail);
 router.delete('/favourite/:id', favourite.deleteDetail);
+
+router.post('/follow/:id', follow.followUser);
+router.post('/unfollow/:id', follow.unfollowUser);
+router.get('/check-follow/:id', follow.checkFollow);
+router.get('/check-likes', follow.checkLike);
+router.post('/like', follow.add);
+router.delete('/like', follow.delete);
+
 
 
 module.exports = router;
