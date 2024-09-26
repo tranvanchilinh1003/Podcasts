@@ -1,6 +1,6 @@
 
 .product-list-section {
-    padding: 40px 0; /* Thêm padding để tạo khoảng cách phía trên */
+    padding: 40px 0;
 }
 .product-list-section .custom-block-image-wrap {
     position: relative;
@@ -11,12 +11,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 10; /* Đảm bảo nút play nằm trên hình ảnh */
+    z-index: 10;
 }
 
 .product-list-section .play-button {
     display: inline-block;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
     padding: 15px;
     color: #fff;
@@ -25,6 +25,78 @@
     line-height: 0;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.product-list-section .play-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+
+.product-item {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.custom-block {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-block:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+.custom-block-image-wrap img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.custom-block-info {
+    padding: 15px;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.profile-block {
+    font-size: 14px;
+    color: #777;
+    margin-top: 10px;
+}
+
+.custom-block-bottom {
+    font-size: 14px;
+    color: #777;
+    margin-top: 15px;
+}
+
+.social-share .badge {
+    background-color: #ff5722;
+    color: white;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.social-share .badge:hover {
+    background-color: #e64a19;
 }
 
 .product-list-section .play-button:hover {

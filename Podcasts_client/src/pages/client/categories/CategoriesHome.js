@@ -62,7 +62,7 @@ function CategoriesHome() {
                   <h5 className="mb-2">
                     <Link to={`/categories/${category.id}`}>{category.name}</Link>
                   </h5>
-                  <p className="mb-0">{category.description}</p>
+                  <p className="mb-0"  dangerouslySetInnerHTML={{ __html: category.description }}></p>
                 </div>
               </div>
             </div>

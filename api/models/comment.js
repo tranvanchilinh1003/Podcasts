@@ -27,11 +27,19 @@ module.exports = class Comments {
     // Lấy danh sách bình luận theo phân trang
     static async getList(from, row) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT p.id, p.title, p.images, COUNT(*) so_luong, MIN(cmt.date) cu_nhat, MAX(cmt.date) moi_nhat 
-                       FROM comments cmt 
-                       JOIN post p ON p.id = cmt.post_id 
-                       GROUP BY p.id, p.title 
-                       HAVING so_luong > 0 
+            let sql = `SELECT 
+    p.id, 
+    p.title, 
+    p.images, 
+    (COUNT(DISTINCT cmt.id) + COUNT(DISTINCT rc.id)) AS so_luong,
+    MIN(cmt.date) AS cu_nhat,
+    MAX(cmt.date) AS moi_nhat
+FROM 
+    post p
+LEFT JOIN comments cmt ON p.id = cmt.post_id
+LEFT JOIN repcomments rc ON cmt.id = rc.original_comment_id
+GROUP BY p.id, p.title
+HAVING (COUNT(DISTINCT cmt.id) + COUNT(DISTINCT rc.id)) > 0
                        LIMIT ?, ?`;
             connect.query(sql, [from, row], function (err, data) {
                 if (err) reject(err);

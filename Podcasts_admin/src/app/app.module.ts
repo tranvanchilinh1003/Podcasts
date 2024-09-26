@@ -1,32 +1,33 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {
   NbSidebarModule,
   NbMenuModule,
   NbDatepickerModule,
-  NbDialogModule, NbWindowModule, NbToastrModule, NbChatModule
+  NbDialogModule,
+  NbWindowModule,
+  NbToastrModule,
+  NbChatModule
 } from '@nebular/theme';
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {CoreModule} from "./@core/core.module";
-import {ThemeModule} from "./@theme/theme.module";
-import { PaginatorModule } from '../app/@theme/components/paginator/paginator.module';
+
+import { CoreModule } from "./@core/core.module";
+import { ThemeModule } from "./@theme/theme.module";
+import { PaginatorModule } from './@theme/components/paginator/paginator.module';
 import { SharesModule } from './pages/shares/shares.module';
 import { JWTInterceptor } from './@core/interceptors';
-import { filterInterceptorRequest } from '../app/@core/interceptors/filter-endpoint.interceptor';
+import { filterInterceptorRequest } from './@core/interceptors/filter-endpoint.interceptor';
 import { EXCEPT_API_ENDPOINT } from './@core/config';
-
-
-
+import { TinymceModule } from './@theme/components/tinymce/tinymce.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -46,7 +47,7 @@ import { EXCEPT_API_ENDPOINT } from './@core/config';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    
+    TinymceModule,
   ],
   providers: [
     {
@@ -63,8 +64,6 @@ import { EXCEPT_API_ENDPOINT } from './@core/config';
       useValue: EXCEPT_API_ENDPOINT
     }
   ],
-  
   bootstrap: [AppComponent]
-  
 })
 export class AppModule { }

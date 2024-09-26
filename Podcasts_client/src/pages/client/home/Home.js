@@ -39,6 +39,7 @@ import CategoriesHome from "../categories/CategoriesHome";
     <>
     
       <section className="hero-section">
+        
         <div className="container">
           <div className="row">
             <div className="col-lg-12 col-12">
@@ -214,7 +215,7 @@ import CategoriesHome from "../categories/CategoriesHome";
           </div>
         </div>
       </section>
-
+      <CategoriesHome/>
      {/* categories */}
      <Post />
     

@@ -1,6 +1,7 @@
 const Post = require('../../models/post');
 const  Cate = require('../../models/categories');
 const moment = require('moment-timezone');
+
 // All List 
 exports.list = async (req, res, next) => {
     const page = req.query.page || 1;
@@ -30,9 +31,12 @@ exports.list = async (req, res, next) => {
             }
         })
     }
-};
+}; 
 // Create
 exports.create = async (req, res, next) => {
+    console.log(req.body); // In ra dữ liệu nhận được từ client
+    
+
     const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
     let post = {
         title: req.body.title,
@@ -43,11 +47,19 @@ exports.create = async (req, res, next) => {
         audio: req.body.audio,
         create_date: date_create
     };
+
+    if (!post.title || !post.categories_id || !post.customers_id) {
+        return res.status(400).json({
+            error: "Title, categories_id, and customers_id are required"
+        });
+    }
+
     let result = await Post.createPost(post);
     res.status(200).json({
         data: result
-    })
+    });
 };
+
 
 // Update
 exports.update = async (req, res, next) => {
@@ -75,7 +87,7 @@ exports.update = async (req, res, next) => {
             error: 'Internal Server Error'
         });
     }
-};
+}; 
 // Detail 
 exports.edit = async (req, res, next) => {
     try {
@@ -143,7 +155,7 @@ exports.delete = async (req, res, next) => {
                 error: 'Product not found'
             });
             return;
-        }
+        } 
         res.status(200).json({
             message: 'Product deleted successfully'
         });

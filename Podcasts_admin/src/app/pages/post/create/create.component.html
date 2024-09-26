@@ -40,7 +40,7 @@
                                 max="100"></progress>
                             <div
                                 *ngIf="postForm.get('images').invalid && (postForm.get('images').dirty || postForm.get('images').touched)">
-                                <small *ngIf="postForm.get('images').hasError('required')">
+<small *ngIf="postForm.get('images').hasError('required')">
                                     <i class="text-danger">Vui lòng chọn hình ảnh!</i>
                                 </small>
                             </div>
@@ -77,12 +77,12 @@
                     <div class='row'>
                         <div class="col-sm-12 mt-2">
                             <label for="description" class="fw-bold col-form-label">Mô tả</label>
-                        <app-tinymce-editor name="description" id="description " ></app-tinymce-editor>
+                <app-tinymce-editor id="description" name="description" formControlName="description"></app-tinymce-editor>
                         </div>
                     </div>
                     <div class="text-end">
                         <button type="submit" id="btn" nbButton
-                            class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5 "
+class="mat-ripple size-medium shape-rectangle appearance-hero status-primary ng-star-inserted nb-transition ml-5 mt-5 "
                             [disabled]="!postForm.valid"><i class="nb-plus"></i>Thêm mới</button>
                     </div>
                     <br>

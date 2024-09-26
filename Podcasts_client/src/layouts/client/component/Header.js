@@ -107,7 +107,6 @@ function Header() {
     }
   };
 
-  // Handle search submit
   const handleSearchSubmit = async (event) => {
     event.preventDefault();
     if (searchTerm.trim() !== '') {
@@ -128,123 +127,107 @@ function Header() {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg" style={{ position: 'fixed' }}>
-      <div className="container">
-        <Link className="navbar-brand me-lg-5 me-0" to="/" onClick={scrollToTop}>
-          <img
-            src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e"
-            className="logo-image img-fluid"
-            alt="templatemo pod talk"
-          />
-        </Link>
-
-        <div className="custom-search">
-          <form onSubmit={handleSearchSubmit} method='get' className="custom-form search-form flex-fill me-3" role="search">
-            <div className="input-group input-group-lg">
-              <input
-                name="search"
-                type="search"
-                className="border-0 p-2 rounded-start"
-                id="search"
-                placeholder="Bạn muốn tìm gì?"
-                aria-label="Search"
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-              <button type="submit" className="form-control" id="submit">
-                <i className="bi-search"></i>
+    <nav className="navbar navbar-expand-lg" style={{ position: 'fixed', width: '100%' }}>
+  <div className="container-fluid d-flex align-items-center justify-content-between">
+    <div className="d-flex align-items-center">
+      <Link className="navbar-brand" to="/" onClick={scrollToTop} style={{ marginLeft: '0' }}>
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e"
+          className="logo-image img-fluid"
+          alt="templatemo pod talk"
+          style={{ width: '50px', height: '50px' }}
+        />
+      </Link>
+    </div>
+    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span className="navbar-toggler-icon"></span>
+    </button>
+    <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <Link className="navbar-brand me-lg-3 me-0" to="/" onClick={scrollToTop}>
+        <i className="bi bi-house-fill fs-2"></i>
+      </Link>
+      <div className="custom-search">
+        <form onSubmit={handleSearchSubmit} method="get" className="custom-form search-form flex-fill" role="search">
+          <div className="input-group input-group-lg justify-content-center" style={{ width: '300px' }}>
+            <input
+              name="search"
+              type="search"
+              className="border-0 p-2 rounded-start"
+              id="search"
+              placeholder="Bạn muốn tìm gì?"
+              aria-label="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <button type="submit" className="form-control" id="submit">
+              <i className="bi-search"></i>
+            </button>
+          </div>
+        </form>
+        {suggestions.length > 0 && (
+          <div className="dropdown list-inline bg-gradient rounded-3" id="searchSuggestions" style={{ marginTop: '0.5rem' }}>
+            <ul id="suggestionList" className={`dropdown-menu-customers ${showAll ? 'expanded' : ''}`} aria-labelledby="dropdownMenuButton">
+              {suggestions.slice(0, showAll ? suggestions.length : 5).map((suggestion, index) => (
+                <li key={index} className="dropdown-item-customers d-flex align-items-center">
+                  <img
+                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${suggestion.images}?alt=media`}
+                    alt={suggestion.title}
+                  />
+                  <Link to={`/getId_post/${suggestion.id}`} className="keywordds p-2">
+                    {suggestion.title}
+                  </Link>
+                </li>
+              ))}
+              {suggestions.length > 5 && (
+                <li>
+                  <p className="show-all-text text-center m-auto" onClick={handleShowAll} style={{ cursor: 'pointer' }}>
+                    {showAll ? 'Ẩn bớt' : 'Xem tất cả'}
+                  </p>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+    <div className="d-flex align-items-center ms-lg-auto">
+      {isLoggedIn ? (
+        <>
+          {customer && customer.length > 0 && (
+            <div className="nav-item dropdown dropend">
+              <button className="btn btn-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img
+                  className="img-profile rounded-circle"
+                  src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${customer[0].images}?alt=media`}
+                  width={40} height={40}
+                  alt="profile"
+                />
               </button>
-            </div>
-          </form>
-          {suggestions.length > 0 && (
-            <div className="dropdown list-inline bg-gradient rounded-3" id="searchSuggestions">
-              <ul id="suggestionList" className={`dropdown-menu-customers ${showAll ? 'expanded' : ''}`} aria-labelledby="dropdownMenuButton">
-                {suggestions.slice(0, showAll ? suggestions.length : 5).map((suggestion, index) => (
-                  <li key={index} className="dropdown-item-customers d-flex align-items-center">
-                    <img
-                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${suggestion.images}?alt=media`} 
-                      alt={suggestion.title}
-                    />
-                    <Link to={`/getId_post/${suggestion.id}`} className="keywordds p-2">
-                      {suggestion.title}
-                    </Link>
-                  </li>
-                ))}
-                {suggestions.length > 5 && (
-                  <li>
-                    <p className="show-all-text text-center m-auto" onClick={handleShowAll}>
-                      {showAll ? 'Ẩn bớt' : 'Xem tất cả'}
-                    </p>
-                  </li>
-                )}
+              <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="userDropdown" style={{ left: '-150%' }}>
+                <li className="dropdown-item">
+                  <strong>{customer[0].username}</strong>
+                </li>
+                <li><Link className="dropdown-item" to={`/account/${customer[0].id}`}>Thông tin tài khoản</Link></li>
+                <li><button className="dropdown-item" onClick={handleLogout}>Đăng xuất</button></li>
               </ul>
             </div>
           )}
-        </div>
+        </>
+      ) : (
+        <>
+          <Link to="/register" className="btn btn-outline-light rounded-1 button-home">Đăng ký</Link>
+          <Link to="/login" className="btn btn-danger ms-2 p-2 rounded-1 button-home">Đăng nhập</Link>
+        </>
+      )}
+    </div>
+  </div>
+</nav>
 
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
 
-        <div className="collapse navbar-collapse d-flex align-items-center" id="navbarNav">
-          <ul className="navbar-nav ms-lg-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Trang chủ</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/about">Về chúng tôi</Link>
-            </li>
-            <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle" to="/client/menu/product" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Thể loại</Link>
-              <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                {categories.map((category) => (
-                  <li key={category.id}>
-                    <Link className="dropdown-item" to={`/categories/${category.id}`}>
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contact">Liên hệ</Link>
-            </li>
 
-            <div className="nav-item dropdown">
-              {isLoggedIn ? (
-                <>
-                  <Link className="nav-link dropdown-toggle" to="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {customer && customer.length > 0 && (
-                      <img
-                        className="img-profile rounded-circle"
-                        src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${customer[0].images}?alt=media`}
-                        width={40} height={40}
-                        alt="profile"
-                      />
-                    )}
-                  </Link>
-                  <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                    <li><Link className="dropdown-item" to={`/account/${customer[0].id}`}>{customer[0]?.username}</Link></li>
-                    <li><button className="dropdown-item" onClick={handleLogout}>Đăng xuất</button></li>
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <Link className="nav-link dropdown-toggle" to="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i className="fs-4 bi bi-person-circle"></i>
-                  </Link>
-                  <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                    <li><Link className="dropdown-item" to="/login">Đăng nhập</Link></li>
-                    <li><Link className="dropdown-item" to="/register">Đăng ký</Link></li>
-                  </ul>
-                </>
-              )}
-            </div>
-          </ul>
-        </div>
-      </div>
-    </nav>
   );
+  
+  
 }
 
 export default Header;
