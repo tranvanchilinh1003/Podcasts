@@ -7,8 +7,8 @@ import Spinner from "../Spinner/Spinner";
 
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
-  console.log( (4 / 5) *100);
-  
+  console.log((4 / 5) * 100);
+
   return (
     <div
       style={{
@@ -211,15 +211,23 @@ function Post() {
     }
   };
 
-  const truncateText = (text, maxLength) => {
-    if (text.length <= maxLength) return text;
-    const truncated = text.substr(0, maxLength);
-    return (
-      truncated.substr(
-        0,
-        Math.min(truncated.length, truncated.lastIndexOf(" "))
-      ) + "..."
-    );
+  const truncateTextWithHtml = (html, maxLength) => {
+    const tempElement = document.createElement("div");
+    tempElement.innerHTML = html;
+
+    const text = tempElement.innerText || tempElement.textContent;
+    if (text.length <= maxLength) return html;
+
+    let truncatedText = text.substr(0, maxLength);
+    const lastSpaceIndex = truncatedText.lastIndexOf(" ");
+    if (lastSpaceIndex > 0) {
+      truncatedText = truncatedText.substr(0, lastSpaceIndex);
+    }
+    const truncatedHtml = document.createElement("div");
+    truncatedHtml.innerHTML = tempElement.innerHTML; 
+    const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
+
+    return trimmedHtml + "..."; 
   };
 
   const handleShareClick = async (postId) => {
@@ -259,26 +267,34 @@ function Post() {
 
   const handleLikeClick = async (event, postId) => {
     event.preventDefault();
-  
+
     const customer = getUserFromLocalStorage();
     if (!customer) {
       navigate("/login");
       return;
     }
-  
+
     const post = data.find((post) => post.data.id === postId);
     const isLiked = post?.isLiked;
-  
+
     const updatedData = data.map((p) =>
-      p.data.id === postId 
-        ? { ...p, isLiked: !isLiked, data: { ...p.data, total_likes: isLiked ? p.data.total_likes - 1 : p.data.total_likes + 1 } }
+      p.data.id === postId
+        ? {
+          ...p,
+          isLiked: !isLiked,
+          data: {
+            ...p.data,
+            total_likes: isLiked
+              ? p.data.total_likes - 1
+              : p.data.total_likes + 1,
+          },
+        }
         : p
     );
-  
+
     setData(updatedData);
-  
+
     try {
-  
       if (isLiked) {
         await axios.delete("http://localhost:8080/api/like", {
           data: {
@@ -292,17 +308,14 @@ function Post() {
           customers_id: customer.id,
         });
       }
-  
-      
+
       fetchPost();
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái thích:", error);
-      
-    
-      setData(data); 
+
+      setData(data);
     }
   };
-  
 
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
@@ -368,7 +381,7 @@ function Post() {
 
                       <a
                         href="#"
-                        id='like-icon'
+                        id="like-icon"
                         className={
                           post.isLiked
                             ? "bi-heart-fill fs-6"
@@ -384,8 +397,6 @@ function Post() {
                         className="bi-chat me-1"
                       >
                         <span className="me-1">{post.data.total_comments}</span>
-
-                      
                       </Link>
                     </div>
                   </div>
@@ -418,10 +429,23 @@ function Post() {
                         <strong>Người đăng</strong>
                       </p>
                     </div>
-                    <p className="description-text ">
-                      {expandedPostId === post.data.id
-                        ? post.data.description
-                        : truncateText(post.data.description, 100)}{" "}
+                    <p className="description-text">
+                      {expandedPostId === post.data.id ? (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: post.data.description,
+                          }}
+                        />
+                      ) : (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: truncateTextWithHtml(
+                              post.data.description,
+                              100
+                            ),
+                          }}
+                        />
+                      )}{" "}
                       {post.data.description.length > 100 && (
                         <span
                           className="read-more-toggle"
@@ -441,13 +465,9 @@ function Post() {
                     </p>
                   </div>
                   <div className="d-flex flex-column ms-auto">
-                
-                    <label
-                      href="#"
-                      className=" ms-auto"
-          
-                    >
-                    {post.data.average_comment_rating}/5  <StarRating rating={post.data.average_comment_rating} />
+                    <label href="#" className=" ms-auto">
+                      {post.data.average_comment_rating}/5{" "}
+                      <StarRating rating={post.data.average_comment_rating} />
                     </label>
                     <a
                       href="#"
@@ -512,9 +532,8 @@ function Post() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${
-                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                  }`}
+                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                    }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input
