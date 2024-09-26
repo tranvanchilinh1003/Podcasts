@@ -324,7 +324,7 @@ main {
 
 .navbar .dropdown-menu {
   background: var(--white-color);
-  box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
   border: 0;
   display: inherit;
   opacity: 0;
@@ -333,7 +333,11 @@ main {
   padding: 13px 0 10px 0;
   transition: all 0.3s;
   pointer-events: none;
+  transform: translateX(-150px); /* Di chuyển sang trái ban đầu */
 }
+
+
+
 
 .navbar .dropdown-menu::before {
   content: "";
@@ -345,7 +349,7 @@ main {
   position: absolute;
   top: -10px;
   left: 10px;
-  transform: translateX(400%);
+  transform: translateX(350%);
 }
 
 .navbar .dropdown-item {
