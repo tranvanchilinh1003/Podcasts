@@ -160,13 +160,11 @@ exports.update = async (req, res, next) => {
 
         // Kiểm tra nếu username và email đã thay đổi
         if (username !== oldUsername || email !== oldEmail) {
-            console.log(`Checking for duplicates: username=${username}, email=${email}`);
+            
             // Kiểm tra xem có tồn tại username hoặc email trùng lặp trong cơ sở dữ liệu, loại trừ khách hàng hiện tại
             const existingUser = await Customers.findUser(username, email, id);
 
-            // Log the result of the duplicate check
-            console.log('Existing user check result:', existingUser);
-
+          
             if (existingUser.length > 0) {
                 return res.status(400).json({ error: 'Username hoặc email đã tồn tại.' });
             }
@@ -195,7 +193,7 @@ exports.update = async (req, res, next) => {
             password: hashedPassword // Cập nhật mật khẩu mới hoặc giữ mật khẩu cũ
         };
 
-        console.log('Updating database with:', customers); // Log dữ liệu cập nhật cơ sở dữ liệu
+        
 
         const result = await Customers.updateCustomers(customers, id);
 

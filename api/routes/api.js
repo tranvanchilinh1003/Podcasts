@@ -14,8 +14,10 @@ const router = express.Router();
 // router.post('/categories_insert', cate.create);
 
 
-
+// Router shares
 router.post('/shares', shares.updateShareCount);
+router.get('/shares/:id', shares.list);
+router.delete('/shares/:id', shares.delete);
 router.post('/favourite', favourite.updateFavouriteCount);
 // Route để lấy bình luận dựa trên postId
 router.get('/listcomments', comment.listcomment)
