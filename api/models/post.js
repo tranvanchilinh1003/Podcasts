@@ -4,7 +4,7 @@ module.exports = class Post {
     constructor() { }
     static fetchAll(from , row) {
         return new Promise((resolve, reject) => {
-            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id GROUP BY post.id ORDER By post.create_date DESC LIMIT ?,?', [from, row], 
+            connect.query('SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id GROUP BY post.id, customers.images, customers.username ORDER BY post.create_date DESC LIMIT ?,?', [from, row], 
                   (err, result) => {
                 if (err) reject(err);
                 resolve(result);
@@ -77,6 +77,19 @@ module.exports = class Post {
         return new Promise((resolve, reject) => {
             let sql = `SELECT * FROM post WHERE id = ${postId}`;
             connect.query(sql, [postId], function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+    
+    static async postCustomerId(id) {
+        return new Promise((resolve, reject) => {
+            let sql = `SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id WHERE post.customers_id = ${id} GROUP BY post.id ORDER By post.create_date DESC`;
+            connect.query(sql, [id], function (err, data) {
                 if (err) {
                     reject(err);
                 } else {

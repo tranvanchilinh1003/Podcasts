@@ -2,7 +2,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 
 
-const API_BASE_URL = 'http://localhost:4200/api/'
+const API_BASE_URL = 'http://localhost:8080/api/'
 export const DialogService = {
   success(title) {
     Swal.fire({
