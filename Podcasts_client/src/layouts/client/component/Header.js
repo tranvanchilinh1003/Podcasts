@@ -195,14 +195,14 @@ function Header() {
         <>
           {customer && customer.length > 0 && (
             <div className="nav-item dropdown dropend">
-              <a className=" dropdown-toggle" id="userDropdown"  data-bs-toggle="dropdown" aria-expanded="false">
+            
                 <img
                   className="img-profile rounded-circle"
                   src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${customer[0].images}?alt=media`}
                   width={40} height={40}
                   alt="profile"
                 />
-              </a>
+          
               <ul className="dropdown-menu dropdown-menu-light" aria-labelledby="userDropdown" >
                 <li className="dropdown-item">
                   <strong>{customer[0].username}</strong>

@@ -6,8 +6,6 @@ import axiosInstance from "../firebase/axiosConfig";
 import { DialogService } from "../../../services/common/DialogService";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import Toastify from "toastify-js";
-import "toastify-js/src/toastify.css";
 import "./account.css";
 import {
   ref,
@@ -21,8 +19,10 @@ import Shares from "../shares/shares";
 import EditPassword from "../edit-password/edit-password";
 import InFoUser from "../info-user/info-user";
 import Spinner from "../Spinner/Spinner";
-import InfoUser from "../follower/follower";
+import Follow from "../follower/follower";
 import MyEditor from "../tinymce/tinymce";
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 function Account() {
   const { id } = useParams();
   const {
@@ -69,6 +69,7 @@ function Account() {
   const [Delete, onDelete] = useState(null);
   const [editorContent, setEditorContent] = useState("");
 
+
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
     return userArray && userArray.length > 0 ? userArray[0] : null;
@@ -76,9 +77,10 @@ function Account() {
 
   const handleEditorChange = (content) => {
     if (content !== editorContent) {
+      // Kiểm tra nếu nội dung đã thay đổi
       setEditorContent(content);
       setValue("description", content);
-    
+      console.log("Description Set:", content);
     }
   };
   const descriptionValue = watch("description");
@@ -111,17 +113,18 @@ function Account() {
     }
     fetchPost();
   };
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/categories_All"
-      );
-      setCategories(response.data.data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
+
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/categories_All"
+        );
+        setCategories(response.data.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
     fetchCategories();
   }, []);
 
@@ -178,7 +181,6 @@ function Account() {
       const response = await axios.get(
         `http://localhost:8080/api/post-customer/${id}`
       );
-
       if (userId) {
         const likeResponse = await axios.get(
           "http://localhost:8080/api/check-likes",
@@ -187,9 +189,7 @@ function Account() {
           }
         );
 
-        
         const likedPostIds = likeResponse.data.map((item) => item.post_id);
-
 
         const updatedData = response.data.data.map((post) => ({
           ...post,
@@ -204,10 +204,9 @@ function Account() {
       console.error("Error fetching posts:", error);
     }
   };
-
   useEffect(() => {
     fetchPost();
-  }, []);
+  }, [id]);
   const handlePlayAudio = (url, title, artist, coverImage, postId) => {
     setAudioUrl(url);
     setSongTitle(title);
@@ -445,7 +444,6 @@ function Account() {
         post_id: postId,
         customers_id: customer.id,
       });
-      
 
       Toastify({
         text: "Chia sẻ thành công!",
@@ -508,12 +506,8 @@ function Account() {
                           />
                         )}
                       </h4>
-                      <p className="m-b-10 mt-2 ">
-                        Số người theo dõi:{" "}
-                        <label className="text-white fw-bold">
-                          {userInfo?.followersCount}
-                        </label>
-                      </p>
+
+                      <p className="m-b-10 text-white">Frontend</p>
                     </div>
                   </div>
                   <ul className="profile-header-tab nav nav-tabs mt-5">
@@ -582,6 +576,7 @@ function Account() {
                     aria-labelledby="info-tab"
                   >
                     <div className="row gutters">
+                      {/* info */}
                       <div className="row gutters">
                         <div className="col-md-12">
                           <div className="card border shadow-sm">
@@ -596,7 +591,7 @@ function Account() {
                           </div>
                         </div>
                       </div>
-                      
+                      {/* end info */}
                     </div>
                   </div>
                   <div
@@ -621,10 +616,20 @@ function Account() {
                               >
                                 {/* bắt đầu timeline */}
                                 <ul className="timeline">
-                                  <PostUser fetchPost={fetchPost} />
+                                  <PostUser />
                                   {data.length > 0 ? (
                                     data.map((post) => (
                                       <li key={post.id}>
+                                        {/* Time on the timeline */}
+                                        {/* <div className="timeline-time">
+                                          <span className="time text-center">{formatTimeDate(post.create_date)}</span>
+                                          <span className="time">{formatDate(post.create_date)}</span>
+                                        </div> */}
+                                        {/* Timeline Icon */}
+                                        {/* <div className="timeline-icon">
+                                          <a href="javascript:;">&nbsp;</a>
+                                        </div> */}
+                                        {/* Timeline Content */}
                                         <div className="timeline-body border">
                                           <div className="timeline-header">
                                             <div className=" text-centercol-md-12 d-flex justify-content-between align-items-center">
@@ -680,7 +685,7 @@ function Account() {
                                                   className="rounded-circle"
                                                 >
                                                   {/* &#x2022;&#x2022;&#x2022; */}
-                                                  <i className="bi bi-three-dots"></i>
+                                                  <i class="bi bi-three-dots"></i>
                                                 </button>
                                                 {/* Dropdown Menu */}
                                                 {isDropdownOpen === post.id && (
@@ -1021,14 +1026,14 @@ function Account() {
                                               }
                                             ></a>
                                             <a
-                                            
+                                              href="javascript:;"
                                               className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                               onClick={() =>
                                                 handleCommentClick(post.id)
                                               }
                                             ></a>
                                             <a
-                                          
+                                              href="javascript:;"
                                               className="m-r-15 text-inverse-lighter mx-1"
                                               onClick={(e) => {
                                                 e.preventDefault();
@@ -1083,351 +1088,21 @@ function Account() {
                     </div>
                   </div>
 
-                  <section
+                  <div
                     className="tab-pane fade"
                     id="shares"
                     role="tabpanel"
                     aria-labelledby="shares-tab"
                   >
                     <Shares />
-                  </section>
+                  </div>
                   <div
                     className="tab-pane fade"
                     id="follow"
                     role="tabpanel"
                     aria-labelledby="follow-tab"
                   >
-                    <InfoUser id={id} />
-                  </div>
-                  {/* nôi dung bài đăng */}
-                  <div
-                    className="tab-pane fade"
-                    id="posts"
-                    role="tabpanel"
-                    aria-labelledby="posts-tab"
-                  >
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div
-                          id="content"
-                          className="content content-full-width"
-                        >
-                          <div className="profile-content">
-                            {/* bắt đầu nội dung tab */}
-                            <div className="tab-content p-0">
-                              {/* bắt đầu tab #profile-post */}
-                              <div
-                                className="tab-pane fade active show"
-                                id="profile-post"
-                              >
-                                <ul className="timeline">
-                                  <div className="timeline-body rounded">
-                                    <div className="timeline-comment-box">
-                                      <div className="user">
-                                        <img
-                                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                          alt="Hồ sơ"
-                                        />
-                                      </div>
-                                      <div className="input">
-                                        <form action="">
-                                          <div className="input-group">
-                                            <input
-                                              type="text"
-                                              className="form-control rounded-corner"
-                                              onClick={handleShow}
-                                              placeholder="Thêm một bài viết..."
-                                            />
-                                            <span className="input-group-btn p-l-10">
-                                              <button
-                                                className="btn btn-primary f-s-12 rounded-corner"
-                                                type="button"
-                                                onClick={handleShow}
-                                              >
-                                                Thêm bài viết
-                                              </button>
-                                            </span>
-                                          </div>
-                                        </form>
-                                      </div>
-                                    </div>
-
-                                    {/* Component Modal */}
-                                    <Modal
-                                      show={showModal}
-                                      onHide={handleClose}
-                                      size="lg"
-                                    >
-                                      <Modal.Header closeButton>
-                                        <Modal.Title>Thêm bài viết</Modal.Title>
-                                      </Modal.Header>
-                                      <Modal.Body>
-                                        {/* Nội dung của Modal */}
-                                        {/* <p>Hãy nhập nội dung bài viết của bạn ở đây.</p> */}
-                                        <div className="row">
-                                          <div className="col-6">
-                                            <label>Tiêu đề</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                            />
-                                          </div>
-                                          <div className="col-6">
-                                            <label>Hình ảnh</label>
-                                            <input
-                                              type="file"
-                                              className="form-control"
-                                            />
-                                          </div>
-                                          <div className="col-6">
-                                            <label>Audio</label>
-                                            <input
-                                              type="file"
-                                              className="form-control"
-                                            />
-                                          </div>
-                                          <div className="col-6">
-                                            <label>Thể loại</label>
-                                            <select
-                                              className="form-control"
-                                              style={{
-                                                width: "100%",
-                                                height: "2.5rem",
-                                                fontSize: "1rem",
-                                              }}
-                                            >
-                                              <option disabled selected>
-                                                Vui lòng chọn loại!
-                                              </option>
-                                            </select>
-                                          </div>
-                                          <div className="col-12">
-                                            <label>Audio</label>
-                                            <textarea
-                                              className="form-control"
-                                              placeholder="Mô tả..."
-                                            ></textarea>
-                                          </div>
-                                        </div>
-                                      </Modal.Body>
-                                      <Modal.Footer>
-                                        <Button
-                                          variant="secondary"
-                                          onClick={handleClose}
-                                        >
-                                          Hủy
-                                        </Button>
-                                        <Button
-                                          variant="primary"
-                                          onClick={handleClose}
-                                        >
-                                          Thêm
-                                        </Button>
-                                      </Modal.Footer>
-                                    </Modal>
-                                  </div>
-                                  {data.map((post) => (
-                                    <li key={post.id}>
-                                      {/* Bắt đầu thời gian trên timeline */}
-                                      <div className="timeline-time">
-                                        <span className="time text-center">
-                                          {formatTimeDate(post.create_date)}
-                                        </span>
-                                        <span className="time">
-                                          {formatDate(post.create_date)}
-                                        </span>
-                                      </div>
-                                      {/* Bắt đầu biểu tượng timeline */}
-                                      <div className="timeline-icon">
-                                        <a href="#">&nbsp;</a>
-                                      </div>
-                                      {/* Bắt đầu nội dung timeline */}
-                                      <div className="timeline-body border">
-                                        <div className="timeline-header">
-                                          <span className="userimage">
-                                            <img
-                                              src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                              alt="Hồ sơ"
-                                            />
-                                          </span>
-                                          <span className="username mx-1">
-                                            <a >
-                                              {userInfo?.username}
-                                            </a>
-                                          </span>
-                                          <span className="pull-right text-muted">
-                                            {post.view} Lượt xem
-                                          </span>
-                                        </div>
-                                        <div className="timeline-content">
-                                          <h4>{post.title}</h4>
-                                          <p className="description-text">
-                                            {expandedPostId === post.id ? (
-                                              <span
-                                                dangerouslySetInnerHTML={{
-                                                  __html: post.description,
-                                                }}
-                                              />
-                                            ) : (
-                                              <span
-                                                dangerouslySetInnerHTML={{
-                                                  __html: truncateTextWithHtml(
-                                                    post.description,
-                                                    100
-                                                  ),
-                                                }}
-                                              />
-                                            )}{" "}
-                                            {post.description.length > 100 && (
-                                              <span
-                                                className="read-more-toggle"
-                                                onClick={() =>
-                                                  setExpandedPostId(
-                                                    expandedPostId === post.id
-                                                      ? null
-                                                      : post.id
-                                                  )
-                                                }
-                                              >
-                                                {expandedPostId === post.id
-                                                  ? "Ẩn bớt"
-                                                  : "Xem thêm"}
-                                              </span>
-                                            )}
-                                          </p>
-                                          <div className="image-container">
-                                            <img
-                                              src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                                              alt="Your image description"
-                                              className="border rounded"
-                                            />
-                                            <span
-                                              className="custom-block-icon"
-                                              onClick={() =>
-                                                handlePlayAudio(
-                                                  post.audio,
-                                                  post.title,
-                                                  post.username,
-                                                  post.images,
-                                                  post.id
-                                                )
-                                              }
-                                            >
-                                              <i className="bi-play-fill fs-2"></i>
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <div className="timeline-likes">
-                                          <div className="stats-right">
-                                            <span className="stats-text mx-1">
-                                              259 Chia sẻ
-                                            </span>
-                                            <a href="#">
-                                              <span className="stats-text">
-                                                {post.total_comments} Bình luận
-                                              </span>
-                                            </a>
-                                          </div>
-                                          <div className="stats">
-                                            <span className="fa-stack fa-fw stats-icon">
-                                              <i className="fa fa-circle fa-stack-2x text-danger"></i>
-                                              <i className="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
-                                            </span>
-                                            <span className="fa-stack fa-fw stats-icon">
-                                              <i className="fa fa-circle fa-stack-2x text-primary"></i>
-                                              <i className="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                            <span className="stats-total">
-                                              {post.total_favorites}
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <div className="timeline-footer">
-                                          <a
-                                            
-                                            className="m-r-15 text-inverse-lighter mx-1"
-                                          >
-                                            <i className="bi bi-hand-thumbs-up"></i>{" "}
-                                            Thích
-                                          </a>
-                                          <a
-                                            
-                                            className="m-r-15 text-inverse-lighter mx-1"
-                                            onClick={() =>
-                                              handleCommentClick(post.id)
-                                            }
-                                          >
-                                            <i className="bi bi-chat"></i> Bình
-                                            luận
-                                          </a>
-                                          <a
-                                            
-                                            className="m-r-15 text-inverse-lighter mx-1"
-                                          >
-                                            <i className="bi bi-share"></i> Chia
-                                            sẻ
-                                          </a>
-                                        </div>
-                                        {/* Khu vực nhập bình luận */}
-                                        {visibleCommentBox === post.id && (
-                                          <div className="timeline-comment-box">
-                                            <div className="user">
-                                              <img
-                                                src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                                alt="Hồ sơ"
-                                              />
-                                            </div>
-                                            <div className="input">
-                                              <form action="">
-                                                <div className="input-group">
-                                                  <input
-                                                    type="text"
-                                                    className="form-control rounded-corner"
-                                                    placeholder="Viết một bình luận..."
-                                                  />
-                                                  <span className="input-group-btn p-l-10">
-                                                    <button
-                                                      className="btn btn-primary f-s-12 rounded-corner"
-                                                      type="button"
-                                                    >
-                                                      Bình luận
-                                                    </button>
-                                                  </span>
-                                                </div>
-                                              </form>
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className="tab-pane fade"
-                    id="shares"
-                    role="tabpanel"
-                    aria-labelledby="shares-tab"
-                  >
-                    <h3 className="mb-4">Chia sẻ</h3>
-                    <p>hihi1</p>
-                  </div>
-
-                  <div
-                    className="tab-pane fade"
-                    id="favorites"
-                    role="tabpanel"
-                    aria-labelledby="favorites-tab"
-                  >
-                    <h3 className="mb-4">Yêu thích</h3>
-                    <p>hihi?</p>
+                    <Follow />
                   </div>
                 </div>
               </div>
