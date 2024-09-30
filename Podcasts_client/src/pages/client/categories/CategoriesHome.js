@@ -47,7 +47,7 @@ function CategoriesHome() {
             </div>
           </div>
           {displayedCategories.map(category => (
-            <div className="col-lg-4 col-12 mb-4 mb-lg-0 mt-3" key={category.id}>
+            <div className="col-lg-4 col-12  mb-lg-0 mt-3" key={category.id}>
               <div className="custom-block custom-block-full">
                 <div className="custom-block-image-wrap">
                   <Link to={`/categories/${category.id}`}>

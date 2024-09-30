@@ -19,7 +19,7 @@ exports.list = async (req, res, next) => {
         })
     } else {
         res.status(200).json({
-            data: shares,
+            data: [],
             meta: {
                 current_page: page,
                 last_page: 1,

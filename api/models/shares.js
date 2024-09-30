@@ -2,24 +2,70 @@ var connect = require('./database');
 var shares = [];
 module.exports = class Shares {
     constructor() { }
-    // static fetchAll(from, row) {
-    //     return new Promise((resolve, reject) => {
-    //         connect.query('SELECT p.id AS id, p.title, p.images, COUNT(*) AS so_luong, MIN(sh.date) AS cu_nhat, MAX(sh.date) AS moi_nhat, c.username FROM share sh JOIN post p ON p.id = sh.post_id JOIN customers c ON c.id = sh.customers_id GROUP BY sh.id, p.id, p.title, c.username HAVING so_luong > 0 LIMIT ?,?', [from, row], (err, result) => {
-    //             if (err) reject(err);
-    //             resolve(result);
-    //         });
-    //     });
-    // }
+
     static fetchAll(id, from, row) {
         return new Promise((resolve, reject) => {
-            connect.query(`SELECT sh.id, p.id AS post_id, p.title, p.description, p.images AS post_images, p.audio, p.create_date, p.customers_id AS post_customer_id, COUNT(sh.id) AS so_luong, MIN(sh.date) AS cu_nhat, MAX(sh.date) AS moi_nhat, c.username AS sharing_customer_username, c.images AS sharing_customer_image, c2.username AS post_customer_username, c2.images AS post_customer_image, COUNT(com.id) AS comment_count FROM SHARE sh JOIN post p ON p.id = sh.post_id JOIN customers c ON c.id = sh.customers_id JOIN customers c2 ON c2.id = p.customers_id LEFT JOIN comments com ON com.post_id = p.id WHERE c.id = ${id} GROUP BY sh.id, p.id, p.title, p.description, p.images, p.audio, p.create_date, p.customers_id, c.username, c.images, c2.username, c2.images HAVING so_luong > 0;
+            connect.query(`
+            SELECT 
+    sh.id, 
+    p.id AS post_id, 
+    p.title, 
+    p.description, 
+    p.images AS post_images, 
+    p.audio, 
+    p.create_date, 
+    p.customers_id AS post_customer_id, 
+    COUNT(sh.id) AS so_luong, 
+    MIN(sh.date) AS cu_nhat, 
+    MAX(sh.date) AS moi_nhat, 
+    c.username AS sharing_customer_username, 
+    c.images AS sharing_customer_image, 
+    c2.username AS post_customer_username, 
+    c2.images AS post_customer_image, 
+    COUNT(com.id) AS comment_count,
+    COUNT(DISTINCT \`like\`.id) AS total_likes,  
+    COUNT(DISTINCT sh.id) AS total_shares  
+FROM 
+    SHARE sh 
+JOIN 
+    post p ON p.id = sh.post_id 
+JOIN 
+    customers c ON c.id = sh.customers_id 
+JOIN 
+    customers c2 ON c2.id = p.customers_id 
+LEFT JOIN 
+    comments com ON com.post_id = p.id 
+LEFT JOIN 
+    \`like\` ON p.id = \`like\`.post_id  
+WHERE 
+    c.id = ? 
+GROUP BY 
+    sh.id, 
+    p.id, 
+    p.title, 
+    p.description, 
+    p.images, 
+    p.audio, 
+    p.create_date, 
+    p.customers_id, 
+    c.username, 
+    c.images, 
+    c2.username, 
+    c2.images 
+HAVING 
+    so_luong > 0 
+ORDER BY 
+    moi_nhat DESC;
 
-`, [from, row], (err, result) => {
+    ;
+
+`, [id, from, row], (err, result) => {
                 if (err) reject(err);
                 resolve(result);
             });
         });
     }
+
     static async countShare() {
         return new Promise((resolve, reject) => {
             let sql = `SELECT COUNT(*) AS count FROM share`;
@@ -45,14 +91,6 @@ module.exports = class Shares {
         });
     }
 
-    // models/shares.js
-    static incrementShareCount(postId, customerId) {
-        return new Promise((resolve, reject) => {
-            // Hàm này không cần phải làm gì trong trường hợp này
-            // vì bạn chỉ cần chèn dữ liệu vào bảng share
-            resolve();
-        });
-    }
 
     static createShare(postId, customerId) {
         return new Promise((resolve, reject) => {

@@ -215,8 +215,8 @@ function Header() {
         </>
       ) : (
         <>
-          <Link to="/register" className="btn btn-outline-light rounded-1 button-home">Đăng ký</Link>
-          <Link to="/login" className="btn btn-danger ms-2 p-2 rounded-1 button-home">Đăng nhập</Link>
+          <Link to="/register" className="btn btn-outline-light rounded-1 button-home fw-bold">Đăng ký</Link>
+          <Link to="/login" className="btn btn-danger ms-2 p-2 rounded-1 button-home fw-bold">Đăng nhập</Link>
         </>
       )}
     </div>

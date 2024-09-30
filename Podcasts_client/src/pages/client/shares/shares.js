@@ -37,6 +37,25 @@ function Shares() {
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
     const [Delete, onDelete] = useState(null);
+
+    const truncateTextWithHtml = (html, maxLength) => {
+        const tempElement = document.createElement("div");
+        tempElement.innerHTML = html;
+
+        const text = tempElement.innerText || tempElement.textContent;
+        if (text.length <= maxLength) return html;
+
+        let truncatedText = text.substr(0, maxLength);
+        const lastSpaceIndex = truncatedText.lastIndexOf(" ");
+        if (lastSpaceIndex > 0) {
+            truncatedText = truncatedText.substr(0, lastSpaceIndex);
+        }
+        const truncatedHtml = document.createElement("div");
+        truncatedHtml.innerHTML = tempElement.innerHTML;
+        const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
+
+        return trimmedHtml + "...";
+    };
     // Hàm để toggle mở/đóng dropdown
     const toggleDropdown = (sharesId) => {
         setIsDropdownOpen(isDropdownOpen === sharesId ? null : sharesId);
@@ -68,16 +87,7 @@ function Shares() {
         const date = new Date(dateString);
         return date.toLocaleTimeString('vi-VN', options);
     }
-    const truncateText = (text, maxLength) => {
-        if (text.length <= maxLength) return text;
-        const truncated = text.substr(0, maxLength);
-        return (
-            truncated.substr(
-                0,
-                Math.min(truncated.length, truncated.lastIndexOf(" "))
-            ) + "..."
-        );
-    };
+
     const handleCloseAudio = () => {
         setIsAudioVisible(false);
         setAudioUrl(null);
@@ -159,7 +169,7 @@ function Shares() {
                 if (!viewUpdated && audio.currentTime / audio.duration >= 0.8) {
                     updateViewCount(currentPostId);
                     setViewUpdated(true);
-                    fetchPost();
+                    fetchShare();
                 }
             }
         };
@@ -271,7 +281,7 @@ function Shares() {
                                                             <span className="time">{formatDate(shares.create_date)}</span>
                                                         </div>
                                                         <div className="timeline-icon">
-                                                            <a href="javascript:;">&nbsp;</a>
+                                                            <a href="#">&nbsp;</a>
                                                         </div>
                                                         <div className="timeline-body border">
                                                             <div className="timeline-header">
@@ -281,7 +291,7 @@ function Shares() {
                                                                             <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
                                                                         </span>
                                                                         <span className="username mx-1">
-                                                                            <a href="javascript:;" className='d-flex'>{userInfo?.username}{userInfo.isticket === "active" && (
+                                                                            <a href="#" className='d-flex'>{userInfo?.username}{userInfo.isticket === "active" && (
                                                                                 <img
                                                                                     src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
                                                                                     className="verified-image img-fluid mx-1 h-75 mt-1"
@@ -289,10 +299,8 @@ function Shares() {
                                                                                 />
                                                                             )}</a>
                                                                         </span>
-                                                                        {/* <span className="text-muted">{shares.so_luong} Lượt xem</span> */}
-                                                                        <span className="time mx-2">{formatDate(shares.create_date)}</span>
+                                                                        <span className="time mx-2">{formatDate(shares.moi_nhat)}</span>
                                                                     </div>
-
                                                                     <div style={{ position: 'relative', display: 'inline-block' }} className='mx-2'>
                                                                         {/* Dropdown Button */}
                                                                         <button
@@ -332,35 +340,55 @@ function Shares() {
                                                                             </ul>
                                                                         )}
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                             <div className="timeline-content">
 
                                                                 <div className="timeline-header">
                                                                     <div className="d-flex">
-                                                                        <img className="mx-1 ml-3" src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${shares.post_customer_image}?alt=media`} alt="Hồ sơ"
+                                                                        <img className="mx-1 ml-3 rounded-circle" src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${shares.post_customer_image}?alt=media`} alt="Hồ sơ"
                                                                             style={{ width: '25px', height: '25px' }} />
                                                                         <h4>{shares.post_customer_username}</h4>
                                                                     </div>
                                                                 </div>
                                                                 <h4 className='ml-3'>{shares.title}</h4>
-                                                                <p className="description-text ml-3">
-                                                                    {expandedPostId === shares.id
-                                                                        ? shares.description
-                                                                        : truncateText(shares.description, 100)}
+                                                                <p className="description-text">
+                                                                    {expandedPostId === shares.id ? (
+                                                                        <span
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: shares.description,
+                                                                            }}
+                                                                        />
+                                                                    ) : (
+                                                                        <span
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: truncateTextWithHtml(
+                                                                                    shares.description,
+                                                                                    100
+                                                                                ),
+                                                                            }}
+                                                                        />
+                                                                    )}{" "}
                                                                     {shares.description.length > 100 && (
                                                                         <span
                                                                             className="read-more-toggle"
-                                                                            onClick={() => setExpandedPostId(expandedPostId === shares.id ? null : shares.id)}
+                                                                            onClick={() =>
+                                                                                setExpandedPostId(
+                                                                                    expandedPostId === shares.id
+                                                                                        ? null
+                                                                                        : shares.id
+                                                                                )
+                                                                            }
                                                                         >
-                                                                            {expandedPostId === shares.id ? "Ẩn bớt" : "Xem thêm"}
+                                                                            {expandedPostId === shares.id
+                                                                                ? "Ẩn bớt"
+                                                                                : "Xem thêm"}
                                                                         </span>
                                                                     )}
                                                                 </p>
 
-                                                                <div className="image-container">
-                                                                    <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${shares.post_images}?alt=media`} alt="Your image description" className="border rounded" />
+                                                                <div className="image-container d-flex justify-content-center">
+                                                                    <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${shares.post_images}?alt=media`} alt="Your image description" className="border rounded " />
                                                                     <span
                                                                         className="custom-block-icon"
                                                                         onClick={() =>
@@ -368,7 +396,7 @@ function Shares() {
                                                                                 shares.audio,
                                                                                 shares.title,
                                                                                 shares.username,
-                                                                                shares.images,
+                                                                                shares.post_images,
                                                                                 shares.id
                                                                             )
                                                                         }
@@ -379,27 +407,25 @@ function Shares() {
                                                             </div>
                                                             <div className="timeline-likes">
                                                                 <div className="stats-right">
-                                                                    <a href='#'>
-                                                                        <span className="stats-text">{shares.so_luong} Bình luận</span>
-                                                                    </a>
+                                                                    <span className="stats-text">{shares.so_luong} Bình luận</span>
                                                                 </div>
                                                                 <div className="stats">
                                                                     <span className="fa-stack fa-fw stats-icon">
                                                                         <i className="fa fa-circle fa-stack-2x text-danger"></i>
                                                                         <i className="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
                                                                     </span>
-                                                                    <span className="stats-total">{shares.total_favorites}</span>
+                                                                    <span className="stats-total">{shares.total_likes}</span>
                                                                     <span className="stats-total ms-3"><label className="bi-headphones me-1 fs-5"></label>{shares.so_luong}</span>
                                                                 </div>
                                                             </div>
                                                             <div className="timeline-footer">
-                                                                <a href="javascript:;" className="bi-heart me-4 mx-1 m-r-15 text-inverse-lighter mx-1"></a>
+                                                                <a href="#" className="bi-heart me-4 mx-1 m-r-15 text-inverse-lighter mx-1"></a>
                                                                 <a
-                                                                    href="javascript:;"
+                                                                    href="#"
                                                                     className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                                                     onClick={() => handleCommentClick(shares.id)}
                                                                 ></a>
-                                                                <a href="javascript:;" className="m-r-15 text-inverse-lighter mx-1">
+                                                                <a href="#" className="m-r-15 text-inverse-lighter mx-1">
                                                                     <i className="bi bi-share"></i>
                                                                 </a>
                                                             </div>
@@ -434,81 +460,81 @@ function Shares() {
                 </div>
 
             </div>
-
-            {isAudioVisible && (
-                <div
-                    className="audio-player"
-                    style={{ position: "fixed", bottom: 0, zIndex: 1000 }}
-                >
-                    <span className="text-white close-audio" onClick={handleCloseAudio}>
-                        <i className="bi bi-x"></i>
-                    </span>
-                    <div className="album-cover">
-                        <img
-                            src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${albumCover}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                            alt="Album Cover"
-                        />
-                        <span className="icon-audio" onClick={handlePlayPauseClick}>
-                            {isPlaying ? (
-                                <i className="bi bi-stop-fill fs-2"></i>
-                            ) : (
-                                <i className="bi bi-play fs-1"></i>
-                            )}
+            <div className='wrapper'>
+                {isAudioVisible && (
+                    <div
+                        className="audio-player"
+                        style={{ position: "fixed", bottom: 0, zIndex: 1000 }}
+                    >
+                        <span className="text-white close-audio" onClick={handleCloseAudio}>
+                            <i className="bi bi-x"></i>
                         </span>
-                    </div>
-                    <div className="player-controls d-flex">
-                        <div className="song-info">
-                            <div className="song-title">{songTitle}</div>
-                            <p className="artist">{artist}</p>
+                        <div className="album-cover">
+                            <img
+                                src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${albumCover}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                                alt="Album Cover"
+                            />
+                            <span className="icon-audio" onClick={handlePlayPauseClick}>
+                                {isPlaying ? (
+                                    <i className="bi bi-stop-fill fs-2"></i>
+                                ) : (
+                                    <i className="bi bi-play fs-1"></i>
+                                )}
+                            </span>
                         </div>
-                        <div className="d-flex">
-                            <div
-                                className="m-auto progress-bar-audio"
-                                onClick={handleProgressClick}
-                            >
+                        <div className="player-controls d-flex">
+                            <div className="song-info">
+                                <div className="song-title">{songTitle}</div>
+                                <p className="artist">{artist}</p>
+                            </div>
+                            <div className="d-flex">
                                 <div
-                                    className="progress"
-                                    style={{ width: `${(currentTime / duration) * 100}%` }}
-                                ></div>
+                                    className="m-auto progress-bar-audio"
+                                    onClick={handleProgressClick}
+                                >
+                                    <div
+                                        className="progress"
+                                        style={{ width: `${(currentTime / duration) * 100}%` }}
+                                    ></div>
+                                </div>
+                                <div className="volume-controls">
+                                    <i
+                                        className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                                            }`}
+                                        onClick={handleMuteClick}
+                                    ></i>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="1"
+                                        step="0.01"
+                                        value={audioRef.current ? audioRef.current.volume : 1}
+                                        onChange={handleVolumeChange}
+                                        className="volume-slider w-50"
+                                    />
+                                </div>
                             </div>
-                            <div className="volume-controls">
-                                <i
-                                    className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                                        }`}
-                                    onClick={handleMuteClick}
-                                ></i>
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="1"
-                                    step="0.01"
-                                    value={audioRef.current ? audioRef.current.volume : 1}
-                                    onChange={handleVolumeChange}
-                                    className="volume-slider w-50"
-                                />
+
+                            <div className="time-info">
+                                <span className="current-time">{formatTime(currentTime)}</span> /
+                                <span className="total-time">{formatTime(duration)}</span>
+                            </div>
+
+                            <div className="buttons">
+                                <button className="play-btn" onClick={handlePlayPauseClick}>
+                                    {isPlaying ? "Pause" : "Play"}
+                                </button>
                             </div>
                         </div>
 
-                        <div className="time-info">
-                            <span className="current-time">{formatTime(currentTime)}</span> /
-                            <span className="total-time">{formatTime(duration)}</span>
-                        </div>
-
-                        <div className="buttons">
-                            <button className="play-btn" onClick={handlePlayPauseClick}>
-                                {isPlaying ? "Pause" : "Play"}
-                            </button>
-                        </div>
+                        <audio
+                            ref={audioRef}
+                            src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F${audioUrl}?alt=media&token=4acc2496-8718-4a17-b827-d4ff81986c25`}
+                            autoPlay
+                        ></audio>
                     </div>
-
-                    <audio
-                        ref={audioRef}
-                        src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F${audioUrl}?alt=media&token=4acc2496-8718-4a17-b827-d4ff81986c25`}
-                        autoPlay
-                    ></audio>
-                </div>
-            )}
-
+                )}
+            </div>
         </>
     );
 }

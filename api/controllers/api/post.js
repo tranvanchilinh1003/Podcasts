@@ -34,9 +34,7 @@ exports.list = async (req, res, next) => {
 }; 
 // Create
 exports.create = async (req, res, next) => {
-    console.log(req.body); // In ra dữ liệu nhận được từ client
     
-
     const date_create = moment().utcOffset('+07:00').format('YYYY-MM-DD HH:mm:ss');
     let post = {
         title: req.body.title,
@@ -276,15 +274,4 @@ exports.customerId = async (req, res, next) => {
       }
     }
  
-    exports.customerId = async (req, res, next) => {    
-        try {
-            
-            const postcostomer = await Post.postCustomerId(req.params.id); 
-            res.status(200).json({
-                data: postcostomer
-            });
-          } catch (error) {
-            console.error('Error fetching :', error);
-            res.status(500).json({ error: 'Error fetching customer stats' });
-          }
-        }
+    

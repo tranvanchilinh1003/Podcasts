@@ -91,7 +91,30 @@ module.exports = class Post {
   }
   static async postCustomerId(id) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT post.*, customers.images AS images_customers, customers.username, COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT favourite.id) AS total_favorites, COUNT(DISTINCT share.id) AS total_shares FROM post JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN favourite ON post.id = favourite.post_id LEFT JOIN share ON post.id = share.post_id WHERE post.customers_id = ${id} GROUP BY post.id ORDER By post.create_date DESC`;
+      let sql = `SELECT 
+    post.*, 
+    customers.images AS images_customers, 
+    customers.username, 
+    COUNT(DISTINCT comments.id) AS total_comments, 
+    COUNT(DISTINCT \`like\`.id) AS total_likes, 
+    COUNT(DISTINCT share.id) AS total_shares 
+FROM 
+    post 
+JOIN 
+    customers ON post.customers_id = customers.id 
+LEFT JOIN 
+    comments ON post.id = comments.post_id 
+LEFT JOIN 
+    \`like\` ON post.id = \`like\`.post_id 
+LEFT JOIN 
+    share ON post.id = share.post_id 
+WHERE 
+    post.customers_id = ${id}
+GROUP BY 
+    post.id, customers.images, customers.username 
+ORDER BY 
+    post.create_date DESC;
+`;
       connect.query(sql, [id], function (err, data) {
         if (err) {
           reject(err);

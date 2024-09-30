@@ -7,8 +7,6 @@ import Spinner from "../Spinner/Spinner";
 
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
-  console.log((4 / 5) * 100);
-
   return (
     <div
       style={{
@@ -83,12 +81,13 @@ function Post() {
         );
 
         const likedPostIds = likeResponse.data.map((item) => item.post_id);
-
+      
+        
         const updatedData = data.map((post) => ({
           ...post,
           isLiked: likedPostIds.includes(post.data.id),
         }));
-
+        
         setData(updatedData);
       } else {
         setData(data);
@@ -101,6 +100,8 @@ function Post() {
   };
 
   useEffect(() => {
+    
+    
     fetchPost();
   }, []);
 
@@ -313,7 +314,6 @@ function Post() {
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái thích:", error);
 
-      setData(data);
     }
   };
 

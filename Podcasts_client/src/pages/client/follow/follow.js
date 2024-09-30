@@ -9,7 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
-
+import InfoUser from "../follower/follower";
 function Follow() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -87,10 +87,32 @@ function Follow() {
 
   const fetchPost = async () => {
     try {
+      const customer = getUserFromLocalStorage();
+      const userId = customer ? customer.id : null;
       const response = await axios.get(
         `http://localhost:8080/api/post-customer/${id}`
       );
-      setData(response.data.data);
+      if (userId) {
+        const likeResponse = await axios.get(
+          "http://localhost:8080/api/check-likes",
+          {
+            params: { userId },
+          }
+        );
+  
+        
+        const likedPostIds = likeResponse.data.map((item) => item.post_id);
+      
+        const updatedData = response.data.data.map((post) => ({
+          ...post,
+          isLiked: likedPostIds.includes(post.id),
+        }));
+
+        setData(updatedData);
+      } else {
+        setData(response.data.data);
+      }
+      
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -156,7 +178,7 @@ function Follow() {
     try {
       await axios.post(`http://localhost:8080/api/update_view/${postId}`);
     } catch (error) {
-      console.error("Error updating view count:", error);
+  
     }
   };
 
@@ -214,7 +236,7 @@ function Follow() {
           follower_id: user.id,
         }
       );
-      console.log("Follow successful:", response.data);
+      
       setIsFollowing(true);
       fetchUserInfo();
     } catch (error) {
@@ -236,7 +258,7 @@ function Follow() {
           follower_id: user.id,
         }
       );
-      console.log("Unfollow successful:", response.data);
+    
       setIsFollowing(false);
       fetchUserInfo();
     } catch (error) {
@@ -275,6 +297,88 @@ function Follow() {
   useEffect(() => {
     fetchUserInfo();
   }, [id, setValue]);
+
+  const handleLikeClick = async (event, postId) => {
+    event.preventDefault();
+  
+    const customer = getUserFromLocalStorage();
+    if (!customer) {
+      navigate("/login");
+      return;
+    }
+  
+    const post = data.find((post) => post.id === postId);
+    const isLiked = post?.isLiked;
+  
+    // Update state immediately
+    const updatedData = data.map((p) =>
+      p.id === postId
+        ? {
+            ...p,
+            isLiked: !isLiked,
+            total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1, 
+          }
+        : p
+    );
+  
+    setData(updatedData);
+  
+    try {
+      if (isLiked) {
+        await axios.delete("http://localhost:8080/api/like", {
+          data: {
+            post_id: postId,
+            customers_id: customer.id,
+          },
+        });
+      } else {
+        await axios.post("http://localhost:8080/api/like", {
+          post_id: postId,
+          customers_id: customer.id,
+        });
+      }
+    
+    } catch (error) {
+      console.error("Error updating like status:", error);
+      
+      setData(data); 
+    }
+  };
+
+  const handleShareClick = async (postId) => {
+    try {
+      const customer = getUserFromLocalStorage();
+      if (!customer) {
+        navigate("/login");
+        return;
+      }
+      const response = await axios.post("http://localhost:8080/api/shares", {
+        post_id: postId,
+        customers_id: customer.id,
+      });
+  
+
+      Toastify({
+        text: "Chia sẻ thành công!",
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "#4caf50",
+        stopOnFocus: true,
+      }).showToast();
+    } catch (error) {
+      console.error("Error updating share count:", error);
+
+      Toastify({
+        text: "Vui lòng đăng nhập để chia sẻ",
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        backgroundColor: "#f44336",
+        stopOnFocus: true,
+      }).showToast();
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -359,6 +463,19 @@ function Follow() {
                         Thông tin
                       </a>
                     </li>
+                    <li className="nav-item">
+                      <a
+                        id="follow-tab"
+                        data-bs-toggle="tab"
+                        href="#follow"
+                        role="tab"
+                        aria-controls="follow"
+                        aria-selected="false"
+                        className="nav-link"
+                      >
+                        Theo dõi
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -373,7 +490,6 @@ function Follow() {
                     <ul className="timeline">
                       {data.map((post) => (
                         <li key={post.id}>
-                        
                           <div className="timeline-time">
                             <span className="time text-center">
                               {formatTimeDate(post.create_date)}
@@ -382,11 +498,11 @@ function Follow() {
                               {formatDate(post.create_date)}
                             </span>
                           </div>
-                        
+
                           <div className="timeline-icon">
                             <a href="javascript:;">&nbsp;</a>
                           </div>
-                        
+
                           <div className="timeline-body border">
                             <div className="timeline-header">
                               <span className="userimage">
@@ -409,8 +525,7 @@ function Follow() {
                                   ? post.description
                                   : truncateText(post.description, 100)}{" "}
                                 {/* Adjust the 100 to the desired max length */}
-                                {post.description.length >
-                                  100  && (
+                                {post.description.length > 100 && (
                                   <span
                                     className="read-more-toggle"
                                     onClick={() =>
@@ -427,7 +542,7 @@ function Follow() {
                                   </span>
                                 )}
                               </p>
-                              <div className="image-container">
+                              <div className="image-container d-flex justify-content-center ">
                                 <img
                                   src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
                                   alt="Your image description"
@@ -452,47 +567,55 @@ function Follow() {
                             <div className="timeline-likes">
                               <div className="stats-right">
                                 <span className="stats-text mx-1">
-                                  259 Chia sẻ
+                                  {post.total_shares} Chia sẻ
                                 </span>
-                                <a href="#">
-                                  <span className="stats-text">
-                                    {post.total_comments} Bình luận
-                                  </span>
-                                </a>
+
+                                <span className="stats-text">
+                                  {post.total_comments} Bình luận
+                                </span>
                               </div>
                               <div className="stats">
                                 <span className="fa-stack fa-fw stats-icon">
                                   <i className="fa fa-circle fa-stack-2x text-danger"></i>
                                   <i className="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
                                 </span>
-                                <span className="fa-stack fa-fw stats-icon">
-                                  <i className="fa fa-circle fa-stack-2x text-primary"></i>
-                                  <i className="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+
+                                <span className="stats-total ">
+                                  {post.total_likes}
                                 </span>
-                                <span className="stats-total">
-                                  {post.total_favorites}
+                                <span className="stats-total ms-3">
+                                  {" "}
+                                  <label className="bi-headphones me-1 fs-5"></label>
+                                  {post.view}
                                 </span>
                               </div>
                             </div>
                             <div className="timeline-footer">
                               <a
-                                href="javascript:;"
-                                className="m-r-15 text-inverse-lighter mx-1"
-                              >
-                                <i className="bi bi-hand-thumbs-up"></i> Thích
-                              </a>
+                                href="#"
+                                id="like-icon"
+                                className={
+                                  post.isLiked
+                                    ? "bi-heart-fill text-danger fs-6"
+                                    : "bi-heart me-1 fs-6"
+                                }
+                                onClick={(e) => handleLikeClick(e, post.id)}
+                              ></a>
+
                               <a
                                 href="javascript:;"
-                                className="m-r-15 text-inverse-lighter mx-1"
+                                className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                 onClick={() => handleCommentClick(post.id)}
-                              >
-                                <i className="bi bi-chat"></i> Bình luận
-                              </a>
+                              ></a>
                               <a
                                 href="javascript:;"
                                 className="m-r-15 text-inverse-lighter mx-1"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleShareClick(post.id);
+                                }}
                               >
-                                <i className="bi bi-share"></i> Chia sẻ
+                                <i className="bi bi-share"></i>
                               </a>
                             </div>
                             {/* Khu vực nhập bình luận */}
@@ -556,6 +679,14 @@ function Follow() {
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div
+                    className="tab-pane fade "
+                    id="follow"
+                    role="tabpanel"
+                    aria-labelledby="follow-tab"
+                  >
+                    <InfoUser id={id} />
                   </div>
                 </div>
               </div>

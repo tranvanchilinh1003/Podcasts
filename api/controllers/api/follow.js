@@ -79,4 +79,15 @@ exports.delete = async (req, res, next) => {
     res.status(500).json({ error: 'Có lỗi xảy ra.' });
 }
 };
+exports.listFollow = async (req, res, next) => {
+   const id = req.params.id;
+   try {
+    const follows = await Follow.list_follow(id);
+    res.status(200).json({
+        data: follows,
+      })
+   }catch(err){
 
+   }
+  
+};

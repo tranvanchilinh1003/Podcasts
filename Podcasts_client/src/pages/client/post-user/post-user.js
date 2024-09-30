@@ -11,7 +11,8 @@ import axios from 'axios';
 import Spinner from '../Spinner/Spinner';
 import MyEditor from '../tinymce/tinymce';
 import './post-user.css';
-function PostUser() {
+
+function PostUser({ fetchPost  }) {
   const { id } = useParams();
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm();
   const [userId, setUserId] = useState(null);
@@ -25,8 +26,6 @@ function PostUser() {
   const [imgUploadProgress, setImgUploadProgress] = useState(0);
   const [audioUploadProgress, setAudioUploadProgress] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const handleClose = () => setShowModal(false);
-  const [data, setData] = useState([]);
   const [editorContent, setEditorContent] = useState('');
 
   const handleEditorChange = (content) => {
@@ -37,19 +36,7 @@ function PostUser() {
     const userArray = JSON.parse(localStorage.getItem("customer"));
     return userArray && userArray.length > 0 ? userArray[0] : null;
   };
-  const fetchPost = async () => {
-    try {
-      const getId = getUserFromLocalStorage();
-      const idCustomer = getId ? getId.id : null;
-      const response = await axios.get(`http://localhost:8080/api/post-customer/${idCustomer}`);
-      setData(response.data.data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
-  useEffect(() => {
-    fetchPost();
-  }, []);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -61,13 +48,9 @@ function PostUser() {
     };
     fetchCategories();
 
-    const info = localStorage.getItem('customer');
+    const info = getUserFromLocalStorage();
     if (info) {
-      const customerArray = JSON.parse(info);
-      if (Array.isArray(customerArray) && customerArray.length > 0) {
-        const customer = customerArray[0];
-        setUserId(customer.id);
-      }
+      setUserId(info.id);
     }
   }, []);
 
@@ -90,9 +73,6 @@ function PostUser() {
     };
     fetchUserInfo();
   }, [id, setValue]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
 
   const onFileChange = (e) => {
     const { name, files } = e.target;
@@ -136,20 +116,22 @@ function PostUser() {
       }
       formData.description = editorContent;
       formData.customers_id = userId;
+      
       await axiosInstance.post('/api/post', formData);
-
-      DialogService.success('Thêm thành công')
-      await fetchPost();
+      DialogService.success('Thêm thành công');
+      await fetchPost (); 
       reset();
-      handleClose();
-      setImgUploadProgress(0); // Reset progress after successful upload
+      setImgUploadProgress(0);
       setAudioUploadProgress(0);
+      setShowModal(false); // Đóng modal
     } catch (error) {
       console.error('Upload failed:', error);
       DialogService.error('Thêm thất bại');
     }
   };
-  if (loading) return <Spinner />;
+
+  if (loading) return <Spinner />; // Hiển thị loading nếu đang tải
+
   return (
     <div className="timeline-body rounded">
       <div className="timeline-comment-box rounded">
@@ -157,14 +139,7 @@ function PostUser() {
           <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
         </div>
         <div className="input row">
-          <form action="" >
-            {/* <div className="input-group" >
-              <input type="text" className="form-control rounded-corner" placeholder="Thêm một bài viết..." onClick={() => setShowModal(true)} />
-              <span className="input-group-btn p-l-10">
-                <button className="btn btn-primary f-s-12 rounded-corner" type="button" onClick={() => setShowModal(true)}>Thêm bài viết</button>
-              </span>
-            </div> */}
-
+          <form action="">
             <div className="input-group-user input-group-post">
               <input
                 type="text"
@@ -180,7 +155,6 @@ function PostUser() {
                 Thêm bài viết
               </button>
             </div>
-
           </form>
         </div>
       </div>
@@ -241,11 +215,7 @@ function PostUser() {
               </div>
               <div className='col-12'>
                 <label>Mô tả</label>
-                {/* <textarea className='form-control' placeholder='Mô tả...'
-                  id="description"
-                  name="description"
-                  {...register('description')}
-                ></textarea> */}<MyEditor onEditorChange={handleEditorChange} id="description"
+                <MyEditor onEditorChange={handleEditorChange} id="description"
                   name="description"
                   {...register('description')} />
               </div>

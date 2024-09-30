@@ -112,7 +112,7 @@ router.get('/check-follow/:id', follow.checkFollow);
 router.get('/check-likes', follow.checkLike);
 router.post('/like', follow.add);
 router.delete('/like', follow.delete);
-
+router.get('/list_follow/:id', follow.listFollow);
 
 
 module.exports = router;
