@@ -22,7 +22,7 @@ const OTPForm = () => {
   const checkOTP = async (form) => {
     const email = localStorage.getItem('email');
     const otp = getOTPValue();
-    console.log('Concatenated OTP:', otp);
+  
 
     const value = {
       email,
@@ -31,7 +31,7 @@ const OTPForm = () => {
 
     try {
       const response = await check(value);
-      console.log(response);
+    
       
       if (response.success) {
         DialogService.success(response.message);

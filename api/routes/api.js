@@ -10,6 +10,7 @@ const cate = require('../controllers/api/categories');
 const shares = require('../controllers/api/shares');
 const favourite = require('../controllers/api/favourite');
 const follow = require('../controllers/api/follow');
+const notification = require('../controllers/api/notification');
 const router = express.Router();
 // router.post('/categories_insert', cate.create);
 
@@ -112,7 +113,13 @@ router.get('/check-follow/:id', follow.checkFollow);
 router.get('/check-likes', follow.checkLike);
 router.post('/like', follow.add);
 router.delete('/like', follow.delete);
-router.get('/list_follow/:id', follow.listFollow);
+router.get('/list_followed/:id', follow.listFollowed);
+router.get('/list_follower/:id', follow.listFollower);
 
 
+
+router.post('/notification', notification.Createnotification)
+router.delete('/notification/:id', notification.delete)
+router.get('/notification_userId/:id', notification.getList)
+router.patch('/notification/:id', notification.update)
 module.exports = router;

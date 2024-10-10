@@ -19,10 +19,11 @@ import Shares from "../shares/shares";
 import EditPassword from "../edit-password/edit-password";
 import InFoUser from "../info-user/info-user";
 import Spinner from "../Spinner/Spinner";
-import Follow from "../follower/follower";
+import UserFollowList from "../followed/followed";
 import MyEditor from "../tinymce/tinymce";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+
 function Account() {
   const { id } = useParams();
   const {
@@ -131,7 +132,7 @@ function Account() {
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
 
   const handleCommentClick = (postId) => {
-    // Toggle the visibility of the comment box for the clicked post
+    
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
   };
 
@@ -361,30 +362,36 @@ function Account() {
       DialogService.error("Thêm thất bại");
     }
   };
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/customers/${id}`
+      );
+      const user = response.data.data[0];
+      setUserInfo(user);
+      setOldImage(user.images);
+      setOldPassword(user.password);
+      setValue("username", user.username);
+      setValue("full_name", user.full_name);
+      setValue("email", user.email);
+      setValue("gender", user.gender.toString());
+      console.log(user);
+      
+      
+    } catch (err) {
+      console.error("Failed to fetch user info:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/customers/${id}`
-        );
-        const user = response.data.data[0];
-        setUserInfo(user);
-        setOldImage(user.images);
-        setOldPassword(user.password);
-        setValue("username", user.username);
-        setValue("full_name", user.full_name);
-        setValue("email", user.email);
-        setValue("gender", user.gender.toString());
-      } catch (err) {
-        console.error("Failed to fetch user info:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchUserInfo();
+
+  
   }, [id, setValue]);
 
   const handleLikeClick = async (event, postId) => {
@@ -425,6 +432,7 @@ function Account() {
           post_id: postId,
           customers_id: customer.id,
         });
+        
       }
     } catch (error) {
       console.error("Error updating like status:", error);
@@ -506,8 +514,12 @@ function Account() {
                           />
                         )}
                       </h4>
-
-                      <p className="m-b-10 text-white">Frontend</p>
+                      <p className="m-b-10 mt-2 ">
+                          Số người theo dõi:{" "}
+                          <label className="text-white fw-bold">
+                            {userInfo?.numberOfFollowers}
+                          </label>
+                        </p>
                     </div>
                   </div>
                   <ul className="profile-header-tab nav nav-tabs mt-5">
@@ -553,6 +565,19 @@ function Account() {
                     </li>
                     <li className="nav-item">
                       <a
+                        id="follower-tab"
+                        data-bs-toggle="tab"
+                        href="#follower"
+                        role="tab"
+                        aria-controls="follower"
+                        aria-selected="false"
+                        className="nav-link"
+                      >
+                      ĐÃ THEO DÕI
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
                         id="follow-tab"
                         data-bs-toggle="tab"
                         href="#follow"
@@ -561,7 +586,7 @@ function Account() {
                         aria-selected="false"
                         className="nav-link"
                       >
-                        THEO DÕI
+                      NGƯỜI THEO DÕI
                       </a>
                     </li>
                   </ul>
@@ -616,7 +641,7 @@ function Account() {
                               >
                                 {/* bắt đầu timeline */}
                                 <ul className="timeline">
-                                  <PostUser />
+                                  <PostUser fetchPost={fetchPost} />
                                   {data.length > 0 ? (
                                     data.map((post) => (
                                       <li key={post.id}>
@@ -627,7 +652,7 @@ function Account() {
                                         </div> */}
                                         {/* Timeline Icon */}
                                         {/* <div className="timeline-icon">
-                                          <a href="javascript:;">&nbsp;</a>
+                                          <a href="#">&nbsp;</a>
                                         </div> */}
                                         {/* Timeline Content */}
                                         <div className="timeline-body border">
@@ -685,7 +710,7 @@ function Account() {
                                                   className="rounded-circle"
                                                 >
                                                   {/* &#x2022;&#x2022;&#x2022; */}
-                                                  <i class="bi bi-three-dots"></i>
+                                                  <i className="bi bi-three-dots"></i>
                                                 </button>
                                                 {/* Dropdown Menu */}
                                                 {isDropdownOpen === post.id && (
@@ -714,7 +739,7 @@ function Account() {
                                                         handleEdit(post)
                                                       }
                                                     >
-                                                      <a class="dropdown-item">
+                                                      <a className="dropdown-item">
                                                         Sửa
                                                       </a>
                                                     </li>
@@ -859,11 +884,7 @@ function Account() {
                                                               <label>
                                                                 Mô tả
                                                               </label>
-                                                              {/* <textarea className='form-control' placeholder='Mô tả...'
-                                                                id="description"
-                                                                name="description"
-                                                                {...register('description')}
-                                                              ></textarea> */}
+                                                            
                                                               <Controller
                                                                 name="description"
                                                                 control={
@@ -917,7 +938,7 @@ function Account() {
                                                         handleDelete(post.id)
                                                       }
                                                     >
-                                                      <a class="dropdown-item">
+                                                      <a className="dropdown-item">
                                                         Xóa
                                                       </a>
                                                     </li>
@@ -1026,14 +1047,15 @@ function Account() {
                                               }
                                             ></a>
                                             <a
-                                              href="javascript:;"
+                                              
                                               className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                               onClick={() =>
+                                                
                                                 handleCommentClick(post.id)
                                               }
                                             ></a>
                                             <a
-                                              href="javascript:;"
+                                            
                                               className="m-r-15 text-inverse-lighter mx-1"
                                               onClick={(e) => {
                                                 e.preventDefault();
@@ -1098,11 +1120,19 @@ function Account() {
                   </div>
                   <div
                     className="tab-pane fade"
+                    id="follower"
+                    role="tabpanel"
+                    aria-labelledby="follower-tab"
+                  >
+              <UserFollowList id={id} type="follower" />
+                  </div>
+                  <div
+                    className="tab-pane fade"
                     id="follow"
                     role="tabpanel"
                     aria-labelledby="follow-tab"
                   >
-                    <Follow />
+                <UserFollowList id={id} type="followed" />
                   </div>
                 </div>
               </div>

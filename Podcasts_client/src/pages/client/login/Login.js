@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthClient } from "./AuthContext";
 import { DialogService } from "../../../services/common/DialogService";
 import GoogleAuth from "./GoogleAuth";
-import Facebook from "./Facebook";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -106,15 +106,15 @@ function Login() {
               aria-label="Xác nhận"
             />
           </form>
-          <div class="social-account-container">
-            <span class="title">Hoặc đăng nhập bằng</span>
-            <div class="social-accounts">
-              <button class="social-button google ">
+          <div className="social-account-container">
+            <span className="title">Hoặc đăng nhập bằng</span>
+            <div className="social-accounts">
+              <button className="social-button google ">
                 <GoogleAuth onLogin={handleGoogleLogin} />
               </button>
             </div>
           </div>
-          <span class="agreement">
+          <span className="agreement">
             <Link to="/register">Đăng ký tài khoản tại đây!</Link>
           </span>
         </div>

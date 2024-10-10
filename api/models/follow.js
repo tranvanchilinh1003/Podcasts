@@ -106,5 +106,23 @@ module.exports = class Follow {
             );
         });
     }
+    static list_follower(id) {
+        return new Promise((resolve, reject) => {
+            connect.query(
+                "SELECT u.id, u.username, f.follow_date, u.images, u.email FROM follow f JOIN customers u ON f.followed_id = u.id WHERE f.follower_id = ?",
+                [id], 
+                (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+    
+
+    
     
 };

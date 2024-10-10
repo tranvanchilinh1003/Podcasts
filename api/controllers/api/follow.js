@@ -1,4 +1,5 @@
 const Follow = require('../../models/follow'); 
+const Notification = require('../../models/notification'); 
 
   exports.followUser = async (req, res, next) => {
     const { follower_id  } = req.body; 
@@ -61,9 +62,10 @@ exports.checkLike = async (req, res, next) => {
 
 exports.add = async (req, res, next) => {
   const { post_id, customers_id } = req.body;
+
   try {
     const likedPosts = await Follow.addLike(post_id, customers_id);
-  
+    
 } catch (err) {
     console.error('Lỗi:', err);
     res.status(500).json({ error: 'Có lỗi xảy ra.' });
@@ -79,7 +81,7 @@ exports.delete = async (req, res, next) => {
     res.status(500).json({ error: 'Có lỗi xảy ra.' });
 }
 };
-exports.listFollow = async (req, res, next) => {
+exports.listFollowed = async (req, res, next) => {
    const id = req.params.id;
    try {
     const follows = await Follow.list_follow(id);
@@ -91,3 +93,20 @@ exports.listFollow = async (req, res, next) => {
    }
   
 };
+exports.listFollower = async (req, res, next) => {
+   const id = req.params.id;
+   try {
+    const follows = await Follow.list_follower(id);
+    res.status(200).json({
+        data: follows,
+      })
+   }catch(err){
+
+   }
+  
+};
+
+
+
+
+

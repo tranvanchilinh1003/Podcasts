@@ -107,29 +107,60 @@ function PostUser({ fetchPost  }) {
         const imgPath = `upload/${imgFileName}`;
         formData.images = await uploadFile(fileImg, imgPath, setImgUploadProgress);
       }
-
+  
       if (fileAudio) {
         const audioExtension = fileAudio.name.split('.').pop();
         const audioFileName = `${Date.now()}.${audioExtension}`;
         const audioPath = `audio/${audioFileName}`;
         formData.audio = await uploadFile(fileAudio, audioPath, setAudioUploadProgress);
+        
+        // Transcribe the uploaded audio file
+        const transcription = await transcribeAudio(fileAudio);
+        if (transcription) {
+          formData.transcription = transcription;
+        }
       }
+  
       formData.description = editorContent;
       formData.customers_id = userId;
-      
+  
       await axiosInstance.post('/api/post', formData);
       DialogService.success('Thêm thành công');
-      await fetchPost (); 
+      await fetchPost(); 
       reset();
       setImgUploadProgress(0);
       setAudioUploadProgress(0);
-      setShowModal(false); // Đóng modal
+      setShowModal(false); // Close modal
     } catch (error) {
       console.error('Upload failed:', error);
       DialogService.error('Thêm thất bại');
     }
   };
-
+  
+  // Function to transcribe audio
+  const transcribeAudio = async (audioFile) => {
+    const formData = new FormData();
+    formData.append('audio', audioFile);
+  
+    try {
+      const response = await axios.post('http://localhost:5000/api/transcribe', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (response.data.transcription) {
+        return response.data.transcription;
+      } else {
+        console.error('Transcription error:', response.data.error);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error during transcription:', error);
+      return null;
+    }
+  };
+  
   if (loading) return <Spinner />; // Hiển thị loading nếu đang tải
 
   return (

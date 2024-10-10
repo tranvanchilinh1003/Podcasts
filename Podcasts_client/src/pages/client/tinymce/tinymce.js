@@ -4,7 +4,7 @@ import { Editor } from '@tinymce/tinymce-react';
 
 const MyEditor = ({ value, onEditorChange }) => {
     return (
-        <div className="editor-container border border-dark rounded-1 ">
+        <div className="editor-container  rounded-1 ">
             <Editor
                 apiKey="6w2dyd9i3vjn3yqoolo3l15z32xfkzf24pfrf45b606pwj2m" // Replace with your TinyMCE API key
                 value={value}

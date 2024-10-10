@@ -2,8 +2,6 @@ import React from 'react';
 import { Routes, Route, useLocation  } from 'react-router-dom';
 import Header from '../../layouts/client/component/Header';
 import Home from '../../pages/client/home/Home';
-import About from '../../pages/client/about/About';
-import Contact from '../../pages/client/contact/Contact';
 import Footer from '../../layouts/client/component/Footer';
 import Login from '../../pages/client/login/Login';
 import Register from '../../pages/client/register/Register';
@@ -42,11 +40,9 @@ const AppRouter = () => {
     <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
         <Route path="/account/:id" element={<Account />}/>
-        <Route path="/contact" element={<Contact />} />
         <Route path="/categories/:id" element={<Categories />} />
        <Route path="/getId_post/:id" element={<CategoriesDetail />} />
        <Route path="/post_search" element={<SearchResults />} /> 

@@ -41,9 +41,7 @@ const StarRating = ({ rating }) => {
 
 function Post() {
   const [data, setData] = useState([]);
-  const [allData, setAllData] = useState([]);
   const [visibleCount, setVisibleCount] = useState(6);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [isAudioVisible, setIsAudioVisible] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -55,13 +53,12 @@ function Post() {
   const [currentPostId, setCurrentPostId] = useState(null);
   const [viewUpdated, setViewUpdated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [customer_id, setCustomer] = useState(null);
   const [expandedPostId, setExpandedPostId] = useState(null);
-  const [isLike, setIsLike] = useState(false);
   const audioRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const fetchPost = async () => {
     try {
       const customer = getUserFromLocalStorage();
@@ -72,7 +69,7 @@ function Post() {
       const data = response.data.data || [];
 
       if (userId) {
-        // Kiểm tra các bài viết đã được thích
+    
         const likeResponse = await axios.get(
           "http://localhost:8080/api/check-likes",
           {
@@ -81,13 +78,12 @@ function Post() {
         );
 
         const likedPostIds = likeResponse.data.map((item) => item.post_id);
-      
-        
+
         const updatedData = data.map((post) => ({
           ...post,
           isLiked: likedPostIds.includes(post.data.id),
         }));
-        
+
         setData(updatedData);
       } else {
         setData(data);
@@ -100,8 +96,6 @@ function Post() {
   };
 
   useEffect(() => {
-    
-    
     fetchPost();
   }, []);
 
@@ -140,13 +134,32 @@ function Post() {
     )}`;
   };
 
-  const handleLoadMoreToggle = () => {
-    const newVisibleCount = visibleCount + 6;
-    setVisibleCount(newVisibleCount);
-  };
+  useEffect(() => {
+    const loadMoreProducts = async () => {
+      setLoadingMore(true);
+      const newVisibleCount = visibleCount + 6;
+      setVisibleCount(newVisibleCount);
+    if(newVisibleCount >= data.length){
+      setLoadingMore(false);
+      return;
+    }
+    };
+    const handleScroll = () => {
+      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50; // Tải khi gần đến footer
+      if (bottom) {
+        loadMoreProducts();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll); // Dọn dẹp
+    };
+  }, [visibleCount, loadingMore]);
 
   const postsToDisplay = data.slice(0, visibleCount);
-  const shouldShowLoadMore = postsToDisplay.length < data.length;
+
 
   const handlePlayAudio = (url, title, artist, coverImage, postId) => {
     setAudioUrl(url);
@@ -225,10 +238,10 @@ function Post() {
       truncatedText = truncatedText.substr(0, lastSpaceIndex);
     }
     const truncatedHtml = document.createElement("div");
-    truncatedHtml.innerHTML = tempElement.innerHTML; 
+    truncatedHtml.innerHTML = tempElement.innerHTML;
     const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
 
-    return trimmedHtml + "..."; 
+    return trimmedHtml + "...";
   };
 
   const handleShareClick = async (postId) => {
@@ -271,51 +284,94 @@ function Post() {
 
     const customer = getUserFromLocalStorage();
     if (!customer) {
-      navigate("/login");
-      return;
+        navigate("/login");
+        return;
     }
 
     const post = data.find((post) => post.data.id === postId);
     const isLiked = post?.isLiked;
 
-    const updatedData = data.map((p) =>
-      p.data.id === postId
-        ? {
-          ...p,
-          isLiked: !isLiked,
-          data: {
-            ...p.data,
-            total_likes: isLiked
-              ? p.data.total_likes - 1
-              : p.data.total_likes + 1,
-          },
+    const updatedData = data.map((p) => {
+        if (p.data.id === postId) {
+            return {
+                ...p,
+                isLiked: !isLiked,
+                data: {
+                    ...p.data,
+                    total_likes: isLiked ? p.data.total_likes - 1 : p.data.total_likes + 1,
+                },
+            };
         }
-        : p
-    );
+        return p;
+    });
 
     setData(updatedData);
 
     try {
-      if (isLiked) {
-        await axios.delete("http://localhost:8080/api/like", {
-          data: {
-            post_id: postId,
-            customers_id: customer.id,
-          },
-        });
-      } else {
-        await axios.post("http://localhost:8080/api/like", {
-          post_id: postId,
-          customers_id: customer.id,
-        });
-      }
+        if (isLiked) {
+            const notificationId = post.data.notificationId;
+            if(notificationId){
+              await axios.delete(`http://localhost:8080/api/notification/${notificationId}`);
+            }
+        
+            await axios.delete("http://localhost:8080/api/like", {
+              data: {
+                  post_id: postId,
+                  customers_id: customer.id,
+              },
+          });
+            const updatedDataWithoutNotification = updatedData.map((p) => {
+                if (p.data.id === postId) {
+                    return {
+                        ...p,
+                        data: {
+                            ...p.data,
+                            notificationId: null,
+                        },
+                    };
+                }
+                return p;
+            });
+            setData(updatedDataWithoutNotification);
+        } else {
+            if (customer.id !== post.data.customers_id) {
+                const response = await axios.post("http://localhost:8080/api/notification", {
+                    user_id: post.data.customers_id,
+                    sender_id: customer.id,
+                    action: "like",
+                    post_id: postId,
+                });
 
-      fetchPost();
+                const notificationId = response.data.notification_id;
+                const updatedDataWithNotification = updatedData.map((p) => {
+                    if (p.data.id === postId) {
+                        return {
+                            ...p,
+                            data: {
+                                ...p.data,
+                                notificationId: notificationId,
+                            },
+                        };
+                    }
+                    return p;
+                });
+                setData(updatedDataWithNotification);
+            }
+            await axios.post("http://localhost:8080/api/like", {
+                post_id: postId,
+                customers_id: customer.id,
+            });
+        }
+
+        fetchPost();
     } catch (error) {
-      console.error("Lỗi khi cập nhật trạng thái thích:", error);
-
+        console.error("Lỗi khi cập nhật trạng thái thích:", error);
     }
-  };
+};
+
+
+
+
 
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
@@ -347,9 +403,15 @@ function Post() {
 
           <div className="row">
             {postsToDisplay.map((post) => (
-              <div className="col-lg-12 col-12 mb-4" key={post.data.id}>
-                <div className="custom-block d-flex flex-column flex-md-row">
-                  <div className="col-lg-3 col-12">
+              <div
+                className="col-lg-12 col-12 col-md-12 mb-4"
+                key={post.data.id}
+              >
+                <div
+                  className="custom-block d-flex flex-column flex-md-row"
+                  style={{ display: "flex", flexWrap: "wrap" }}
+                >
+                  <div className="col-lg-3 col-md-12 ">
                     <div className="custom-block-icon-wrap">
                       <div className="section-overlay"></div>
                       <a className="custom-block-image-wrap">
@@ -400,7 +462,7 @@ function Post() {
                       </Link>
                     </div>
                   </div>
-                  <div className="custom-block-info col-lg-8 col-12">
+                  <div className="custom-block-info col-lg-8 col-md-12">
                     <h4 className="mb-2">
                       <Link to={`/getId_post/${post.data.id}`}>
                         {post.data.title}
@@ -487,11 +549,11 @@ function Post() {
         </div>
       </div>
       <div className="d-flex justify-content-center mt-4">
-        {shouldShowLoadMore && (
-          <button className="shadow" onClick={handleLoadMoreToggle}>
-            <span className="text-center">Xem thêm</span>
-          </button>
-        )}
+      {loadingMore && (
+        <p>
+           Đang tải thêm sản phẩm...
+        </p>
+      )}
       </div>
 
       {isAudioVisible && (
@@ -532,8 +594,9 @@ function Post() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                    }`}
+                  className={`bi ${
+                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                  }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input
