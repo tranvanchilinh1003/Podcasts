@@ -59,19 +59,63 @@
 #     return jsonify({'data': top_podcasts})  
 # if __name__ == '__main__':
 #     app.run(debug=True, port=5000)
+
 from flask import Flask, request, jsonify
+import os
+import whisper
+from flask_cors import CORS
 import pandas as pd
 import requests
 import json
-import speech_recognition as sr
-from pydub import AudioSegment
-import os
-from flask_cors import CORS
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # Giới hạn tối đa là 50MB
 CORS(app)
 
-# Hàm lấy và lưu dữ liệu từ API bên ngoài
+# Tải mô hình Whisper lớn "small", "medium" hoặc "large" "base"
+model = whisper.load_model("medium")
+
+def transcribe_audio(file_path):
+    # Chuyển đổi âm thanh thành văn bản bằng tiếng Việt
+    result = model.transcribe(file_path, language='vi')  # Chỉ định ngôn ngữ là tiếng Việt
+    return result["text"]
+
+@app.route('/api/transcribe', methods=['POST'])
+def transcribe():
+    if 'audio' not in request.files:
+        return jsonify({'error': 'Chưa có file âm thanh được cung cấp'}), 400
+
+    audio_file = request.files['audio']
+    print(f'Đã nhận tệp: {audio_file.filename}, kích thước: {audio_file.content_length} bytes')
+    wav_file_path = 'temp_audio.wav'  # Đường dẫn tạm thời để lưu tệp
+
+    try:
+        # Lưu tệp âm thanh tạm thời 
+        audio_file.save(wav_file_path)
+
+        # Chuyển đổi âm thanh thành văn bản 
+        transcription = transcribe_audio(wav_file_path)
+
+        print("Transcription:", transcription)
+
+        banned_words = [
+                  'sex', 'kill', 'hate', 'drugs', 'fuck', 'fuckyou',
+                  'chết', 'sát thủ', 'khủng bố',  
+                ]
+        banned_count = sum(1 for word in banned_words if word in transcription)
+
+        if banned_count > 10:
+            return jsonify({'error': 'Số lượng từ cấm vượt quá 10 '}), 400
+
+        return jsonify({'transcription': transcription})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+    finally:
+        # Xóa tệp tạm thời sau khi xử lý
+        if os.path.exists(wav_file_path):
+            os.remove(wav_file_path)
+
 def fetch_and_save_data():
     url = 'http://localhost:8080/api/get_All'
     response = requests.get(url)
@@ -103,33 +147,6 @@ def fetch_and_save_data():
     else:
         print(f"Lỗi khi lấy dữ liệu: {response.status_code}")
 
-# Hàm chuyển đổi âm thanh thành văn bản
-def transcribe_audio(audio_file_path):
-    try:
-        # Tải file âm thanh
-        audio = AudioSegment.from_file(audio_file_path)
-
-        # Nếu file là mp3, chuyển đổi sang wav
-        if audio_file_path.endswith('.mp3'):
-            wav_file_path = audio_file_path.replace('.mp3', '.wav')
-            audio.export(wav_file_path, format='wav')
-            audio_file_path = wav_file_path
-
-        recognizer = sr.Recognizer()
-        with sr.AudioFile(audio_file_path) as source:
-            audio_data = recognizer.record(source)
-            text = recognizer.recognize_google(audio_data)
-            return text
-    except Exception as e:
-        return f"Lỗi khi xử lý file âm thanh: {e}"
-
-# Hàm kiểm tra số lượng từ cấm trong văn bản
-def count_banned_words(text, banned_words):
-    words = text.lower().split()
-    count = sum(words.count(word.lower()) for word in banned_words)
-    return count
-
-# Endpoint để lấy top podcasts
 @app.route('/api/top_podcasts', methods=['GET'])
 def get_top_podcasts():
     fetch_and_save_data()
@@ -137,33 +154,5 @@ def get_top_podcasts():
     top_podcasts = df.to_dict(orient='records')
     return jsonify({'data': top_podcasts})
 
-# Endpoint để chuyển đổi âm thanh
-@app.route('/api/transcribe', methods=['POST'])
-def transcribe():
-    if not os.path.exists('uploads'):
-        os.makedirs('uploads')
-
-    if 'audio' not in request.files:
-        return jsonify({'error': 'Chưa có file âm thanh được cung cấp'}), 400
-
-    audio_file = request.files['audio']
-    audio_file_path = os.path.join('uploads', audio_file.filename)
-    audio_file.save(audio_file_path)
-
-    transcription = transcribe_audio(audio_file_path)
-
-    # Kiểm tra từ cấm
-    banned_words = ['ổ quỷ', 'đường', 'vào']  # Danh sách từ cấm
-    banned_count = count_banned_words(transcription, banned_words)
-
-    # Xóa file tạm thời sau khi xử lý
-    os.remove(audio_file_path)
-
-    if banned_count > 10:
-        return jsonify({'error': 'Số lượng từ cấm vượt quá 10'}), 400
-
-    return jsonify({'transcription': transcription})
-
 if __name__ == '__main__':
-    fetch_and_save_data()  # Tải dữ liệu ban đầu khi khởi động ứng dụng
     app.run(debug=True, port=5000)

@@ -370,6 +370,10 @@ function Post() {
 };
 
 
+const roundTo = (num, places) => {
+  const factor = Math.pow(10, places);
+  return Math.round(num * factor) / factor;
+};
 
 
 
@@ -528,7 +532,7 @@ function Post() {
                   </div>
                   <div className="d-flex flex-column ms-auto">
                     <label href="#" className=" ms-auto">
-                      {post.data.average_comment_rating}/5{" "}
+                      {roundTo(post.data.average_comment_rating, 1)}/5{" "}
                       <StarRating rating={post.data.average_comment_rating} />
                     </label>
                     <a

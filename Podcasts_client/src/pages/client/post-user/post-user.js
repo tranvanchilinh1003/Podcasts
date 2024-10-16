@@ -98,68 +98,99 @@ function PostUser({ fetchPost  }) {
     setProgress(100);
     return path.split('/').pop();
   };
-
+  const transcribeAudio = async (audioFile) => {
+    // Kiểm tra xem audioFile có tồn tại và là một tệp không
+    if (!audioFile || !(audioFile instanceof File)) {
+        console.error('Chưa chọn tệp âm thanh.');
+        return '';
+    }
+  
+    const formData = new FormData();
+    formData.append('audio', audioFile); // Thêm tệp vào FormData
+  
+    try {
+        const response = await axios.post('http://localhost:5000/api/transcribe', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+  
+        if (response.data.transcription) {
+            console.log('Kết quả transcribe:', response.data.transcription); // Ghi log kết quả
+            return response.data.transcription;
+        } else if (response.data.error) {
+            console.error('Lỗi khi transcribe:', response.data.error);
+            return '';
+        }
+    } catch (error) {
+        console.error('Lỗi gửi tệp:', error);
+        return '';
+    }
+  };
   const onSubmit = async (formData) => {
     try {
-      if (fileImg) {
-        const imgExtension = fileImg.name.split('.').pop();
-        const imgFileName = `${Date.now()}.${imgExtension}`;
-        const imgPath = `upload/${imgFileName}`;
-        formData.images = await uploadFile(fileImg, imgPath, setImgUploadProgress);
-      }
-  
-      if (fileAudio) {
-        const audioExtension = fileAudio.name.split('.').pop();
-        const audioFileName = `${Date.now()}.${audioExtension}`;
-        const audioPath = `audio/${audioFileName}`;
-        formData.audio = await uploadFile(fileAudio, audioPath, setAudioUploadProgress);
-        
-        // Transcribe the uploaded audio file
-        const transcription = await transcribeAudio(fileAudio);
-        if (transcription) {
-          formData.transcription = transcription;
+        // Kiểm tra và tải lên hình ảnh
+        if (fileImg) {
+            const imgExtension = fileImg.name.split('.').pop();
+            const imgFileName = `${Date.now()}.${imgExtension}`;
+            const imgPath = `upload/${imgFileName}`;
+            formData.images = await uploadFile(fileImg, imgPath, setImgUploadProgress);
         }
-      }
-  
-      formData.description = editorContent;
-      formData.customers_id = userId;
-  
-      await axiosInstance.post('/api/post', formData);
-      DialogService.success('Thêm thành công');
-      await fetchPost(); 
-      reset();
-      setImgUploadProgress(0);
-      setAudioUploadProgress(0);
-      setShowModal(false); // Close modal
+
+        // Kiểm tra và tải lên file âm thanh
+        let transcription = '';
+        if (fileAudio) {
+            const audioExtension = fileAudio.name.split('.').pop();
+            const audioFileName = `${Date.now()}.${audioExtension}`;
+            const audioPath = `audio/${audioFileName}`;
+            formData.audio = await uploadFile(fileAudio, audioPath, setAudioUploadProgress);
+
+            // Chuyển đổi file âm thanh thành văn bản
+            transcription = await transcribeAudio(fileAudio);
+            if (transcription) {
+                // Kiểm tra từ cấm
+                const forbiddenWords = [
+                  'sex', 'kill', 'hate', 'drugs', 'fuck', 'fuckyou',
+                  'chết', 'sát thủ', 'khủng bố',  
+                ];
+                 // Thay thế bằng danh sách từ cấm của bạn
+                const containsForbiddenWords = forbiddenWords.some(word => transcription.includes(word));
+
+                if (containsForbiddenWords) {
+                    DialogService.error('Nội dung chứa từ cấm.');
+
+                    reset();
+                    setShowModal(false);
+                    return; // Dừng quá trình nếu có từ cấm
+                }
+            }
+        }
+
+        formData.description = editorContent;
+        formData.customers_id = userId;
+        formData.transcription = transcription; // Gửi nội dung đã chuyển đổi đến backend
+
+        // Gửi dữ liệu đến backend
+        await axiosInstance.post('/api/post', formData);
+        DialogService.success('Thêm thành công');
+        await fetchPost(); 
+        reset();
+        setImgUploadProgress(0);
+        setAudioUploadProgress(0);
+        setShowModal(false); // Đóng modal
     } catch (error) {
-      console.error('Upload failed:', error);
-      DialogService.error('Thêm thất bại');
+        console.error('Upload failed:', error);
+        DialogService.error('Thêm thất bại');
     }
-  };
-  
-  // Function to transcribe audio
-  const transcribeAudio = async (audioFile) => {
-    const formData = new FormData();
-    formData.append('audio', audioFile);
-  
-    try {
-      const response = await axios.post('http://localhost:5000/api/transcribe', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      if (response.data.transcription) {
-        return response.data.transcription;
-      } else {
-        console.error('Transcription error:', response.data.error);
-        return null;
-      }
-    } catch (error) {
-      console.error('Error during transcription:', error);
-      return null;
-    }
-  };
+};
+
+
+
+
+
+
+
+
   
   if (loading) return <Spinner />; // Hiển thị loading nếu đang tải
 

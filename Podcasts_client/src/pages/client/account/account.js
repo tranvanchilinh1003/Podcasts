@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
-import { Progress } from "antd";
+import { Progress, Dropdown, Space } from "antd";
 import axiosInstance from "../firebase/axiosConfig";
 import { DialogService } from "../../../services/common/DialogService";
 import { useForm, Controller } from "react-hook-form";
@@ -69,7 +69,34 @@ function Account() {
   const [editPost, setEditPost] = useState(null);
   const [Delete, onDelete] = useState(null);
   const [editorContent, setEditorContent] = useState("");
-
+  const items = (post) => [
+    {
+      key: "1",
+      label: (
+        <a
+          target="_blank"
+          style={{ width: "50px", textAlign: "center" }}
+          rel="noopener noreferrer"
+          onClick={() => handleEdit(post)}
+        >
+          Sửa
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ width: "50px", textAlign: "center" }}
+          onClick={() => handleDelete(post.id)} // Thêm hàm xóa nếu cần
+        >
+          Xóa
+        </a>
+      ),
+    },
+  ];
 
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
@@ -132,7 +159,6 @@ function Account() {
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
 
   const handleCommentClick = (postId) => {
-    
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
   };
 
@@ -376,8 +402,6 @@ function Account() {
       setValue("email", user.email);
       setValue("gender", user.gender.toString());
       console.log(user);
-      
-      
     } catch (err) {
       console.error("Failed to fetch user info:", err);
       setError(err);
@@ -386,12 +410,8 @@ function Account() {
     }
   };
 
-
   useEffect(() => {
-
     fetchUserInfo();
-
-  
   }, [id, setValue]);
 
   const handleLikeClick = async (event, postId) => {
@@ -432,7 +452,6 @@ function Account() {
           post_id: postId,
           customers_id: customer.id,
         });
-        
       }
     } catch (error) {
       console.error("Error updating like status:", error);
@@ -515,11 +534,11 @@ function Account() {
                         )}
                       </h4>
                       <p className="m-b-10 mt-2 ">
-                          Số người theo dõi:{" "}
-                          <label className="text-white fw-bold">
-                            {userInfo?.numberOfFollowers}
-                          </label>
-                        </p>
+                        Số người theo dõi:{" "}
+                        <label className="text-white fw-bold">
+                          {userInfo?.numberOfFollowers}
+                        </label>
+                      </p>
                     </div>
                   </div>
                   <ul className="profile-header-tab nav nav-tabs mt-5">
@@ -573,7 +592,7 @@ function Account() {
                         aria-selected="false"
                         className="nav-link"
                       >
-                      ĐÃ THEO DÕI
+                        ĐÃ THEO DÕI
                       </a>
                     </li>
                     <li className="nav-item">
@@ -586,7 +605,7 @@ function Account() {
                         aria-selected="false"
                         className="nav-link"
                       >
-                      NGƯỜI THEO DÕI
+                        NGƯỜI THEO DÕI
                       </a>
                     </li>
                   </ul>
@@ -709,40 +728,22 @@ function Account() {
                                                   }}
                                                   className="rounded-circle"
                                                 >
-                                                  {/* &#x2022;&#x2022;&#x2022; */}
-                                                  <i className="bi bi-three-dots"></i>
-                                                </button>
-                                                {/* Dropdown Menu */}
-                                                {isDropdownOpen === post.id && (
-                                                  <ul
-                                                    style={{
-                                                      position: "absolute",
-                                                      top: "100%",
-                                                      left: "0",
-                                                      backgroundColor: "white",
-                                                      boxShadow:
-                                                        "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                                                      listStyle: "none",
-                                                      padding: "10px",
-                                                      margin: "0",
-                                                      borderRadius: "4px",
-                                                      zIndex: 1000,
+                                                  <Dropdown
+                                                    menu={{
+                                                      items: items(post),
                                                     }}
-                                                    className="border"
+                                                    placement="topLeft"
+                                                    arrow={{
+                                                      pointAtCenter: true,
+                                                    }}
                                                   >
-                                                    <li
-                                                      style={{
-                                                        padding: "5px 0",
-                                                        cursor: "pointer",
-                                                      }}
-                                                      onClick={() =>
-                                                        handleEdit(post)
-                                                      }
-                                                    >
-                                                      <a className="dropdown-item">
-                                                        Sửa
-                                                      </a>
-                                                    </li>
+                                                    <a>
+                                                      <i className="bi bi-three-dots"></i>
+                                                    </a>
+                                                  </Dropdown>
+                                                </button>
+                                            
+                                            
                                                     {/* Modal */}
                                                     <Modal
                                                       show={showModal}
@@ -884,7 +885,7 @@ function Account() {
                                                               <label>
                                                                 Mô tả
                                                               </label>
-                                                            
+
                                                               <Controller
                                                                 name="description"
                                                                 control={
@@ -929,21 +930,7 @@ function Account() {
                                                         </form>
                                                       </Modal.Body>
                                                     </Modal>
-                                                    <li
-                                                      style={{
-                                                        padding: "5px 0",
-                                                        cursor: "pointer",
-                                                      }}
-                                                      onClick={() =>
-                                                        handleDelete(post.id)
-                                                      }
-                                                    >
-                                                      <a className="dropdown-item">
-                                                        Xóa
-                                                      </a>
-                                                    </li>
-                                                  </ul>
-                                                )}
+                                                  
                                               </div>
                                             </div>
                                           </div>
@@ -1047,15 +1034,12 @@ function Account() {
                                               }
                                             ></a>
                                             <a
-                                              
                                               className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                               onClick={() =>
-                                                
                                                 handleCommentClick(post.id)
                                               }
                                             ></a>
                                             <a
-                                            
                                               className="m-r-15 text-inverse-lighter mx-1"
                                               onClick={(e) => {
                                                 e.preventDefault();
@@ -1124,7 +1108,7 @@ function Account() {
                     role="tabpanel"
                     aria-labelledby="follower-tab"
                   >
-              <UserFollowList id={id} type="follower" />
+                    <UserFollowList id={id} type="follower" />
                   </div>
                   <div
                     className="tab-pane fade"
@@ -1132,7 +1116,7 @@ function Account() {
                     role="tabpanel"
                     aria-labelledby="follow-tab"
                   >
-                <UserFollowList id={id} type="followed" />
+                    <UserFollowList id={id} type="followed" />
                   </div>
                 </div>
               </div>

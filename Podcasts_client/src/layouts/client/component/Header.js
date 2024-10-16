@@ -11,6 +11,8 @@ const CLIENT_ID =
 const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
 
 function Header() {
+  const [userInfo, setUserInfo] = useState(null);
+  const [oldImage, setOldImage] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -87,16 +89,47 @@ function Header() {
 
     initializeGapi();
   }, []);
+const fetchUserInfo = async () => {
+  try {
+    const customer = getUserFromLocalStorage();
+    const userId = customer ? customer.id : null;
+    const response = await axios.get(
+      `http://localhost:8080/api/customers/${userId}`
+    );
+    setUserInfo(response.data.data[0]);
+    setOldImage(response.data.data[0].images);
+  } catch (err) {
+    console.error("Failed to fetch user info:", err);
+    setError(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  useEffect(() => {
-    const token = localStorage.getItem("userToken");
-    const user = JSON.parse(localStorage.getItem("customer"));
+useEffect(() => {
+  const token = localStorage.getItem("userToken");
+  const user = JSON.parse(localStorage.getItem("customer"));
 
-    if (token && user) {
-    } else {
-      logout();
+  if (token && user) {
+    fetchUserInfo();
+  } else {
+    logout();
+  }
+
+  const handleStorageChange = (event) => {
+    if (event.key === 'customer') {
+      fetchUserInfo();
     }
-  }, [logout, loginGoogle]);
+  };
+
+  window.addEventListener('storage', handleStorageChange);
+
+  // Cleanup event listener on unmount
+  return () => {
+    window.removeEventListener('storage', handleStorageChange);
+  };
+}, [logout]);
+
 
   const handleLogout = async () => {
     try {
@@ -484,7 +517,7 @@ function Header() {
                   >
                     <img
                       className="img-profile rounded-circle"
-                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${customer[0].images}?alt=media`}
+                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                       width={40}
                       height={40}
                       alt="Profile"
@@ -499,12 +532,12 @@ function Header() {
                         }}
                       >
                         <li className="dropdown-item">
-                          <strong>{customer[0].username}</strong>
+                          <strong>{userInfo.username}</strong>
                         </li>
                         <li>
                           <Link
                             className="dropdown-item"
-                            to={`/account/${customer[0].id}`}
+                            to={`/account/${userInfo.id}`}
                           >
                             Thông tin tài khoản
                           </Link>
