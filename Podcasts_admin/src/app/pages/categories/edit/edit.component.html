@@ -14,7 +14,7 @@
               <label for="images" class="fw-bold col-form-label">Hình ảnh</label>
               <input type="file" class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput fullWidth id="img" accept="image/*" (change)="onFileChange($event)" name="images" formControlName="images">
               <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressImage}}" max="100"></progress>
-              <img *ngIf="!isUploading && showImagePreview" [src]="imgUpload" style="width: 120px; height: 120px;" alt="Image preview" class="img-thumbnail mt-2">
+              <img *ngIf="!isUploading && showImagePreview" [src]="imgUpload" style="width: 130px; height: 130px;" alt="Image preview" class="img-thumbnail mt-2">
             </div>
           </div>
           <div class='row mb-3'>

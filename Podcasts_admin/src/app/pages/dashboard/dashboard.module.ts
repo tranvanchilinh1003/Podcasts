@@ -21,5 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
     DashboardComponent,
 
   ],
+  exports: [
+    DashboardComponent
+  ]
 })
 export class DashboardModule { }
