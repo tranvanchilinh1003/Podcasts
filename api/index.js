@@ -6,6 +6,10 @@ const app = express();
 var bodyParser = require("body-parser");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const { initSocketIO } = require('./middlewares/socket');
+const sessionMiddleware = require('./middlewares/session');
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -28,12 +32,17 @@ app.use("/styles", express.static("styles"));
 app.use("/uploads", express.static("uploads"));
 
 
+// Routes
 const api = require('./routes/api');
 app.use('/api', api);
 
+// Tạo HTTP server
+const server = http.createServer(app);
 
-  
-app.listen(port, () => {
-    console.log(`ứng dụng chạy với port: ${port}`);
-  });
-  
+// Khởi tạo Socket.io
+initSocketIO(server, sessionMiddleware);
+
+// Khởi động server
+server.listen(port, () => {
+    console.log(`Ứng dụng chạy với port: ${port}`);
+});

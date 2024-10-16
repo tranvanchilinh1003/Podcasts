@@ -4,6 +4,9 @@ import axios from "axios";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Spinner from "../Spinner/Spinner";
+import CommentList from "../comments/CommentList";
+import CommentBox from "../comments/CommentBox";
+import { SocketProvider } from "../../../config/SocketContext";
 
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
@@ -59,6 +62,67 @@ function Post() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [commentBoxVisibility, setCommentBoxVisibility] = useState({});
+  const [customer, setCustomerImage] = useState("");
+  const [commentToEdit, setCommentToEdit] = useState(null);
+  const [postComments, setPostComments] = useState({});
+
+  useEffect(() => {
+    // Lấy URL hình ảnh từ localStorage
+    const imageUrl = JSON.parse(localStorage.getItem("customer"));
+    if (imageUrl) {
+      setCustomerImage(imageUrl);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(commentBoxVisibility).length) {
+      Object.keys(commentBoxVisibility).forEach((postId) => {
+        if (commentBoxVisibility[postId]) {
+          fetchComments(postId);
+        }
+      });
+    }
+  }, [commentBoxVisibility]);
+
+  const fetchComments = async (postId) => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/comments", {
+        params: { postId: postId },
+      });
+
+      setPostComments((prevComments) => ({
+        ...prevComments,
+        [postId]: response.data.data,
+      }));
+      fetchPost();
+    } catch (error) {
+      console.error("Error loading comments:", error);
+    }
+  };
+
+  const handleEditComment = (comment) => {
+    setCommentToEdit(comment); // Lưu bình luận cần chỉnh sửa
+  };
+
+  const handleCommentClick = (postId) => {
+    setCommentBoxVisibility((prevState) => ({
+      ...prevState,
+      [postId]: !prevState[postId],
+    }));
+  };
+
+  const handleReply = (commentId) => {
+    setPostComments((prevComments) => ({
+      ...prevComments,
+      [currentPostId]: prevComments[currentPostId].map((comment) =>
+        comment.id === commentId
+          ? { ...comment, showReplyForm: !comment.showReplyForm }
+          : comment
+      ),
+    }));
+  };
+
   const fetchPost = async () => {
     try {
       const customer = getUserFromLocalStorage();
@@ -412,9 +476,10 @@ const roundTo = (num, places) => {
                 key={post.data.id}
               >
                 <div
-                  className="custom-block d-flex flex-column flex-md-row"
+                  className="custom-block"
                   style={{ display: "flex", flexWrap: "wrap" }}
                 >
+                  <div className=" d-flex flex-column flex-md-row">
                   <div className="col-lg-3 col-md-12 ">
                     <div className="custom-block-icon-wrap">
                       <div className="section-overlay"></div>
@@ -458,12 +523,15 @@ const roundTo = (num, places) => {
                         <span>{post.data.total_likes}</span>
                       </a>
 
-                      <Link
-                        to={`/getId_post/${post.data.id}`}
-                        className="bi-chat me-1"
-                      >
-                        <span className="me-1">{post.data.total_comments}</span>
-                      </Link>
+                      <span
+                          className="bi-chat me-1"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleCommentClick(post.data.id)}
+                        >
+                          <span className="me-1">
+                            {post.data.total_comments}
+                          </span>
+                        </span>
                     </div>
                   </div>
                   <div className="custom-block-info col-lg-8 col-md-12">
@@ -546,6 +614,39 @@ const roundTo = (num, places) => {
                       <i className="bi bi-share-fill"></i>
                     </a>
                   </div>
+                  </div>
+                  {commentBoxVisibility[post.data.id] && (
+                    <div>
+                      <div>
+                        <CommentList
+                          comments={postComments[post.data.id] || []}
+                          onEdit={handleEditComment}
+                          userId={customer[0]?.id}
+                          onReply={handleReply}
+                          fetchPost={fetchPost}
+                          fetchComments={fetchComments}
+                        />
+                      </div>
+
+                      {customer[0]?.id ? (
+                        <div>
+                          <SocketProvider>
+                            <CommentBox
+                              postId={post.data.id}
+                              custommer={customer}
+                              fetchComments={() => fetchComments(post.data.id)}
+                              commentToEdit={commentToEdit}
+                              setCommentToEdit={setCommentToEdit}
+                            />
+                          </SocketProvider>
+                        </div>
+                      ) : (
+                        <div className=" mt-5 text-center">
+                          <p>Đăng nhập để bình luận</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
