@@ -12,7 +12,6 @@ const Email = () => {
   const checkMail = async (form) => {
     try {
       const response = await forGot(form);
-      console.log(response);
       localStorage.setItem('email', response.data);
       DialogService.success('Vui lòng check mail để nhập OTP')
     } catch (error) {

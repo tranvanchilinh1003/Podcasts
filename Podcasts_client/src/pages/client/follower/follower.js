@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import './follower.css';
 import { Link, useNavigate } from "react-router-dom";
-function InfoUser({ id }) {
+function Follower({ id }) {
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -133,4 +133,4 @@ function InfoUser({ id }) {
   );
 }
 
-export default InfoUser;
+export default Follower;

@@ -334,7 +334,7 @@ function Post() {
   }
   return (
     <section
-      className="latest-podcast-section section-padding pb-0"
+      className="latest-podcast-section pb-0"
       id="section_2"
     >
       <div className="container">

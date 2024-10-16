@@ -288,7 +288,14 @@ function Shares() {
                                                                 <div className="col-md-12 d-flex justify-content-between align-items-center">
                                                                     <div className="d-flex align-items-center">
                                                                         <span className="userimage">
-                                                                            <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
+                                                                            <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ"
+                                                                                style={{
+                                                                                    maxWidth: "auto",
+                                                                                    // height: "100%",
+                                                                                    width: "100%",
+                                                                                    borderRadius: "50%",
+                                                                                }}
+                                                                            />
                                                                         </span>
                                                                         <span className="username mx-1">
                                                                             <a href="#" className='d-flex'>{userInfo?.username}{userInfo.isticket === "active" && (
@@ -421,7 +428,6 @@ function Shares() {
                                                             <div className="timeline-footer">
                                                                 <a href="#" className="bi-heart me-4 mx-1 m-r-15 text-inverse-lighter mx-1"></a>
                                                                 <a
-                                                                    href="#"
                                                                     className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                                                     onClick={() => handleCommentClick(shares.id)}
                                                                 ></a>
@@ -430,17 +436,48 @@ function Shares() {
                                                                 </a>
                                                             </div>
                                                             {visibleCommentBox === shares.id && (
+                                                                // <div className="timeline-comment-box">
+                                                                //     <div className="user">
+                                                                //         <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
+                                                                //     </div>
+                                                                //     <div className="input">
+                                                                //         <form>
+                                                                //             <div className="input-group">
+                                                                //                 <input type="text" className="form-control rounded-corner" placeholder="Viết một bình luận..." />
+                                                                //                 <span className="input-group-btn p-l-10">
+                                                                //                     <button className="btn btn-primary f-s-12 rounded-corner" type="button">Bình luận</button>
+                                                                //                 </span>
+                                                                //             </div>
+                                                                //         </form>
+                                                                //     </div>
+                                                                // </div>
                                                                 <div className="timeline-comment-box">
-                                                                    <div className="user">
-                                                                        <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
+                                                                    <div className="user mt-1">
+                                                                        <img
+                                                                            src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                                                                            alt="Hồ sơ"
+                                                                            style={{
+                                                                                maxWidth: "auto",
+                                                                                height: "100%",
+                                                                                width: "100%",
+                                                                                borderRadius: "50%",
+                                                                            }}
+                                                                        />
                                                                     </div>
-                                                                    <div className="input">
-                                                                        <form>
-                                                                            <div className="input-group">
-                                                                                <input type="text" className="form-control rounded-corner" placeholder="Viết một bình luận..." />
-                                                                                <span className="input-group-btn p-l-10">
-                                                                                    <button className="btn btn-primary f-s-12 rounded-corner" type="button">Bình luận</button>
-                                                                                </span>
+                                                                    <div className="input row">
+                                                                        <form action="">
+                                                                            <div className="input-group-user input-group-post">
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="input-post rounded-corner col-md-12 col-12 col-lg-10"
+                                                                                    placeholder="Bình luận bài viết..."
+                                                                                />
+                                                                                <button
+                                                                                    className="button--submit col-md-12 col-12 col-lg-2"
+                                                                                    type="button"
+                                                                                >
+                                                                                    Bình luận
+                                                                                </button>
                                                                             </div>
                                                                         </form>
                                                                     </div>

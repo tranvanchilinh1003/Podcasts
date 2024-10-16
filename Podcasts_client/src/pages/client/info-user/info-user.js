@@ -35,7 +35,29 @@ function InfoUser() {
         setImgUploadProgress(100); // Ensure progress is set to 100 after successful upload
         return path.split('/').pop();
     };
+    const fetchUserInfo = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
+            const user = response.data.data[0];
+            setUserInfo(user);
+            setOldImage(user.images);
+            setOldPassword(user.password);
+            setValue('username', user.username);
+            setValue('full_name', user.full_name);
+            setValue('email', user.email);
+            setValue('gender', user.gender.toString());
+        } catch (err) {
+            console.error('Failed to fetch user info:', err);
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
+   
+        fetchUserInfo();
+    }, [id, setValue]);
     const onSubmit = async (data) => {
         setIsUploading(true);
         if (file) {
@@ -44,7 +66,7 @@ function InfoUser() {
             const newFileName = `${currentDate.toISOString().replace(/[:.]/g, '-')}.${fileExtension}`;
             const path = `upload/${newFileName}`;
             const storageRef = ref(storage, path);
-            data.images = await uploadFile(file, path,setImgUploadProgress);
+            data.images = await uploadFile(file, path, setImgUploadProgress);
 
             try {
                 await uploadBytes(storageRef, file);
@@ -67,6 +89,7 @@ function InfoUser() {
         try {
             data.role = 'user';
             const response = await axiosInstance.patch(`/api/customers/${id}`, data);
+
             if (response.status === 200) {
                 DialogService.success('Cập nhật tài khoản thành công');
             }
@@ -82,33 +105,12 @@ function InfoUser() {
             setImgUploadProgress(0);
         }
     };
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
-                const user = response.data.data[0];
-                setUserInfo(user);
-                setOldImage(user.images);
-                setOldPassword(user.password);
-                setValue('username', user.username);
-                setValue('full_name', user.full_name);
-                setValue('email', user.email);
-                setValue('gender', user.gender.toString());
-            } catch (err) {
-                console.error('Failed to fetch user info:', err);
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
 
-        fetchUserInfo();
-    }, [id, setValue]);
     if (loading) return <Spinner />;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="col-md-6">
+        <div className="col-md-6 ">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Tên Người Dùng:</label>

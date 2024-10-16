@@ -190,7 +190,7 @@
     background: #fff;
     list-style-type: none;
     margin: -10px 0 0;
-    padding: 0 0 0 140px;
+    padding: 0 0 0 0;
     white-space: nowrap;
     border-radius: 0
 }
@@ -479,7 +479,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .profile-header .profile-header-cover {
-    background-image: url(https://bootdey.com/img/Content/bg1.jpg);
+    /* background-image: url(https://bootdey.com/img/Content/bg1.jpg); */
+    /* background-image: url(https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F2024-08-06T05:01:55.374Z.jpg?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -622,7 +623,7 @@ select.form-control:not([size]):not([multiple]) {
     background: #fff;
     list-style-type: none;
     margin: -10px 0 0;
-    padding: 0 0 0 140px;
+    padding: 0 0 0 0;
     white-space: nowrap;
     border-radius: 0
 }
@@ -1012,7 +1013,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .timeline img {
     max-width: 100%;
-    display: block
+    /* display: block */
 }
 
 .timeline-content {
@@ -1124,3 +1125,5 @@ select.form-control:not([size]):not([multiple]) {
 
 
 
+
+  

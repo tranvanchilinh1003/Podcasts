@@ -273,5 +273,7 @@ exports.customerId = async (req, res, next) => {
         res.status(500).json({ error: 'Error fetching customer stats' });
       }
     }
+
+    
  
     

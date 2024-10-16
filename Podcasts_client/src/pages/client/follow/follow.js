@@ -9,7 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/firebase";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
-import InfoUser from "../follower/follower";
+import Follower from "../follower/follower";
 function Follow() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,6 +49,24 @@ function Follow() {
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
 
+  const truncateTextWithHtml = (html, maxLength) => {
+    const tempElement = document.createElement("div");
+    tempElement.innerHTML = html;
+
+    const text = tempElement.innerText || tempElement.textContent;
+    if (text.length <= maxLength) return html;
+
+    let truncatedText = text.substr(0, maxLength);
+    const lastSpaceIndex = truncatedText.lastIndexOf(" ");
+    if (lastSpaceIndex > 0) {
+      truncatedText = truncatedText.substr(0, lastSpaceIndex);
+    }
+    const truncatedHtml = document.createElement("div");
+    truncatedHtml.innerHTML = tempElement.innerHTML;
+    const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
+
+    return trimmedHtml + "...";
+  };
   const handleCommentClick = (postId) => {
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
   };
@@ -99,10 +117,10 @@ function Follow() {
             params: { userId },
           }
         );
-  
-        
+
+
         const likedPostIds = likeResponse.data.map((item) => item.post_id);
-      
+
         const updatedData = response.data.data.map((post) => ({
           ...post,
           isLiked: likedPostIds.includes(post.id),
@@ -112,7 +130,7 @@ function Follow() {
       } else {
         setData(response.data.data);
       }
-      
+
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -178,7 +196,7 @@ function Follow() {
     try {
       await axios.post(`http://localhost:8080/api/update_view/${postId}`);
     } catch (error) {
-  
+
     }
   };
 
@@ -236,7 +254,7 @@ function Follow() {
           follower_id: user.id,
         }
       );
-      
+
       setIsFollowing(true);
       fetchUserInfo();
     } catch (error) {
@@ -258,7 +276,7 @@ function Follow() {
           follower_id: user.id,
         }
       );
-    
+
       setIsFollowing(false);
       fetchUserInfo();
     } catch (error) {
@@ -300,29 +318,29 @@ function Follow() {
 
   const handleLikeClick = async (event, postId) => {
     event.preventDefault();
-  
+
     const customer = getUserFromLocalStorage();
     if (!customer) {
       navigate("/login");
       return;
     }
-  
+
     const post = data.find((post) => post.id === postId);
     const isLiked = post?.isLiked;
-  
+
     // Update state immediately
     const updatedData = data.map((p) =>
       p.id === postId
         ? {
-            ...p,
-            isLiked: !isLiked,
-            total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1, 
-          }
+          ...p,
+          isLiked: !isLiked,
+          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+        }
         : p
     );
-  
+
     setData(updatedData);
-  
+
     try {
       if (isLiked) {
         await axios.delete("http://localhost:8080/api/like", {
@@ -337,11 +355,11 @@ function Follow() {
           customers_id: customer.id,
         });
       }
-    
+
     } catch (error) {
       console.error("Error updating like status:", error);
-      
-      setData(data); 
+
+      setData(data);
     }
   };
 
@@ -356,7 +374,7 @@ function Follow() {
         post_id: postId,
         customers_id: customer.id,
       });
-  
+
 
       Toastify({
         text: "Chia sẻ thành công!",
@@ -400,6 +418,12 @@ function Follow() {
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                         alt="Profile"
+                        style={{
+                          maxWidth: "auto",
+                          height: "100%",
+                          width: "100%",
+                          borderRadius: "50%",
+                        }}
                       />
                     </div>
                     <div className="profile-header-info d-flex justify-content-between align-items-center">
@@ -415,14 +439,14 @@ function Follow() {
                         <p className="m-b-10 mt-2 ">
                           Số người theo dõi:{" "}
                           <label className="text-white fw-bold">
-                            {userInfo?.followersCount}
+                            {userInfo?.numberOfFollowers}
                           </label>
                         </p>
                       </h4>
                       <div>
                         {getUserFromLocalStorage()?.id != id && (
                           <Button
-                            className="text-white fw-bold py-2 px-5"
+                            className="text-white fw-bold "
                             variant={isFollowing ? "secondary" : "danger"}
                             onClick={() =>
                               isFollowing
@@ -500,7 +524,7 @@ function Follow() {
                           </div>
 
                           <div className="timeline-icon">
-                            <a href="javascript:;">&nbsp;</a>
+                            <a >&nbsp;</a>
                           </div>
 
                           <div className="timeline-body border">
@@ -512,7 +536,7 @@ function Follow() {
                                 />
                               </span>
                               <span className="username mx-1">
-                                <a href="javascript:;">{userInfo?.username}</a>
+                                <a >{userInfo?.username}</a>
                               </span>
                               <span className="pull-right text-muted">
                                 {post.view} Lượt xem
@@ -521,26 +545,40 @@ function Follow() {
                             <div className="timeline-content">
                               <h4>{post.title}</h4>
                               <p className="description-text">
-                                {expandedPostId === post.id
-                                  ? post.description
-                                  : truncateText(post.description, 100)}{" "}
-                                {/* Adjust the 100 to the desired max length */}
-                                {post.description.length > 100 && (
+                                {expandedPostId === post.id ? (
                                   <span
-                                    className="read-more-toggle"
-                                    onClick={() =>
-                                      setExpandedPostId(
-                                        expandedPostId === post.id
-                                          ? null
-                                          : post.id
-                                      )
-                                    }
-                                  >
-                                    {expandedPostId === post.id
-                                      ? "Ẩn bớt"
-                                      : "Xem thêm"}
-                                  </span>
-                                )}
+                                    dangerouslySetInnerHTML={{
+                                      __html: post.description,
+                                    }}
+                                  />
+                                ) : (
+                                  <span
+                                    dangerouslySetInnerHTML={{
+                                      __html:
+                                        truncateTextWithHtml(
+                                          post.description,
+                                          100
+                                        ),
+                                    }}
+                                  />
+                                )}{" "}
+                                {post.description.length >
+                                  100 && (
+                                    <span
+                                      className="read-more-toggle"
+                                      onClick={() =>
+                                        setExpandedPostId(
+                                          expandedPostId === post.id
+                                            ? null
+                                            : post.id
+                                        )
+                                      }
+                                    >
+                                      {expandedPostId === post.id
+                                        ? "Ẩn bớt"
+                                        : "Xem thêm"}
+                                    </span>
+                                  )}
                               </p>
                               <div className="image-container d-flex justify-content-center ">
                                 <img
@@ -603,12 +641,12 @@ function Follow() {
                               ></a>
 
                               <a
-                                href="javascript:;"
+
                                 className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                 onClick={() => handleCommentClick(post.id)}
                               ></a>
                               <a
-                                href="javascript:;"
+
                                 className="m-r-15 text-inverse-lighter mx-1"
                                 onClick={(e) => {
                                   e.preventDefault();
@@ -620,33 +658,64 @@ function Follow() {
                             </div>
                             {/* Khu vực nhập bình luận */}
                             {visibleCommentBox === post.id && (
+                              // <div className="timeline-comment-box">
+                              //   <div className="user">
+                              //     <img
+                              //       src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                              //       alt="Hồ sơ"
+                              //     />
+                              //   </div>
+                              //   <div className="input">
+                              //     <form action="">
+                              //       <div className="input-group">
+                              //         <input
+                              //           type="text"
+                              //           className="form-control rounded-corner"
+                              //           placeholder="Viết một bình luận..."
+                              //         />
+                              //         <span className="input-group-btn p-l-10">
+                              //           <button
+                              //             className="btn btn-primary f-s-12 rounded-corner"
+                              //             type="button"
+                              //           >
+                              //             Bình luận
+                              //           </button>
+                              //         </span>
+                              //       </div>
+                              //     </form>
+                              //   </div>
+                              // </div>
                               <div className="timeline-comment-box">
-                                <div className="user">
+                              <div className="user mt-1">
                                   <img
-                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                    alt="Hồ sơ"
+                                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                                      alt="Hồ sơ"
+                                      style={{
+                                          maxWidth: "auto",
+                                          height: "100%",
+                                          width: "100%",
+                                          borderRadius: "50%",
+                                      }}
                                   />
-                                </div>
-                                <div className="input">
-                                  <form action="">
-                                    <div className="input-group">
-                                      <input
-                                        type="text"
-                                        className="form-control rounded-corner"
-                                        placeholder="Viết một bình luận..."
-                                      />
-                                      <span className="input-group-btn p-l-10">
-                                        <button
-                                          className="btn btn-primary f-s-12 rounded-corner"
-                                          type="button"
-                                        >
-                                          Bình luận
-                                        </button>
-                                      </span>
-                                    </div>
-                                  </form>
-                                </div>
                               </div>
+                              <div className="input row">
+                                  <form action="">
+                                      <div className="input-group-user input-group-post">
+                                          <input
+                                              type="text"
+                                              className="input-post rounded-corner col-md-12 col-12 col-lg-10"
+                                              placeholder="Bình luận bài viết..."
+                                          />
+                                          <button
+                                              className="button--submit col-md-12 col-12 col-lg-2"
+                                              type="button"
+                                          >
+                                              Bình luận
+                                          </button>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
                             )}
                           </div>
                         </li>
@@ -659,7 +728,7 @@ function Follow() {
                     role="tabpanel"
                     aria-labelledby="info-tab"
                   >
-                    <table className="table table-striped">
+                    <table className="table table-light table-striped ">
                       <tbody>
                         <tr>
                           <td>Họ Và Tên:</td>
@@ -671,7 +740,7 @@ function Follow() {
                         </tr>
                         <tr>
                           <td>Số lượng người theo dõi:</td>
-                          <td>{userInfo?.followersCount}</td>
+                          <td>{userInfo?.numberOfFollowers}</td>
                         </tr>
                         <tr>
                           <td>Tham gia:</td>
@@ -686,7 +755,7 @@ function Follow() {
                     role="tabpanel"
                     aria-labelledby="follow-tab"
                   >
-                    <InfoUser id={id} />
+                    <Follower id={id} />
                   </div>
                 </div>
               </div>
@@ -732,9 +801,8 @@ function Follow() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${
-                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                  }`}
+                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                    }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input

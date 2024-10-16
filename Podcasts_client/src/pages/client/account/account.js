@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import { Progress } from "antd";
+import { Dropdown, Space } from 'antd';
 import axiosInstance from "../firebase/axiosConfig";
 import { DialogService } from "../../../services/common/DialogService";
 import { useForm, Controller } from "react-hook-form";
@@ -19,10 +20,11 @@ import Shares from "../shares/shares";
 import EditPassword from "../edit-password/edit-password";
 import InFoUser from "../info-user/info-user";
 import Spinner from "../Spinner/Spinner";
-import Follow from "../follower/follower";
+import Follower from "../follower/follower";
 import MyEditor from "../tinymce/tinymce";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+
 function Account() {
   const { id } = useParams();
   const {
@@ -58,6 +60,7 @@ function Account() {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [oldImage, setOldImage] = useState("");
+  const [backGround, setBackGround] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [expandedPostId, setExpandedPostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -68,6 +71,119 @@ function Account() {
   const [editPost, setEditPost] = useState(null);
   const [Delete, onDelete] = useState(null);
   const [editorContent, setEditorContent] = useState("");
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
+      const user = response.data.data[0];
+      setUserInfo(user);
+      setOldImage(user.images);
+      setOldPassword(user.password);
+      setBackGround(user.backGround);
+      setValue('username', user.username);
+      setValue('full_name', user.full_name);
+      setValue('email', user.email);
+      setValue('gender', user.gender.toString());
+    } catch (err) {
+      console.error('Failed to fetch user info:', err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+
+    fetchUserInfo();
+  }, [id, setValue]);
+  const handleFileUpload = async (file, type) => {
+    if (file) {
+      setIsUploading(true); // Start the uploading state
+
+      const fileExtension = file.name.split('.').pop();
+      const currentDate = new Date();
+      const newFileName = `${currentDate.toISOString().replace(/[:.]/g, '-')}.${fileExtension}`;
+      const path = `upload/${newFileName}`;
+
+      try {
+        // Upload to Firebase
+        const storageRef = ref(storage, path);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+
+        // Prepare data for the API
+        const formData = {
+          images: type === 'images' ? newFileName : oldImage, // Use old image if not uploading a new one
+          background: type === 'background' ? newFileName : backGround // Use old background if not uploading a new one
+        };
+
+        // Send the request to update
+        const response = await axiosInstance.patch(`/api/background/${id}`, formData);
+
+
+        await fetchUserInfo();
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        DialogService.error('Upload failed. Please try again.');
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
+
+
+
+  const uploadAvatar = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      handleFileUpload(file, 'images');
+    };
+    input.click();
+  };
+
+  const uploadBackground = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      handleFileUpload(file, 'background');
+    };
+    input.click();
+  };
+
+
+  // Dropdown items remain unchanged
+  const items = [
+    {
+      key: "1",
+      label: (
+        <a
+          onClick={uploadAvatar}
+          style={{ textAlign: "center", cursor: "pointer" }}
+          rel="noopener noreferrer"
+        >
+          Đổi ảnh đại diện
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          onClick={uploadBackground}
+          style={{ textAlign: "center", cursor: "pointer" }}
+          rel="noopener noreferrer"
+        >
+          Đổi ảnh bìa
+        </a>
+      ),
+    },
+  ];
+
 
 
   const getUserFromLocalStorage = () => {
@@ -371,6 +487,7 @@ function Account() {
         const user = response.data.data[0];
         setUserInfo(user);
         setOldImage(user.images);
+        setBackGround(user.background);
         setOldPassword(user.password);
         setValue("username", user.username);
         setValue("full_name", user.full_name);
@@ -403,10 +520,10 @@ function Account() {
     const updatedData = data.map((p) =>
       p.id === postId
         ? {
-            ...p,
-            isLiked: !isLiked,
-            total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
-          }
+          ...p,
+          isLiked: !isLiked,
+          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+        }
         : p
     );
 
@@ -481,16 +598,23 @@ function Account() {
             <div className="content content-full-width">
               <div className="profile">
                 <div className="profile-header">
-                  <div className="profile-header-cover"></div>
+                  <div className="profile-header-cover">
+                    <img
+                      // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}} 
+                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
+                      style={{ width: '100%', height: '100%' }}
+                    />
+
+                  </div>
                   <div className="profile-header-content">
                     <div className="profile-header-img rounded-circle">
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                         alt="Hồ sơ"
-                        // className='w-100'
                         style={{
                           maxWidth: "auto",
                           height: "100%",
+                          width: "100%",
                           borderRadius: "50%",
                         }}
                       />
@@ -508,9 +632,24 @@ function Account() {
                       </h4>
 
                       <p className="m-b-10 text-white">Frontend</p>
+
+
+                    </div>
+                    <div className="d-flex justify-content-end">
+                      <Dropdown
+                        menu={{ items }}
+                        placement="topLeft"
+                        arrow={{
+                          pointAtCenter: true,
+                        }}
+                      >
+                        <button className="bg-transparent">
+                          <i class="bi bi-card-image text-white fs-4"></i>
+                        </button>
+                      </Dropdown>
                     </div>
                   </div>
-                  <ul className="profile-header-tab nav nav-tabs mt-5">
+                  <ul className="mt-2 nav nav-tabs profile-header-tab">
                     <li className="nav-item">
                       <a
                         id="posts-tab"
@@ -579,7 +718,7 @@ function Account() {
                       {/* info */}
                       <div className="row gutters">
                         <div className="col-md-12">
-                          <div className="card border shadow-sm">
+                          <div className="card border shadow-sm ml-3">
                             <div className="card-body">
                               <div className="row">
                                 <InFoUser />
@@ -616,7 +755,7 @@ function Account() {
                               >
                                 {/* bắt đầu timeline */}
                                 <ul className="timeline">
-                                  <PostUser />
+                                  <PostUser fetchPost={fetchPost} />
                                   {data.length > 0 ? (
                                     data.map((post) => (
                                       <li key={post.id}>
@@ -638,6 +777,12 @@ function Account() {
                                                   <img
                                                     src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                                                     alt="Hồ sơ"
+                                                    style={{
+                                                      maxWidth: "auto",
+                                                      // height: "100%",
+                                                      width: "100%",
+                                                      borderRadius: "50%",
+                                                    }}
                                                   />
                                                 </span>
                                                 <span className="username mx-1">
@@ -648,12 +793,12 @@ function Account() {
                                                     {userInfo?.username}
                                                     {userInfo.isticket ===
                                                       "active" && (
-                                                      <img
-                                                        src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
-                                                        className="verified-image img-fluid mx-1 h-75 mt-1"
-                                                        alt="Verified"
-                                                      />
-                                                    )}
+                                                        <img
+                                                          src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                                                          className="verified-image img-fluid mx-1 h-75 mt-1"
+                                                          alt="Verified"
+                                                        />
+                                                      )}
                                                   </a>
                                                 </span>
                                                 {/* <span className="text-muted">{post.view} Lượt xem</span> */}
@@ -685,7 +830,7 @@ function Account() {
                                                   className="rounded-circle"
                                                 >
                                                   {/* &#x2022;&#x2022;&#x2022; */}
-                                                  <i class="bi bi-three-dots"></i>
+                                                  <i className="bi bi-three-dots"></i>
                                                 </button>
                                                 {/* Dropdown Menu */}
                                                 {isDropdownOpen === post.id && (
@@ -714,7 +859,7 @@ function Account() {
                                                         handleEdit(post)
                                                       }
                                                     >
-                                                      <a class="dropdown-item">
+                                                      <a className="dropdown-item">
                                                         Sửa
                                                       </a>
                                                     </li>
@@ -917,7 +1062,7 @@ function Account() {
                                                         handleDelete(post.id)
                                                       }
                                                     >
-                                                      <a class="dropdown-item">
+                                                      <a className="dropdown-item">
                                                         Xóa
                                                       </a>
                                                     </li>
@@ -949,21 +1094,21 @@ function Account() {
                                               )}{" "}
                                               {post.description.length >
                                                 100 && (
-                                                <span
-                                                  className="read-more-toggle"
-                                                  onClick={() =>
-                                                    setExpandedPostId(
-                                                      expandedPostId === post.id
-                                                        ? null
-                                                        : post.id
-                                                    )
-                                                  }
-                                                >
-                                                  {expandedPostId === post.id
-                                                    ? "Ẩn bớt"
-                                                    : "Xem thêm"}
-                                                </span>
-                                              )}
+                                                  <span
+                                                    className="read-more-toggle"
+                                                    onClick={() =>
+                                                      setExpandedPostId(
+                                                        expandedPostId === post.id
+                                                          ? null
+                                                          : post.id
+                                                      )
+                                                    }
+                                                  >
+                                                    {expandedPostId === post.id
+                                                      ? "Ẩn bớt"
+                                                      : "Xem thêm"}
+                                                  </span>
+                                                )}
                                             </p>
                                             <div className="image-container  d-flex justify-content-center">
                                               <img
@@ -1026,14 +1171,14 @@ function Account() {
                                               }
                                             ></a>
                                             <a
-                                              href="javascript:;"
+
                                               className="bi-chat me-1 mx-4 m-r-15 text-inverse-lighter mx-1"
                                               onClick={() =>
                                                 handleCommentClick(post.id)
                                               }
                                             ></a>
                                             <a
-                                              href="javascript:;"
+
                                               className="m-r-15 text-inverse-lighter mx-1"
                                               onClick={(e) => {
                                                 e.preventDefault();
@@ -1050,6 +1195,12 @@ function Account() {
                                                 <img
                                                   src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                                                   alt="Hồ sơ"
+                                                  style={{
+                                                    maxWidth: "auto",
+                                                    height: "100%",
+                                                    width: "100%",
+                                                    borderRadius: "50%",
+                                                  }}
                                                 />
                                               </div>
                                               <div className="input row">
@@ -1102,7 +1253,7 @@ function Account() {
                     role="tabpanel"
                     aria-labelledby="follow-tab"
                   >
-                    <Follow />
+                    <Follower id={id} />
                   </div>
                 </div>
               </div>
@@ -1148,9 +1299,8 @@ function Account() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${
-                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                  }`}
+                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                    }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input
