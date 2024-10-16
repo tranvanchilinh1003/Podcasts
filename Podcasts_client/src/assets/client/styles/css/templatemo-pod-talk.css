@@ -389,42 +389,6 @@ main {
   border: 0;
 }
 
-@media screen and (min-width: 992px) {
-  .navbar .dropdown:hover .dropdown-menu {
-    opacity: 1;
-    margin-top: 0;
-    pointer-events: auto;
-  }
-}
-/* styles.css hoặc file CSS của bạn */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column; /* Đặt các phần tử thành cột */
-    align-items: center; /* Căn giữa các phần tử */
-  }
-
-  .navbar .container-fluid {
-    flex-direction: row; /* Đặt các phần tử trong container thành hàng */
-    justify-content: space-between; /* Căn giữa khoảng cách giữa các phần tử */
-    align-items: center; /* Căn giữa các phần tử */
-  }
-
-  .custom-search {
-    order: 2; /* Đặt form tìm kiếm sau logo */
-    margin: 1rem 0; /* Thêm một khoảng cách trên và dưới cho form */
-  }
-
-  .nav-items {
-    order: 3; /* Đặt các biểu tượng thông báo và tài khoản sau form tìm kiếm */
-    display: flex; /* Hiển thị dưới dạng flex để căn chỉnh ngang */
-    align-items: center; /* Căn giữa các biểu tượng */
-  }
-
-  .notification-icon, .img-profile {
-    margin-left: 10px; /* Thêm khoảng cách giữa các biểu tượng */
-  }
-}
-
 
 .navbar .custom-border-btn {
   border-color: var(--white-color);
