@@ -36,7 +36,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'person-outline',
     children: [
       {
-        title: 'Thêm',
+        title: 'Thêm mới',
         icon: 'plus-circle',
         link: '/pages/customers/create',
       },
@@ -54,7 +54,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'book-outline',
     children: [
       {
-        title: 'Thêm',
+        title: 'Thêm mới',
         icon: 'plus-circle',
         link: '/pages/post/create',
       },

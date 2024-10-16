@@ -389,13 +389,7 @@ main {
   border: 0;
 }
 
-@media screen and (min-width: 992px) {
-  .navbar .dropdown:hover .dropdown-menu {
-    opacity: 1;
-    margin-top: 0;
-    pointer-events: auto;
-  }
-}
+
 
 .navbar .custom-border-btn {
   border-color: var(--white-color);

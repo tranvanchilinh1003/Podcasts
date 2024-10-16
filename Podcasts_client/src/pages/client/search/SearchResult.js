@@ -149,8 +149,9 @@ function SearchResults() {
                     <div className="row">
                         <div className="col-lg-12 col-12 mt-5">
                             <div className="section-title-wrap mb-5 mt-5">
-                                <h4 className="section-title">Chủ đề thịnh hành</h4>
+                                <h4 className="section-title">Tìm kiếm</h4>
                             </div>
+                            {query && <p className="search-results-info mt-3">Kết quả tìm kiếm cho "{query}"</p>}
                         </div>
                         {results.length > 0 ? (
                             results.map((post) => (
