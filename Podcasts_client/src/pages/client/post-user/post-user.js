@@ -158,7 +158,7 @@ function PostUser({ fetchPost }) {
                 const containsForbiddenWords = forbiddenWords.some(word => transcription.includes(word));
 
                 if (containsForbiddenWords) {
-                    DialogService.error('Nội dung chứa từ cấm.');
+                    DialogService.error('Nội dung quá 20 từ cấm .');
 
                     reset();
                     setShowModal(false);

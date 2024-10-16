@@ -52,8 +52,6 @@ exports.update = async (req, res, next) => {
         const id = req.params.id;
         const { images, background } = req.body; // Expecting URLs in the request body
 
-        console.log('Updating customer:', { id, images, background }); // Log received data
-
         // Get current customer info from the database
         const currentCustomer = await Customers.getUpdateCustomers(id);
         if (!currentCustomer) {

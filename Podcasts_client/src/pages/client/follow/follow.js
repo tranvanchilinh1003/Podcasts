@@ -49,24 +49,7 @@ function Follow() {
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const truncateTextWithHtml = (html, maxLength) => {
-    const tempElement = document.createElement("div");
-    tempElement.innerHTML = html;
 
-    const text = tempElement.innerText || tempElement.textContent;
-    if (text.length <= maxLength) return html;
-
-    let truncatedText = text.substr(0, maxLength);
-    const lastSpaceIndex = truncatedText.lastIndexOf(" ");
-    if (lastSpaceIndex > 0) {
-      truncatedText = truncatedText.substr(0, lastSpaceIndex);
-    }
-    const truncatedHtml = document.createElement("div");
-    truncatedHtml.innerHTML = tempElement.innerHTML;
-    const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
-
-    return trimmedHtml + "...";
-  };
   const handleCommentClick = (postId) => {
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
   };
@@ -503,7 +486,7 @@ function Follow() {
                             alt="Verified"
                           />
                         )}
-                        <p className="m-b-10 mt-2 ">
+                        <p className="m-b-10 mt-2 text-white">
                           Số người theo dõi:{" "}
                           <label className="text-white fw-bold">
                             {userInfo?.numberOfFollowers}

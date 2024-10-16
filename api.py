@@ -104,8 +104,8 @@ def transcribe():
                 ]
         banned_count = sum(1 for word in banned_words if word in transcription)
 
-        if banned_count > 10:
-            return jsonify({'error': 'Số lượng từ cấm vượt quá 10 '}), 400
+        if banned_count > 20:
+            return jsonify({'error': 'Số lượng từ cấm vượt quá 20 '}), 400
 
         return jsonify({'transcription': transcription})
 

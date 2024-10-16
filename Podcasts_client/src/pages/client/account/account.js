@@ -70,6 +70,93 @@ function Account() {
   const [editPost, setEditPost] = useState(null);
   const [Delete, onDelete] = useState(null);
   const [editorContent, setEditorContent] = useState("");
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/customers/${id}`
+      );
+      const user = response.data.data[0];
+      setUserInfo(user);
+      setOldImage(user.images);
+      setOldPassword(user.password);
+      setBackGround(user.background);
+      setValue("username", user.username);
+      setValue("full_name", user.full_name);
+      setValue("email", user.email);
+      setValue("gender", user.gender.toString());
+    } catch (err) {
+      console.error("Failed to fetch user info:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, [id, setValue]);
+
+  const handleFileUpload = async (file, type) => {
+    if (file) {
+      setIsUploading(true); // Start the uploading state
+
+      const fileExtension = file.name.split(".").pop();
+      const currentDate = new Date();
+      const newFileName = `${currentDate
+        .toISOString()
+        .replace(/[:.]/g, "-")}.${fileExtension}`;
+      const path = `upload/${newFileName}`;
+
+      try {
+        // Upload to Firebase
+        const storageRef = ref(storage, path);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+
+        // Prepare data for the API
+        const formData = {
+          images: type === "images" ? newFileName : oldImage, // Use old image if not uploading a new one
+          background: type === "background" ? newFileName : backGround, // Use old background if not uploading a new one
+        };
+
+        // Send the request to update
+        const response = await axiosInstance.patch(
+          `/api/background/${id}`,
+          formData
+        );
+
+        await fetchUserInfo();
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        DialogService.error("Upload failed. Please try again.");
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
+  const uploadAvatar = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      handleFileUpload(file, "images");
+    };
+    input.click();
+  };
+
+  const uploadBackground = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      handleFileUpload(file, "background");
+    };
+    input.click();
+  };
   const items = (post) => [
     {
       key: "1",
@@ -98,7 +185,32 @@ function Account() {
       ),
     },
   ];
-
+  const avatarItems = [
+    {
+      key: "1",
+      label: (
+        <a
+          onClick={uploadAvatar}
+          style={{ textAlign: "center", cursor: "pointer" }}
+          rel="noopener noreferrer"
+        >
+          Đổi ảnh đại diện
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          onClick={uploadBackground}
+          style={{ textAlign: "center", cursor: "pointer" }}
+          rel="noopener noreferrer"
+        >
+          Đổi ảnh bìa
+        </a>
+      ),
+    },
+  ];
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
     return userArray && userArray.length > 0 ? userArray[0] : null;
@@ -389,27 +501,6 @@ function Account() {
       DialogService.error("Thêm thất bại");
     }
   };
-  const fetchUserInfo = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/customers/${id}`
-      );
-      const user = response.data.data[0];
-      setUserInfo(user);
-      setOldImage(user.images);
-      setOldPassword(user.password);
-      setValue("username", user.username);
-      setValue("full_name", user.full_name);
-      setValue("email", user.email);
-      setValue("gender", user.gender.toString());
-      console.log(user);
-    } catch (err) {
-      console.error("Failed to fetch user info:", err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     fetchUserInfo();
@@ -431,10 +522,10 @@ function Account() {
     const updatedData = data.map((p) =>
       p.id === postId
         ? {
-          ...p,
-          isLiked: !isLiked,
-          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
-        }
+            ...p,
+            isLiked: !isLiked,
+            total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+          }
         : p
     );
 
@@ -511,11 +602,10 @@ function Account() {
                 <div className="profile-header">
                   <div className="profile-header-cover">
                     <img
-                      // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}} 
+                      // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}}
                       src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
-                      style={{ width: '100%', height: '100%' }}
+                      style={{ width: "100%", height: "100%" }}
                     />
-
                   </div>
                   <div className="profile-header-content">
                     <div className="profile-header-img rounded-circle">
@@ -541,12 +631,27 @@ function Account() {
                           />
                         )}
                       </h4>
-                      <p className="m-b-10 mt-2 ">
+                      <p className="m-b-10 mt-2 text-white">
                         Số người theo dõi:{" "}
                         <label className="text-white fw-bold">
                           {userInfo?.numberOfFollowers}
                         </label>
                       </p>
+                    </div>
+                    <div className="d-flex justify-content-end">
+                      <Dropdown
+                        menu={{
+                          items: avatarItems, // Sử dụng items thay vì avatarItems
+                        }}
+                        placement="topLeft"
+                        arrow={{
+                          pointAtCenter: true,
+                        }}
+                      >
+                        <button className="bg-transparent">
+                          <i className="bi bi-card-image text-white fs-4"></i>
+                        </button>
+                      </Dropdown>
                     </div>
                   </div>
                   <ul className="mt-2 nav nav-tabs profile-header-tab">
@@ -706,12 +811,12 @@ function Account() {
                                                     {userInfo?.username}
                                                     {userInfo.isticket ===
                                                       "active" && (
-                                                        <img
-                                                          src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
-                                                          className="verified-image img-fluid mx-1 h-75 mt-1"
-                                                          alt="Verified"
-                                                        />
-                                                      )}
+                                                      <img
+                                                        src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                                                        className="verified-image img-fluid mx-1 h-75 mt-1"
+                                                        alt="Verified"
+                                                      />
+                                                    )}
                                                   </a>
                                                 </span>
                                                 {/* <span className="text-muted">{post.view} Lượt xem</span> */}
@@ -756,195 +861,181 @@ function Account() {
                                                     </a>
                                                   </Dropdown>
                                                 </button>
-                                            
-                                            
-                                                    {/* Modal */}
-                                                    <Modal
-                                                      show={showModal}
-                                                      onHide={handleClose}
-                                                      size="lg"
-                                                      className=""
-                                                    >
-                                                      <Modal.Header closeButton>
-                                                        <Modal.Title>
-                                                          Chỉnh sửa bài viết
-                                                        </Modal.Title>
-                                                      </Modal.Header>
-                                                      <Modal.Body>
-                                                        <form
-                                                          onSubmit={handleSubmit(
-                                                            onSubmit
-                                                          )}
-                                                        >
-                                                          <div className="row">
-                                                            <div className="col-6">
-                                                              <input
-                                                                type="hidden"
-                                                                className="form-control"
-                                                                id="id"
-                                                                name="id"
-                                                                {...register(
-                                                                  "id"
-                                                                )}
-                                                              />
-                                                              <label>
-                                                                Tiêu đề
-                                                              </label>
-                                                              <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                id="title"
-                                                                name="title"
-                                                                placeholder="Tiêu đề..."
-                                                                {...register(
-                                                                  "title",
-                                                                  {
-                                                                    required: true,
-                                                                  }
-                                                                )}
-                                                              />
-                                                              {errors.title && (
-                                                                <span className="text-danger">
-                                                                  Vui lòng nhập
-                                                                  tiêu đề!
-                                                                </span>
-                                                              )}
-                                                            </div>
-                                                            <div className="col-6">
-                                                              <label>
-                                                                Hình ảnh
-                                                              </label>
-                                                              <input
-                                                                type="file"
-                                                                className="form-control"
-                                                                id="images"
-                                                                name="images"
-                                                                accept="image/*"
-                                                                onChange={
-                                                                  onFileChange
-                                                                }
-                                                              />
-                                                              <Progress
-                                                                percent={
-                                                                  imgUploadProgress
-                                                                }
-                                                              />
-                                                            </div>
-                                                            <div className="col-6">
-                                                              <label>
-                                                                Audio
-                                                              </label>
-                                                              <input
-                                                                type="file"
-                                                                className="form-control"
-                                                                id="audio"
-                                                                name="audio"
-                                                                accept="audio/*"
-                                                                onChange={
-                                                                  onFileChange
-                                                                }
-                                                              />
-                                                              <Progress
-                                                                percent={
-                                                                  audioUploadProgress
-                                                                }
-                                                              />
-                                                            </div>
-                                                            <div className="col-6">
-                                                              <label>
-                                                                Thể loại
-                                                              </label>
-                                                              <select
-                                                                name="categories_id"
-                                                                id="categories_id"
-                                                                className="form-control"
-                                                                {...register(
-                                                                  "categories_id",
-                                                                  {
-                                                                    required: true,
-                                                                  }
-                                                                )}
-                                                              >
-                                                                <option value="">
-                                                                  Vui lòng chọn
-                                                                  loại!
-                                                                </option>
-                                                                {categories.map(
-                                                                  (
-                                                                    category
-                                                                  ) => (
-                                                                    <option
-                                                                      key={
-                                                                        category.id
-                                                                      }
-                                                                      value={
-                                                                        category.id
-                                                                      }
-                                                                    >
-                                                                      {
-                                                                        category.name
-                                                                      }
-                                                                    </option>
-                                                                  )
-                                                                )}
-                                                              </select>
-                                                              {errors.categories_id && (
-                                                                <span className="text-danger">
-                                                                  Vui lòng chọn
-                                                                  loại!
-                                                                </span>
-                                                              )}
-                                                            </div>
-                                                            <div className="col-12">
-                                                              <label>
-                                                                Mô tả
-                                                              </label>
 
-                                                              <Controller
-                                                                name="description"
-                                                                control={
-                                                                  control
-                                                                }
-                                                                render={({
-                                                                  field,
-                                                                }) => (
-                                                                  <MyEditor
-                                                                    value={
-                                                                      descriptionValue
-                                                                    } // Pass the current value
-                                                                    onEditorChange={
-                                                                      handleEditorChange
-                                                                    } // Handle changes
-                                                                    {...field} // Spread other props if needed
-                                                                  />
-                                                                )}
+                                                {/* Modal */}
+                                                <Modal
+                                                  show={showModal}
+                                                  onHide={handleClose}
+                                                  size="lg"
+                                                  className=""
+                                                >
+                                                  <Modal.Header closeButton>
+                                                    <Modal.Title>
+                                                      Chỉnh sửa bài viết
+                                                    </Modal.Title>
+                                                  </Modal.Header>
+                                                  <Modal.Body>
+                                                    <form
+                                                      onSubmit={handleSubmit(
+                                                        onSubmit
+                                                      )}
+                                                    >
+                                                      <div className="row">
+                                                        <div className="col-6">
+                                                          <input
+                                                            type="hidden"
+                                                            className="form-control"
+                                                            id="id"
+                                                            name="id"
+                                                            {...register("id")}
+                                                          />
+                                                          <label>Tiêu đề</label>
+                                                          <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            id="title"
+                                                            name="title"
+                                                            placeholder="Tiêu đề..."
+                                                            {...register(
+                                                              "title",
+                                                              {
+                                                                required: true,
+                                                              }
+                                                            )}
+                                                          />
+                                                          {errors.title && (
+                                                            <span className="text-danger">
+                                                              Vui lòng nhập tiêu
+                                                              đề!
+                                                            </span>
+                                                          )}
+                                                        </div>
+                                                        <div className="col-6">
+                                                          <label>
+                                                            Hình ảnh
+                                                          </label>
+                                                          <input
+                                                            type="file"
+                                                            className="form-control"
+                                                            id="images"
+                                                            name="images"
+                                                            accept="image/*"
+                                                            onChange={
+                                                              onFileChange
+                                                            }
+                                                          />
+                                                          <Progress
+                                                            percent={
+                                                              imgUploadProgress
+                                                            }
+                                                          />
+                                                        </div>
+                                                        <div className="col-6">
+                                                          <label>Audio</label>
+                                                          <input
+                                                            type="file"
+                                                            className="form-control"
+                                                            id="audio"
+                                                            name="audio"
+                                                            accept="audio/*"
+                                                            onChange={
+                                                              onFileChange
+                                                            }
+                                                          />
+                                                          <Progress
+                                                            percent={
+                                                              audioUploadProgress
+                                                            }
+                                                          />
+                                                        </div>
+                                                        <div className="col-6">
+                                                          <label>
+                                                            Thể loại
+                                                          </label>
+                                                          <select
+                                                            name="categories_id"
+                                                            id="categories_id"
+                                                            className="form-control"
+                                                            {...register(
+                                                              "categories_id",
+                                                              {
+                                                                required: true,
+                                                              }
+                                                            )}
+                                                          >
+                                                            <option value="">
+                                                              Vui lòng chọn
+                                                              loại!
+                                                            </option>
+                                                            {categories.map(
+                                                              (category) => (
+                                                                <option
+                                                                  key={
+                                                                    category.id
+                                                                  }
+                                                                  value={
+                                                                    category.id
+                                                                  }
+                                                                >
+                                                                  {
+                                                                    category.name
+                                                                  }
+                                                                </option>
+                                                              )
+                                                            )}
+                                                          </select>
+                                                          {errors.categories_id && (
+                                                            <span className="text-danger">
+                                                              Vui lòng chọn
+                                                              loại!
+                                                            </span>
+                                                          )}
+                                                        </div>
+                                                        <div className="col-12">
+                                                          <label>Mô tả</label>
+
+                                                          <Controller
+                                                            name="description"
+                                                            control={control}
+                                                            render={({
+                                                              field,
+                                                            }) => (
+                                                              <MyEditor
+                                                                value={
+                                                                  descriptionValue
+                                                                } // Pass the current value
+                                                                onEditorChange={
+                                                                  handleEditorChange
+                                                                } // Handle changes
+                                                                {...field} // Spread other props if needed
                                                               />
-                                                            </div>
-                                                          </div>
-                                                          <div className="row">
-                                                            <div className="col text-end">
-                                                              <Button
-                                                                variant="secondary"
-                                                                className="mt-5 mx-1"
-                                                                onClick={
-                                                                  handleClose
-                                                                }
-                                                              >
-                                                                Hủy
-                                                              </Button>
-                                                              <Button
-                                                                variant="primary"
-                                                                type="submit"
-                                                                className="mt-5"
-                                                              >
-                                                                Lưu
-                                                              </Button>
-                                                            </div>
-                                                          </div>
-                                                        </form>
-                                                      </Modal.Body>
-                                                    </Modal>
-                                                  
+                                                            )}
+                                                          />
+                                                        </div>
+                                                      </div>
+                                                      <div className="row">
+                                                        <div className="col text-end">
+                                                          <Button
+                                                            variant="secondary"
+                                                            className="mt-5 mx-1"
+                                                            onClick={
+                                                              handleClose
+                                                            }
+                                                          >
+                                                            Hủy
+                                                          </Button>
+                                                          <Button
+                                                            variant="primary"
+                                                            type="submit"
+                                                            className="mt-5"
+                                                          >
+                                                            Lưu
+                                                          </Button>
+                                                        </div>
+                                                      </div>
+                                                    </form>
+                                                  </Modal.Body>
+                                                </Modal>
                                               </div>
                                             </div>
                                           </div>
@@ -971,21 +1062,21 @@ function Account() {
                                               )}{" "}
                                               {post.description.length >
                                                 100 && (
-                                                  <span
-                                                    className="read-more-toggle"
-                                                    onClick={() =>
-                                                      setExpandedPostId(
-                                                        expandedPostId === post.id
-                                                          ? null
-                                                          : post.id
-                                                      )
-                                                    }
-                                                  >
-                                                    {expandedPostId === post.id
-                                                      ? "Ẩn bớt"
-                                                      : "Xem thêm"}
-                                                  </span>
-                                                )}
+                                                <span
+                                                  className="read-more-toggle"
+                                                  onClick={() =>
+                                                    setExpandedPostId(
+                                                      expandedPostId === post.id
+                                                        ? null
+                                                        : post.id
+                                                    )
+                                                  }
+                                                >
+                                                  {expandedPostId === post.id
+                                                    ? "Ẩn bớt"
+                                                    : "Xem thêm"}
+                                                </span>
+                                              )}
                                             </p>
                                             <div className="image-container  d-flex justify-content-center">
                                               <img
@@ -1182,8 +1273,9 @@ function Account() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                    }`}
+                  className={`bi ${
+                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                  }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input

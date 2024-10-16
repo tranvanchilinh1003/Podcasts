@@ -93,6 +93,18 @@ exports.listFollowed = async (req, res, next) => {
   }
 
 };
+exports.listFollower = async (req, res, next) => {
+   const id = req.params.id;
+   try {
+    const follows = await Follow.list_follower(id);
+    res.status(200).json({
+      data: follows,
+    })
+  } catch (err) {
+
+  }
+
+};
 exports.topFollow = async (req, res, next) => {
   try {
     const follows = await Follow.checkTopFollow(); // Không cần truyền id

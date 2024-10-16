@@ -116,8 +116,7 @@ function Home() {
                     />
                     <div className="owl-carousel-info text-center">
                       <h4 className="mb-2">{follow.username}
-                        {follow.isticket ===
-                          "active" && (
+                        {follow.isticket === "active" && (
                             <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91" className="owl-carousel-verified-image img-fluid mx-2"
                               alt=""
                               style={{
