@@ -54,4 +54,63 @@ button:active {
     font-size: 16px;
     font-weight: bold;
   }
+
+  
+
+
+
+  /* Custom CSS styles */
+ /* .owl-carousel {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+}
+
+.owl-carousel-info-wrap {
+    min-width: 300px; 
+    margin: 0 10px; 
+    transition: transform 0.5s ease;
+}
+
+.owl-carousel-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.owl-carousel-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.social-share {
+    margin-top: 10px;
+}
+
+.social-icon {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.social-icon-item {
+    margin: 0 5px;
+}
+
+.social-icon-link {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007bff; 
+    color: white;
+    border-radius: 5px;
+    margin: 5px 0;
+} */
+
   

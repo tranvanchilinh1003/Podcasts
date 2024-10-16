@@ -11,6 +11,7 @@ const shares = require('../controllers/api/shares');
 const favourite = require('../controllers/api/favourite');
 const follow = require('../controllers/api/follow');
 const notification = require('../controllers/api/notification');
+const background = require('../controllers/api/background');
 const router = express.Router();
 // router.post('/categories_insert', cate.create);
 
@@ -103,11 +104,16 @@ router.get('/customer_keywords', customers.suggestKeywords);
 router.get('/data_customers', customers.chart)
 
 
+router.patch('/background/:id',background.update )
+
+
+
 router.get('/favourite', favourite.list);
 router.get('/favourite/:id', favourite.listDetail);
 router.delete('/favourite/:id', favourite.deleteDetail);
 
 router.post('/follow/:id', follow.followUser);
+router.get('/follow', follow.topFollow);
 router.post('/unfollow/:id', follow.unfollowUser);
 router.get('/check-follow/:id', follow.checkFollow);
 router.get('/check-likes', follow.checkLike);

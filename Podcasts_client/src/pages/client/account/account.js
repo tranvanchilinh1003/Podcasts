@@ -59,6 +59,7 @@ function Account() {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [oldImage, setOldImage] = useState("");
+  const [backGround, setBackGround] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [expandedPostId, setExpandedPostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -430,10 +431,10 @@ function Account() {
     const updatedData = data.map((p) =>
       p.id === postId
         ? {
-            ...p,
-            isLiked: !isLiked,
-            total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
-          }
+          ...p,
+          isLiked: !isLiked,
+          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+        }
         : p
     );
 
@@ -508,16 +509,23 @@ function Account() {
             <div className="content content-full-width">
               <div className="profile">
                 <div className="profile-header">
-                  <div className="profile-header-cover"></div>
+                  <div className="profile-header-cover">
+                    <img
+                      // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}} 
+                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
+                      style={{ width: '100%', height: '100%' }}
+                    />
+
+                  </div>
                   <div className="profile-header-content">
                     <div className="profile-header-img rounded-circle">
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                         alt="Hồ sơ"
-                        // className='w-100'
                         style={{
                           maxWidth: "auto",
                           height: "100%",
+                          width: "100%",
                           borderRadius: "50%",
                         }}
                       />
@@ -541,7 +549,7 @@ function Account() {
                       </p>
                     </div>
                   </div>
-                  <ul className="profile-header-tab nav nav-tabs mt-5">
+                  <ul className="mt-2 nav nav-tabs profile-header-tab">
                     <li className="nav-item">
                       <a
                         id="posts-tab"
@@ -623,7 +631,7 @@ function Account() {
                       {/* info */}
                       <div className="row gutters">
                         <div className="col-md-12">
-                          <div className="card border shadow-sm">
+                          <div className="card border shadow-sm ml-3">
                             <div className="card-body">
                               <div className="row">
                                 <InFoUser />
@@ -682,6 +690,12 @@ function Account() {
                                                   <img
                                                     src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                                                     alt="Hồ sơ"
+                                                    style={{
+                                                      maxWidth: "auto",
+                                                      // height: "100%",
+                                                      width: "100%",
+                                                      borderRadius: "50%",
+                                                    }}
                                                   />
                                                 </span>
                                                 <span className="username mx-1">
@@ -692,12 +706,12 @@ function Account() {
                                                     {userInfo?.username}
                                                     {userInfo.isticket ===
                                                       "active" && (
-                                                      <img
-                                                        src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
-                                                        className="verified-image img-fluid mx-1 h-75 mt-1"
-                                                        alt="Verified"
-                                                      />
-                                                    )}
+                                                        <img
+                                                          src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                                                          className="verified-image img-fluid mx-1 h-75 mt-1"
+                                                          alt="Verified"
+                                                        />
+                                                      )}
                                                   </a>
                                                 </span>
                                                 {/* <span className="text-muted">{post.view} Lượt xem</span> */}
@@ -957,21 +971,21 @@ function Account() {
                                               )}{" "}
                                               {post.description.length >
                                                 100 && (
-                                                <span
-                                                  className="read-more-toggle"
-                                                  onClick={() =>
-                                                    setExpandedPostId(
-                                                      expandedPostId === post.id
-                                                        ? null
-                                                        : post.id
-                                                    )
-                                                  }
-                                                >
-                                                  {expandedPostId === post.id
-                                                    ? "Ẩn bớt"
-                                                    : "Xem thêm"}
-                                                </span>
-                                              )}
+                                                  <span
+                                                    className="read-more-toggle"
+                                                    onClick={() =>
+                                                      setExpandedPostId(
+                                                        expandedPostId === post.id
+                                                          ? null
+                                                          : post.id
+                                                      )
+                                                    }
+                                                  >
+                                                    {expandedPostId === post.id
+                                                      ? "Ẩn bớt"
+                                                      : "Xem thêm"}
+                                                  </span>
+                                                )}
                                             </p>
                                             <div className="image-container  d-flex justify-content-center">
                                               <img
@@ -1056,6 +1070,12 @@ function Account() {
                                                 <img
                                                   src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
                                                   alt="Hồ sơ"
+                                                  style={{
+                                                    maxWidth: "auto",
+                                                    height: "100%",
+                                                    width: "100%",
+                                                    borderRadius: "50%",
+                                                  }}
                                                 />
                                               </div>
                                               <div className="input row">
@@ -1162,9 +1182,8 @@ function Account() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${
-                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                  }`}
+                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                    }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input

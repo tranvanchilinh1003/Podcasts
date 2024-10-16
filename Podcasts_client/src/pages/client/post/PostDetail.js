@@ -3,14 +3,23 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import CommentForm from '../comments/CommentForm';
 import CommentList from '../comments/CommentList';
+import { Link, useNavigate } from "react-router-dom";
 import './details.css';
 
+// function formatDate(dateString) {
+//     const options = { year: 'numeric', month: 'long', day: 'numeric' };
+//     const date = new Date(dateString);
+//     return date.toLocaleDateString(undefined, options);
+// }
 function formatDate(dateString) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    };
     const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, options);
+    return date.toLocaleDateString("vi-VN", options);
 }
-
 function CategoriesDetail() {
     const { id } = useParams();
     const [category, setCategory] = useState(null);
@@ -18,7 +27,25 @@ function CategoriesDetail() {
     const [error, setError] = useState(null);
     const [comments, setComments] = useState([]);
     const [userId, setUserId] = useState(null);
+    const [expandedPostId, setExpandedPostId] = useState(null);
+    const truncateTextWithHtml = (html, maxLength) => {
+        const tempElement = document.createElement("div");
+        tempElement.innerHTML = html;
 
+        const text = tempElement.innerText || tempElement.textContent;
+        if (text.length <= maxLength) return html;
+
+        let truncatedText = text.substr(0, maxLength);
+        const lastSpaceIndex = truncatedText.lastIndexOf(" ");
+        if (lastSpaceIndex > 0) {
+            truncatedText = truncatedText.substr(0, lastSpaceIndex);
+        }
+        const truncatedHtml = document.createElement("div");
+        truncatedHtml.innerHTML = tempElement.innerHTML;
+        const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
+
+        return trimmedHtml + "...";
+    };
     const fetchComments = async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/comments', {
@@ -29,8 +56,8 @@ function CategoriesDetail() {
             console.error("Error loading comments:", error);
         }
     };
-    
-    
+
+
     useEffect(() => {
         const fetchCategoryData = async () => {
             try {
@@ -79,7 +106,7 @@ function CategoriesDetail() {
             comment.id === commentId ? { ...comment, showReplyForm: !comment.showReplyForm } : comment
         ));
     };
-    
+
 
     const handleLike = async (commentId, userId, postId) => {
         try {
@@ -88,6 +115,15 @@ function CategoriesDetail() {
         } catch (error) {
             console.error("Error liking comment:", error);
         }
+    };
+    const getUserFromLocalStorage = () => {
+        const userArray = JSON.parse(localStorage.getItem("customer"));
+        return userArray && userArray.length > 0 ? userArray[0] : null;
+    };
+    const profileLink = (id) => {
+        return id == getUserFromLocalStorage()?.id
+            ? `/account/${id}`
+            : `/follow/${id}`;
     };
 
     if (loading) return <p>Loading...</p>;
@@ -123,6 +159,7 @@ function CategoriesDetail() {
                                                 className="custom-block-image img-fluid"
                                                 alt=''
                                             />
+
                                         </div>
                                     </div>
                                 </div>
@@ -131,14 +168,52 @@ function CategoriesDetail() {
                                     <div className="custom-block-info">
                                         <div className="custom-block-top d-flex mb-1">
                                             <small>
-                                                <i className="bi-clock-fill custom-icon"></i>
-                                                {formatDate(category.create_date)}
+                                                <i className="bi-clock-fill custom-icon">
+
+                                                    {formatDate(category.create_date)}
+
+                                                </i>
                                             </small>
                                         </div>
                                         <h2 className="mb-2">{category.title || 'No Title'}</h2>
-                                        <p>{category.description}</p>
+                                        <p className="description-text">
+                                            {expandedPostId === category.id ? (
+                                                <span
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: category.description,
+                                                    }}
+                                                />
+                                            ) : (
+                                                <span
+                                                    dangerouslySetInnerHTML={{
+                                                        __html:
+                                                            truncateTextWithHtml(
+                                                                category.description,
+                                                                100
+                                                            ),
+                                                    }}
+                                                />
+                                            )}{" "}
+                                            {category.description.length >
+                                                100 && (
+                                                    <span
+                                                        className="read-more-toggle"
+                                                        onClick={() =>
+                                                            setExpandedPostId(
+                                                                expandedPostId === category.id
+                                                                    ? null
+                                                                    : category.id
+                                                            )
+                                                        }
+                                                    >
+                                                        {expandedPostId === category.id
+                                                            ? "Ẩn bớt"
+                                                            : "Xem thêm"}
+                                                    </span>
+                                                )}
+                                        </p>
                                         <div className="mt-5">
-                                        <audio className="w-100" controls loop
+                                            <audio className="w-100" controls loop
                                                 src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F${category.audio}?alt=media&token=3a5d5036-9549-4a5f-9276-853532e74fa4`}>
                                             </audio>
                                         </div>
@@ -154,14 +229,16 @@ function CategoriesDetail() {
                                             </div>
                                             <ul className="social-icon ms-lg-auto ms-md-auto">
                                                 <li className="social-icon-item">
-                                                    <a href="" className="social-icon-link bi-facebook"></a>
+                                                    {/* <a href="" className="social-icon-link bi-facebook"></a> */}
+                                                    <Link to={profileLink(category.customers_id)} className="social-icon-link bi bi-info-circle-fill">
+                                                    </Link>
                                                 </li>
-                                                <li className="social-icon-item">
+                                                {/* <li className="social-icon-item">
                                                     <a href="" className="social-icon-link bi-instagram"></a>
                                                 </li>
                                                 <li className="social-icon-item">
                                                     <a href="" className="social-icon-link bi-whatsapp"></a>
-                                                </li>
+                                                </li> */}
                                             </ul>
                                         </div>
                                     </div>
@@ -189,13 +266,13 @@ function CategoriesDetail() {
                             </div>
                         )}
 
-                        <CommentList 
-                            comments={comments} 
-                            onEdit={fetchComments} 
-                            onDelete={handleDelete} 
-                            onReply={handleReply} 
-                            onLike={handleLike} 
-                            userId={userId} 
+                        <CommentList
+                            comments={comments}
+                            onEdit={fetchComments}
+                            onDelete={handleDelete}
+                            onReply={handleReply}
+                            onLike={handleLike}
+                            userId={userId}
                         />
                     </div>
                 </div>

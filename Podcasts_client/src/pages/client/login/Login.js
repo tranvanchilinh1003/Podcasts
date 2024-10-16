@@ -26,7 +26,7 @@ function Login() {
   };
 
   const handleGoogleLogin = (profile) => {
-    console.log("Google login profile:", profile);
+    // console.log("Google login profile:", profile);
 
     navigate("/");
   };

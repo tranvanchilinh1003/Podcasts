@@ -1,7 +1,7 @@
 var connect = require("./database");
 
 module.exports = class Follow {
-    constructor() {}
+    constructor() { }
 
     static createFollow(follow) {
         return new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ module.exports = class Follow {
         return new Promise((resolve, reject) => {
             connect.query(
                 "SELECT COUNT(*) AS count FROM follow WHERE followed_id = ? AND follower_id = ?",
-                [followedId, followerId], 
+                [followedId, followerId],
                 (err, result) => {
                     if (err) {
                         reject(err);
@@ -46,11 +46,28 @@ module.exports = class Follow {
             );
         });
     }
+
+    static checkTopFollow(followedId, followerId) {
+        return new Promise((resolve, reject) => {
+            connect.query(
+                "SELECT f.followed_id, c.username, c.images, c.isticket, COUNT(*) AS follow_count FROM follow f JOIN customers c ON f.followed_id = c.id GROUP BY f.followed_id, c.username, c.images, c.isticket ORDER BY follow_count DESC LIMIT 6;",
+                [followedId, followerId],
+                (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
+
     static checkLike(customer_id) {
         return new Promise((resolve, reject) => {
             connect.query(
                 "SELECT post_id  FROM \`like\`   WHERE customers_id = ? ",
-                [customer_id], 
+                [customer_id],
                 (err, result) => {
                     if (err) {
                         reject(err);
@@ -65,7 +82,7 @@ module.exports = class Follow {
         return new Promise((resolve, reject) => {
             connect.query(
                 "DELETE FROM `like` WHERE post_id = ? AND customers_id = ?",
-                [post_id, customers_id], 
+                [post_id, customers_id],
                 (err, result) => {
                     if (err) {
                         reject(err);
@@ -80,7 +97,7 @@ module.exports = class Follow {
         return new Promise((resolve, reject) => {
             connect.query(
                 "INSERT INTO `like` (post_id, customers_id) VALUES (?, ?)",
-                [post_id, customers_id], 
+                [post_id, customers_id],
                 (err, result) => {
                     if (err) {
                         reject(err);
@@ -95,7 +112,7 @@ module.exports = class Follow {
         return new Promise((resolve, reject) => {
             connect.query(
                 "SELECT u.id, u.username, f.follow_date, u.images, u.email FROM follow f JOIN customers u ON f.follower_id = u.id WHERE f.followed_id = ?",
-                [id], 
+                [id],
                 (err, result) => {
                     if (err) {
                         reject(err);

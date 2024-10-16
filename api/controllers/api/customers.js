@@ -67,7 +67,8 @@ exports.create = async (req, res, next) => {
             gender: req.body.gender,
             images: req.body.images,
             isticket: req.body.isticket,
-            create_date: date_create
+            create_date: date_create,
+            background: req.body.background
         };
 
         const addedCustomers = await Customers.createCustomers(customers);

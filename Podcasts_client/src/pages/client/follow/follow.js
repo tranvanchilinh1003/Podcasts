@@ -49,6 +49,24 @@ function Follow() {
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
 
+  const truncateTextWithHtml = (html, maxLength) => {
+    const tempElement = document.createElement("div");
+    tempElement.innerHTML = html;
+
+    const text = tempElement.innerText || tempElement.textContent;
+    if (text.length <= maxLength) return html;
+
+    let truncatedText = text.substr(0, maxLength);
+    const lastSpaceIndex = truncatedText.lastIndexOf(" ");
+    if (lastSpaceIndex > 0) {
+      truncatedText = truncatedText.substr(0, lastSpaceIndex);
+    }
+    const truncatedHtml = document.createElement("div");
+    truncatedHtml.innerHTML = tempElement.innerHTML;
+    const trimmedHtml = truncatedHtml.innerHTML.substr(0, truncatedText.length);
+
+    return trimmedHtml + "...";
+  };
   const handleCommentClick = (postId) => {
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
   };
@@ -495,7 +513,7 @@ function Follow() {
                       <div>
                         {getUserFromLocalStorage()?.id != id && (
                           <Button
-                            className="text-white fw-bold py-2 px-5"
+                            className="text-white fw-bold "
                             variant={isFollowing ? "secondary" : "danger"}
                             onClick={() =>
                               isFollowing
@@ -594,8 +612,14 @@ function Follow() {
                               <div className="timeline-header">
                                 <span className="userimage">
                                   <img
-                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                    alt="Hồ sơ"
+                                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                                      alt="Hồ sơ"
+                                      style={{
+                                          maxWidth: "auto",
+                                          height: "100%",
+                                          width: "100%",
+                                          borderRadius: "50%",
+                                      }}
                                   />
                                 </span>
                                 <span className="username mx-1">
@@ -761,7 +785,7 @@ function Follow() {
                     role="tabpanel"
                     aria-labelledby="info-tab"
                   >
-                    <table className="table table-striped">
+                    <table className="table table-light table-striped ">
                       <tbody>
                         <tr>
                           <td>Họ Và Tên:</td>
@@ -773,7 +797,7 @@ function Follow() {
                         </tr>
                         <tr>
                           <td>Số lượng người theo dõi:</td>
-                          <td>{userInfo?.followersCount}</td>
+                          <td>{userInfo?.numberOfFollowers}</td>
                         </tr>
                         <tr>
                           <td>Tham gia:</td>
@@ -842,9 +866,8 @@ function Follow() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${
-                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                  }`}
+                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                    }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input

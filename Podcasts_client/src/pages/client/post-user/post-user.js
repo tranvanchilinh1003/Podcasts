@@ -12,7 +12,7 @@ import Spinner from '../Spinner/Spinner';
 import MyEditor from '../tinymce/tinymce';
 import './post-user.css';
 
-function PostUser({ fetchPost  }) {
+function PostUser({ fetchPost }) {
   const { id } = useParams();
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm();
   const [userId, setUserId] = useState(null);
@@ -27,6 +27,7 @@ function PostUser({ fetchPost  }) {
   const [audioUploadProgress, setAudioUploadProgress] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [editorContent, setEditorContent] = useState('');
+
 
   const handleEditorChange = (content) => {
     setEditorContent(content);
@@ -198,7 +199,12 @@ function PostUser({ fetchPost  }) {
     <div className="timeline-body rounded">
       <div className="timeline-comment-box rounded">
         <div className="user mt-1">
-          <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" />
+          <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`} alt="Hồ sơ" style={{
+            maxWidth: "auto",
+            height: "100%",
+            width: "100%",
+            borderRadius: "50%",
+          }} />
         </div>
         <div className="input row">
           <form action="">

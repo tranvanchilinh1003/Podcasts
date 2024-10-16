@@ -53,6 +53,11 @@ function InfoUser() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+   
+        fetchUserInfo();
+    }, [id, setValue]);
     const onSubmit = async (data) => {
         setIsUploading(true);
         if (file) {
@@ -61,7 +66,7 @@ function InfoUser() {
             const newFileName = `${currentDate.toISOString().replace(/[:.]/g, '-')}.${fileExtension}`;
             const path = `upload/${newFileName}`;
             const storageRef = ref(storage, path);
-            data.images = await uploadFile(file, path,setImgUploadProgress);
+            data.images = await uploadFile(file, path, setImgUploadProgress);
 
             try {
                 await uploadBytes(storageRef, file);
@@ -84,6 +89,7 @@ function InfoUser() {
         try {
             data.role = 'user';
             const response = await axiosInstance.patch(`/api/customers/${id}`, data);
+
             if (response.status === 200) {
                 DialogService.success('Cập nhật tài khoản thành công');
                 fetchUserInfo();
@@ -100,16 +106,14 @@ function InfoUser() {
             setImgUploadProgress(0);
         }
     };
-    useEffect(() => {
+    
         
 
-        fetchUserInfo();
-    }, [id, setValue]);
     if (loading) return <Spinner />;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="col-md-6">
+        <div className="col-md-6 ">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Tên Người Dùng:</label>
