@@ -5,7 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+
 import {
   NbSidebarModule,
   NbMenuModule,
@@ -36,8 +36,6 @@ import { TinymceModule } from './@theme/components/tinymce/tinymce.module';
     AppRoutingModule,
     PaginatorModule,
     SharesModule,
-    DragDropModule,
-    HttpClientModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),

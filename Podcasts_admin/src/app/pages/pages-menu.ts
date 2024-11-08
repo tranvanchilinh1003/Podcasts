@@ -19,13 +19,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Loại',
     icon: 'bookmark-outline',
     children: [
-      // {
-      //   title: 'Thêm mới',
-      //   icon: 'plus-circle',
-      //   link: '/pages/categories/create',
-      // },
       {
-        title: 'Danh mới',
+        title: 'Thêm mới',
+        icon: 'plus-circle',
+        link: '/pages/categories/create',
+      },
+      {
+        title: 'Danh sách',
         icon: 'grid',
         link: '/pages/categories/list',
       },

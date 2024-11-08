@@ -69,7 +69,7 @@ export class EditComponent {
     })
   }
   // list cate
-  getCate() {
+  getCate()  {
     this.spinner.show();
     this.categoriesService.getCategories().subscribe(res => {
       this.categories = res.data
@@ -81,7 +81,7 @@ export class EditComponent {
     })
   }
   // get id post and cate 
-  getIdCate() {
+   getIdCate() {
     let id = this.route.snapshot.params['id'];
     this.spinner.show();
     this.postService.getPostById(id).subscribe({
@@ -169,7 +169,7 @@ export class EditComponent {
 
 
 
-
+  
   onFileChange(event: any, fileType: string): void {
     const file = event.target.files[0];
     if (fileType === 'audio') {
@@ -179,84 +179,11 @@ export class EditComponent {
     }
   }
 
-  // async upload(): Promise<void> {
-  //   if (!this.fileAudio || !this.fileImg) {
-  //     console.error('No file selected');
-  //     return;
-  //   }
-  //   this.isUploading = true;
-  //   const uploadFile = (file: File, path: string, progressCallback: (progress: number) => void): Promise<void> => {
-  //     const task = this.storage.upload(path, file);
-  //     return new Promise((resolve, reject) => {
-  //       task.percentageChanges().subscribe(progress => {
-  //         progressCallback(progress || 0);
-  //       });
-  //       task.then(() => resolve()).catch(error => reject(error));
-  //     });
-  //   };
-
-  //   // Di chuyển khai báo fileExtensionAudio và fileExtensionImg ra khỏi hàm upload
-  //   this.fileExtensionAudio = this.fileAudio.name.split('.').pop();
-  //   this.fileExtensionImg = this.fileImg.name.split('.').pop();
-  //   console.log(this.fileExtensionImg);
-
-  //   const currentDate = new Date();
-  //   this.newFileName = `${currentDate.toISOString().trim()}`;
-  //   const pathAudio = `audio/${this.newFileName}.${this.fileExtensionAudio}`;
-  //   const pathImg = `upload/${this.newFileName}.${this.fileExtensionImg}`;
-
-  //   console.log(this.newFileName);
-  //   await this.storage.upload(pathAudio, this.fileAudio);
-  //   await this.storage.upload(pathImg, this.fileImg);
-  //   console.log('Cập nhật thành công, new file name:', this.newFileName);
-  //   Promise.all([
-  //     uploadFile(this.fileAudio, pathAudio, (progress) => this.uploadProgressAudio = progress),
-  //     uploadFile(this.fileImg, pathImg, (progress) => this.uploadProgressImage = progress)
-  //   ]).then(() => {
-  //     // this.dialog.success('Đã thêm thành công!');
-  //     this.isUploading = false;
-  //   }).catch(error => {
-  //     console.error('Upload failed:', error);
-  //     this.isUploading = false;
-  //   });
-  // }
-
-  // async onUpdate(): Promise<void> {
-
-  //   if (this.postForm.invalid) {
-  //     return;
-  //   }
-
-  //   try {
-  //     if (this.fileImg || this.fileAudio) {
-  //       await this.upload();
-  //       this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
-  //       this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
-  //     }
-  //     this.postnew.customers_id;
-
-
-  //     const postId = this.route.snapshot.params['id'];
-  //     this.postnew.id = postId;
-
-  //     this.postService.updatePost(this.postnew, postId).subscribe({
-  //       next: () => {
-  //         this.dialog.success('Đã thêm thành công!');
-  //       },
-  //       error: error => {
-  //         console.error('Error updating post', error);
-  //       }
-  //     });
-
-  //   } catch (error) {
-  //     console.error('Error uploading image', error);
-  //   }
-  // }
-
-
-
-
   async upload(): Promise<void> {
+    if (!this.fileAudio || !this.fileImg) {
+      console.error('No file selected');
+      return;
+    }
     this.isUploading = true;
     const uploadFile = (file: File, path: string, progressCallback: (progress: number) => void): Promise<void> => {
       const task = this.storage.upload(path, file);
@@ -268,46 +195,53 @@ export class EditComponent {
       });
     };
 
-    // Move file extensions declaration outside of the upload logic
-    if (this.fileImg) {
-      this.fileExtensionImg = this.fileImg.name.split('.').pop();
-      this.newFileName = new Date().toISOString().trim(); // Ensure this is set before uploading images
-      const pathImg = `upload/${this.newFileName}.${this.fileExtensionImg}`;
-      await uploadFile(this.fileImg, pathImg, (progress) => this.uploadProgressImage = progress);
-      this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`; // Set image path after upload
-    }
+    // Di chuyển khai báo fileExtensionAudio và fileExtensionImg ra khỏi hàm upload
+    this.fileExtensionAudio = this.fileAudio.name.split('.').pop();
+    this.fileExtensionImg = this.fileImg.name.split('.').pop();
+    // console.log(this.fileExtensionImg);
 
-    if (this.fileAudio) {
-      this.fileExtensionAudio = this.fileAudio.name.split('.').pop();
-      const pathAudio = `audio/${this.newFileName}.${this.fileExtensionAudio}`;
-      await uploadFile(this.fileAudio, pathAudio, (progress) => this.uploadProgressAudio = progress);
-      this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`; // Set audio path after upload
-    }
+    const currentDate = new Date();
+    this.newFileName = `${currentDate.toISOString().trim()}`;
+    const pathAudio = `audio/${this.newFileName}.${this.fileExtensionAudio}`;
+    const pathImg = `upload/${this.newFileName}.${this.fileExtensionImg}`;
 
-    this.isUploading = false; // Update after processing uploads
+    console.log(this.newFileName);
+    await this.storage.upload(pathAudio, this.fileAudio);
+    await this.storage.upload(pathImg, this.fileImg);
+    console.log('Cập nhật thành công, new file name:', this.newFileName);
+    Promise.all([
+      uploadFile(this.fileAudio, pathAudio, (progress) => this.uploadProgressAudio = progress),
+      uploadFile(this.fileImg, pathImg, (progress) => this.uploadProgressImage = progress)
+    ]).then(() => {
+      // this.dialog.success('Đã thêm thành công!');
+      this.isUploading = false;
+    }).catch(error => {
+      console.error('Upload failed:', error);
+      this.isUploading = false;
+    });
   }
 
   async onUpdate(): Promise<void> {
+    const customerIdRaw = this.localStorageService.getItem(LOCALSTORAGE_KEY.userInfo);
+    const customerId = customerIdRaw[0].id;
+
     if (this.postForm.invalid) {
       return;
     }
 
     try {
-      // Check if there are files to upload
       if (this.fileImg || this.fileAudio) {
-        await this.upload(); // This will handle file uploads and update paths
-      } else {
-        // If no new files are selected, keep existing values
-        this.postnew.images = this.postnew.images; // No change
-        this.postnew.audio = this.postnew.audio;   // No change
+        await this.upload();
+        this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
+        this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
       }
-
+      this.postnew.customers_id = customerId;
       const postId = this.route.snapshot.params['id'];
       this.postnew.id = postId;
 
       this.postService.updatePost(this.postnew, postId).subscribe({
         next: () => {
-          this.dialog.success('Đã cập nhật thành công!');
+          this.dialog.success('Đã thêm thành công!');
         },
         error: error => {
           console.error('Error updating post', error);
@@ -315,7 +249,7 @@ export class EditComponent {
       });
 
     } catch (error) {
-      console.error('Error during update process', error);
+      console.error('Error uploading image', error);
     }
   }
 

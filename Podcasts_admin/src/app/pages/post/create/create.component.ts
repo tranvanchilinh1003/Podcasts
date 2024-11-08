@@ -22,13 +22,13 @@ export class CreateComponent implements OnInit {
   fileImg: File | null = null;
   uploadProgressAudio: number = 0;
   uploadProgressImage: number = 0;
-  imgPreview: string | ArrayBuffer | null = null;
   isUploading: boolean = false;
   categories: ICategories[] = [];
   post: IPost[] = [];
   newFileName: string = '';
   private fileExtensionImg: string;
   private fileExtensionAudio: string;
+  imgPreview: string = ''; 
   postnew: IPost = {
     id: '',
     title: '',
@@ -69,54 +69,54 @@ export class CreateComponent implements OnInit {
       this.fileAudio = file;
     } else if (fileType === 'image') {
       this.fileImg = file;
-      // Đọc file và hiển thị ảnh xem trước
+  
       const reader = new FileReader();
-      reader.onload = () => {
-        this.imgPreview = reader.result;
+      reader.onload = (e: any) => {
+        this.imgPreview = e.target.result;
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(this.fileImg);
     }
   }
-  
-
   upload(): void {
     if (!this.fileAudio || !this.fileImg) {
       console.error('Chưa thêm file nào');
       return;
     }
+  
     this.isUploading = true;
     const uploadFile = (file: File, path: string, progressCallback: (progress: number) => void): Promise<void> => {
       const task = this.storage.upload(path, file);
       return new Promise((resolve, reject) => {
         task.percentageChanges().subscribe(progress => {
           progressCallback(progress || 0);
-});
+        });
         task.then(() => resolve()).catch(error => reject(error));
       });
     };
-
-    // Di chuyển khai báo fileExtensionAudio và fileExtensionImg ra khỏi hàm upload
-    this.fileExtensionAudio = this.fileAudio.name.split('.').pop();
-    this.fileExtensionImg = this.fileImg.name.split('.').pop();
-    console.log(this.fileExtensionImg);
-
+  
     const currentDate = new Date();
     this.newFileName = `${currentDate.toISOString().trim()}`;
     const pathAudio = `audio/${this.newFileName}.${this.fileExtensionAudio}`;
     const pathImg = `upload/${this.newFileName}.${this.fileExtensionImg}`;
-    console.log(this.newFileName);
-
+  
     Promise.all([
       uploadFile(this.fileAudio, pathAudio, (progress) => this.uploadProgressAudio = progress),
       uploadFile(this.fileImg, pathImg, (progress) => this.uploadProgressImage = progress)
     ]).then(() => {
       this.dialog.success('Đã thêm thành công!');
       this.isUploading = false;
+  
+      // Cập nhật đường dẫn file hình ảnh và âm thanh vào form
+      this.postForm.patchValue({
+        images: `${this.newFileName}.${this.fileExtensionImg}`,
+        audio: `${this.newFileName}.${this.fileExtensionAudio}`
+      });
     }).catch(error => {
-      console.error('Upload failed:', error);
+      console.error('Tải lên thất bại:', error);
       this.isUploading = false;
     });
   }
+  
 
   async onCreate(): Promise<void> {
     const customerIdRaw = this.localStorageService.getItem(LOCALSTORAGE_KEY.userInfo);

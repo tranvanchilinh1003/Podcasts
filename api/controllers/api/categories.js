@@ -73,7 +73,6 @@ exports.create = async (req, res, next) => {
     }
 };
 
-
 exports.detail = async (req, res, next) => {
     let category_id = req.params.id;
 
@@ -103,14 +102,15 @@ exports.update = async (req, res, next) => {
         update_date: date_create
     }
     let result = await Category.updateCategories(category, category_id);
-    
+
+
+
     res.status(201).json({
         result: result,
         data: category
 
     })
 };
-
 exports.delete = async (req, res, next) => {
     let category_id = req.params.id;
     try {

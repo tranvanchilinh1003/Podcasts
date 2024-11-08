@@ -11,11 +11,11 @@ const routes: Routes = [
     path: '',
     component: CategoriesComponent,
     children: [
-      // {
-      //   path: 'create',
-      //   component: CreateComponent,
-      //   data: {breadcrumb: 'Thêm mới'},
-      // },
+      {
+        path: 'create',
+        component: CreateComponent,
+        data: {breadcrumb: 'Thêm mới'},
+      },
       {
         path: 'edit/:id',
         component: EditComponent,

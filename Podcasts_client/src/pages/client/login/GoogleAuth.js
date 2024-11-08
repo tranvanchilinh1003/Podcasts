@@ -51,49 +51,36 @@ function GoogleAuth({ onLogin }) {
       const user = await authInstance.signIn();
       const profile = user.getBasicProfile();
       const email = profile.getEmail();
-      const username = removeDiacriticsAndSpaces(profile.getName().toLowerCase());
+     const username = removeDiacriticsAndSpaces(profile.getName().toLowerCase());
       const images = profile.getImageUrl();
-  
+
       const role = "user";
       const create_date = new Date().toISOString();
       const password = "123456789";
-  
-      // Get current date and time
-      const currentDate = new Date();
-      const day = String(currentDate.getDate()).padStart(2, '0');
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
-      const year = currentDate.getFullYear();
-      const hours = String(currentDate.getHours()).padStart(2, '0');
-      const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-      const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-      
-      // Format date and time
-      const formattedDate = `${day}-${month}-${year}_${hours}-${minutes}-${seconds}.jpg`; // Add .jpg extension
-  
-      // Update image reference to include formatted date and time
-      const imageRef = ref(storage, `upload/${formattedDate}`);
+      const imageRef = ref(storage, `upload/${username}`);
       const response = await fetch(images);
       const blob = await response.blob();
       await uploadBytes(imageRef, blob);
-  
+
+      
       const imageUrl = await getDownloadURL(imageRef);
-  
+
+
       const checkResponse = await axios.post(
         `${API_BASE_URL}/api/check_email`,
         { email }
       );
-  
+
       if (checkResponse.data.exists) {
         await axios.post(`${API_BASE_URL}/api/customers`, {
           username,
           email,
-          images: formattedDate, // Changed to formatted date with time
+          images: username,
           role,
           create_date,
           password,
           isticket: 'inactive',
-          gender: 0,
-          background: 'bg1.jpg'
+          gender: 0
         });
         const data = {
           username,
@@ -102,7 +89,18 @@ function GoogleAuth({ onLogin }) {
         const loginResponse = await login(data);
         await DialogService.success("Đăng nhập thành công");
         navigate("/");
-      } else {
+      }
+      // if(!checkResponse.data.exists){
+      //   const data = {
+      //     username: checkResponse.data.data[0].username,
+      //     password: checkResponse.data.data[0].password,
+      //   };
+      //   const loginResponse = await login(data);
+      //   await DialogService.success('Đăng nhập thành công')
+      //   navigate('/');
+      // }
+
+    else {
         if (onLogin) {
           await onLogin(checkResponse.data.data);
           await loginGoogle(checkResponse.data.data); 
@@ -113,8 +111,8 @@ function GoogleAuth({ onLogin }) {
           await localStorage.setItem("userToken", checkResponse.data.token);
           await DialogService.success("Đăng nhập thành công");
           await navigate("/");
-        } 
-      }
+        }
+      } 
     } catch (error) {
       console.error("Error during sign-in", error);
     }

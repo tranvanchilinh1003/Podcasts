@@ -10,7 +10,6 @@ import { EditComponent } from './edit/edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PaginatorModule } from '../../@theme/components/paginator/paginator.module';
 import { TinymceModule } from 'app/@theme/components/tinymce/tinymce.module';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -24,7 +23,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     BreadcrumbModule,
     FormsRoutingModule,
     NbEvaIconsModule,
-    DragDropModule,
     NbIconModule,
     ReactiveFormsModule,
     PaginatorModule,
@@ -33,7 +31,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   declarations: [
    ...routedComponents,
    EditComponent,
-   
   ],
 })
 export class CategoriesModule { }
