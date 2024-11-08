@@ -216,9 +216,8 @@ exports.update = async (req, res, next) => {
         const id = req.params.id;
         const { username, email, full_name, role, gender, images, isticket, password, background } = req.body;
 
-        console.log('Updating customer:', { id, username, email, full_name, role, gender, images, isticket, password, background });
+        
 
-        // Fetch the current customer information from the database
         const currentCustomer = await Customers.getUpdateCustomers(id);
         if (!currentCustomer) {
             return res.status(404).json({ error: 'Customer not found' });
@@ -226,9 +225,9 @@ exports.update = async (req, res, next) => {
 
         const { username: oldUsername, email: oldEmail, password: oldPassword, background: oldBackground } = currentCustomer;
 
-        // Check if username and email have changed
+    
         if (username !== oldUsername || email !== oldEmail) {
-            // Check for existing username or email in the database, excluding the current customer
+        
             const existingUser = await Customers.findUser(username, email, id);
 
             if (existingUser.length > 0) {

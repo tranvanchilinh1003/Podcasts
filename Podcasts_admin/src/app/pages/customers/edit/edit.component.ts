@@ -155,7 +155,7 @@ export class EditComponent implements OnInit {
     this.newFileName = `${currentDate.toISOString().trim()}.${fileExtension}`;
     this.isUploading = true;
     this.uploadProgressBackground = 0;
-    const path = `background/${this.newFileName}`;
+    const path = `upload/${this.newFileName}`;
     const task = this.af.upload(path, this.backgroundFile);
     task.percentageChanges().subscribe((progress) => {
       this.uploadProgressBackground = progress || 0; // Update progress
@@ -229,7 +229,7 @@ export class EditComponent implements OnInit {
         this.oldImagePath = this.editingCustomer.images;
         this.imgUpload = `https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${this.editingCustomer.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9`;
         this.oldBackgroundPath = this.editingCustomer.background;
-        this.backgroundUpload = `https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/background%2F${this.editingCustomer.background}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9`;
+        this.backgroundUpload = `https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${this.editingCustomer.background}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9`;
         this.oldPassword = this.editingCustomer.password;
 
         this.validateForm.patchValue({

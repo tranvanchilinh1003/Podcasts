@@ -72,7 +72,7 @@ export class CreateComponent implements OnInit {
       const currentDate = new Date();
       const backgroundFileName = `${currentDate.toISOString().trim()}.${fileExtension}`;
   
-      const path = `background/${backgroundFileName}`;
+      const path = `upload/${backgroundFileName}`;
       this.isUploading = true; // Set uploading state to true
       this.uploadProgressBackground = 0; // Initialize progress to 0
   

@@ -30,16 +30,11 @@ export class PostService extends ApiService {
         super(_http);
     }
 
-    getPost(page: number = 1): Observable<any> {
-        let headers = new HttpHeaders();
-        const token = this.authservice.getToken();
-        if (token) {
-          headers = headers.set('x-access-token', token);
-        }
-    
-        const params = { page: page.toString() };
-        return this._http.get<{ data: IPost[], meta: any }>(`${API_BASE_URL}${API_ENDPOINT.post.post}`, { headers, params });
-      }
+    getPost(current_page: number): Observable<any> {
+        const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
+            new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
+        return this._http.get<{ data: IPost[] }>(API_BASE_URL + API_ENDPOINT.post.post, { headers });
+    }
     getPostById(postId: string): Observable<{ data: IPost[] }> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();

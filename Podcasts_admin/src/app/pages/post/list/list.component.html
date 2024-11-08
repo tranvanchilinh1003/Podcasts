@@ -88,14 +88,15 @@
                         <ng-container>
                             <tr *ngFor="let list of post; index as i" class="clickable-row">
 
-                                <td>{{ (current_page - 1) * 5 + i + 1 }}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted ">
+                                    {{ (current_page - 1) * 5 + i + 1 }}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
                                     {{list.title}}</td>
                                 <td
                                     class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
-                                    <!-- <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
-                                        width="100px" alt="" class="rounded-circle"> -->
+                                
                                     {{ getCategoryName(list.categories_id) }}
                                 </td>
                                 <td
@@ -134,7 +135,7 @@
                         (dataList)="getPage($event)"></ngx-paginator>
                         
                 </div>
-            </nb-card-body>
+</nb-card-body>
         </nb-card>
     </div>
 </div>
