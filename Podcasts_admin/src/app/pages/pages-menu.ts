@@ -9,7 +9,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Trang chủ',
     icon: 'home-outline',
     link: '/pages',
-   
   },
   {
     title: 'Quản Lý',
@@ -65,15 +64,15 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
-  {
-    title: 'Thống Kê',
-    group: true,
-  },
-  {
-    title: 'Bình luận',
-    icon: 'message-circle-outline',
-    link: '/pages/comment/list',
-  }
+  // {
+  //   title: 'Thống Kê',
+  //   group: true,
+  // },
+  // {
+  //   title: 'Bình luận',
+  //   icon: 'message-circle-outline',
+  //   link: '/pages/comment/list',
+  // }
 
   
 ];

@@ -31,7 +31,7 @@
                                     class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
                                     nbInput fullWidth id="img" accept="image/*" (change)="onFileChange($event, 'image')"
                                     name="images" formControlName="images">
-                                    <img *ngIf="postnew.images" src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{postnew.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="50px">
+                                    <img *ngIf="postnew.images" src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{postnew.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" style="max-width: 40px; height: 40px;" >
                             </div>
 
                             <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressImage}}"

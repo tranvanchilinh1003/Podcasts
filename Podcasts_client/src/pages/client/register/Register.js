@@ -20,7 +20,7 @@ function Register() {
       data.role = "user";
       data.images = "anh_dai_dien.jpg";
       data.isticket = "inactive";
-      data.background = "https://bootdey.com/img/Content/bg1.jpg";
+      data.background = "bg1.jpg";
       data.gender = 0;
       const response = await axiosInstance.post("/api/customers", data);
       console.log(response.data.data);

@@ -1,7 +1,7 @@
 var connect = require("./database");
 var Post = [];
 module.exports = class Post {
-  constructor() {}
+  constructor() { }
   static fetchAll(from, row) {
     return new Promise((resolve, reject) => {
       connect.query(
@@ -100,7 +100,7 @@ ORDER BY
   // Edit
   static async getEdit(postId) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT * FROM post WHERE id = ${postId}`;
+      let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, customers.isticket,COUNT(DISTINCT comments.id) AS total_comments, COUNT(DISTINCT \`like\`.id) AS total_likes FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id LEFT JOIN comments ON post.id = comments.post_id LEFT JOIN \`like\` ON post.id = \`like\`.post_id WHERE post.id = ${postId} GROUP BY post.id, categories.id, customers.id;`;
       connect.query(sql, [postId], function (err, data) {
         if (err) {
           reject(err);

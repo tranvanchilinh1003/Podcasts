@@ -8,6 +8,7 @@ export interface ICustomer{
     gender?: string,
     images?: string,
     isticket?: string,
+    background?: string,
 }
 interface Window {
     webkitSpeechRecognition: any;

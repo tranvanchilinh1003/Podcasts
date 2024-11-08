@@ -1,0 +1,151 @@
+<div class="row">
+    <div class="col-lg-12">
+        <nb-card>
+            <nb-card-header>Xem trước bài viết</nb-card-header>
+            <nb-card-body>
+                <form class="form" enctype="multipart/form-data">
+                    <section class="latest-podcast-section section-padding pb-0" id="section_2">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-10 col-12">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-12">
+                                            <div class="custom-block-icon-wrap">
+                                                <div class="custom-block-image-wrap custom-block-image-detail-page">
+                                                    <img [src]="postnew.images ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F' + postnew.images + '?alt=media' : ''"
+                                                        class="custom-block-image img-fluid rounded  w-auto"
+                                                        style="width: auto ; height: 150px; object-fit: cover;"
+                                                        alt="" />
+                                                </div>
+                                                <div class="custom-block-bottom justify-content-around d-flex mt-3">
+                                                    <p class="bi-headphones me-1">
+                                                        <nb-icon icon="headphones-outline" pack="eva"
+                                                            class="fs-6"></nb-icon>
+                                                        <span>{{ postnew.view }}</span>
+                                                    </p>
+
+                                                    <p>
+                                                        <nb-icon icon="heart-outline" pack="eva" class="fs-6"></nb-icon>
+                                                        <span>{{postnew.total_likes}}</span>
+                                                    </p>
+
+                                                    <p>
+                                                        <nb-icon icon="message-circle-outline" pack="eva"
+                                                            class="fs-6"></nb-icon>
+                                                        <span class="me-1">{{postnew.total_comments}}</span>
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-9 col-12">
+                                            <div class="custom-block-info">
+                                                <div class="custom-block-top d-flex mb-1">
+                                                    <small>
+                                                        <i class="bi-clock-fill custom-icon">
+                                                            <nb-icon icon="clock-outline" pack="eva"
+                                                                class="fs-6"></nb-icon>
+                                                            {{ postnew.create_date | date: 'dd/MM/yyyy' }}
+                                                        </i>
+                                                    </small>
+                                                </div>
+                                                <h2 class="mb-2">{{ postnew.title}}</h2>
+                                                <div class="profile-block profile-detail-block align-items-center">
+                                                    <div class="d-flex mb-3 mb-lg-0 mb-md-0 align-items-center">
+                                                        <img [src]="postnew.images_customers ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F' + postnew.images_customers + '?alt=media' : ''"
+                                                            class="profile-block-image img-fluid rounded-circle" alt=""
+                                                            style="max-width: 50px; height: 50px;" />
+                                                        <div class="ml-2 mx-2">
+                                                            <p class="mb-0 d-flex">{{postnew.username}}
+                                                                <img *ngIf="postnew.isticket === 'active'"
+                                                                    src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                                                                    class="verified-image img-fluid" alt="Verified"
+                                                                    style="width: auto; height: 20px" />
+                                                            </p>
+
+                                                            <p class="mb-0"><strong>Người đăng</strong></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div [innerHTML]="isExpanded ? postnew.description : truncatedDescription"
+                                                    class="mt-2">
+                                                </div>
+                                                <a *ngIf="postnew.description.length > 100" (click)="toggleExpand()"
+                                                    class=" hover-pointer">
+                                                    {{ isExpanded ? 'Ẩn bớt' : 'Xem thêm' }}
+                                                </a>
+                                                <div class="mt-2">
+                                                    <audio class="w-100" controls loop
+                                                        [src]="postnew.audio ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F' + postnew.audio + '?alt=media' : ''">
+                                                    </audio>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <section class="related-podcast-section section-padding">
+                                        <div class="container">
+                                            <div class="row mt-5">
+                                                <div class="section-title-wrap">
+                                                    <h4 class="section-title">Bình luận bài viết</h4>
+                                                </div>
+                                                <div class="col-lg-7 col-7 mt-1">
+                                                    <!-- <CommentForm customers_id={userId} postId={id} onSubmit={handleCommentSubmit} /> -->
+                                                    <form onSubmit={handleSubmit} class="comment-form">
+                                                        <!-- <div class="rating d-flex justify-content-center mb-3">
+                                                            <div *ngFor="let star of stars; let i = index">
+                                                                <input type="radio" [id]="'star-' + (i + 1)"
+                                                                    name="rating" [value]="5 - i"
+                                                                    [checked]="rating === 5 - i"
+                                                                    (change)="setRating(5 - i)" class="d-none" />
+                                                                <label [attr.for]="'star-' + (i + 1)">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        viewBox="0 0 24 24"
+                                                                        [ngClass]="{ 'filled': rating >= 5 - i }">
+                                                                        <path
+                                                                            d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
+                                                                    </svg>
+                                                                </label>
+                                                            </div>
+                                                        </div> -->
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="rating mb-3">
+                                                                <input value="5" name="rate" id="star1" type="radio">
+                                                                <label title="5 sao" for="star1"></label>
+
+                                                                <input value="4" name="rate" id="star2" type="radio">
+                                                                <label title="4 sao" for="star2"></label>
+
+                                                                <input value="3" name="rate" id="star3" type="radio">
+                                                                <label title="3 sao" for="star3"></label>
+
+                                                                <input value="2" name="rate" id="star4" type="radio">
+                                                                <label title="2 sao" for="star4"></label>
+
+                                                                <input value="1" name="rate" id="star5" type="radio">
+                                                                <label title="1 sao" for="star5"></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <textarea class="form-control mb-3" rows="3"
+                                                            placeholder="Bình luận bài viết..."></textarea>
+                                                        <button type="submit" class="btn btn-primary">Bình luận<nb-icon
+                                                                icon="paper-plane-outline" pack="eva"
+                                                                class="fs-6 ms-1"></nb-icon></button>
+                                                    </form>
+                                                </div>
+                                                <!-- <div class="section-title-wrap mt-3">
+                                                    <h4 class="section-title">Danh sách bình luận</h4>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

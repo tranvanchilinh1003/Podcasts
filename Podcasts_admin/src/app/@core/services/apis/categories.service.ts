@@ -54,5 +54,5 @@ export class CategoriesService extends ApiService {
   delete(categoryId: string): Observable<any> {
     return this._http.delete<any>(API_BASE_URL + API_ENDPOINT.categories.categories + `/${categoryId}`);
   }
-
+  
 }

@@ -61,7 +61,7 @@ exports.create = async (req, res, next) => {
         const customers = {
             username: username,
             full_name: req.body.full_name,
-            password: hashedPassword,
+            password: hashedPassword,   
             email: email,
             role: req.body.role,
             gender: req.body.gender,
@@ -144,45 +144,111 @@ exports.detail = async (req, res, next) => {
 
 
 
+// exports.update = async (req, res, next) => {
+//     try {
+//         const id = req.params.id;
+//         const { username, email, full_name, role, gender, images, isticket, password, background } = req.body;
+
+//         console.log('Updating customer:', { id, username, email, full_name, role, gender, images, isticket, password, background }); // Log dữ liệu nhận được
+
+//         // Lấy thông tin khách hàng hiện tại từ cơ sở dữ liệu
+//         const currentCustomer = await Customers.getUpdateCustomers(id);
+//         if (!currentCustomer) {
+//             return res.status(404).json({ error: 'Customer not found' });
+//         }
+
+//         const { username: oldUsername, email: oldEmail, password: oldPassword } = currentCustomer;
+
+//         // Kiểm tra nếu username và email đã thay đổi
+//         if (username !== oldUsername || email !== oldEmail) {
+            
+//             // Kiểm tra xem có tồn tại username hoặc email trùng lặp trong cơ sở dữ liệu, loại trừ khách hàng hiện tại
+//             const existingUser = await Customers.findUser(username, email, id);
+
+          
+//             if (existingUser.length > 0) {
+//                 return res.status(400).json({ error: 'Username hoặc email đã tồn tại.' });
+//             }
+//         }
+
+//         // Xử lý mật khẩu
+//         let hashedPassword = oldPassword; // Mặc định sử dụng mật khẩu cũ
+
+//         if (password) {
+//             // Nếu có mật khẩu mới và mật khẩu mới không phải là mật khẩu đã băm
+//             if (!password.startsWith("$2b$10$")) {
+//                 hashedPassword = await bcrypt.hash(password, 10);
+//             } else {
+//                 hashedPassword = password; // Nếu mật khẩu mới đã được băm, không thay đổi
+//             }
+//         }
+
+//         const customers = {
+//             username,
+//             full_name,
+//             email,
+//             role,
+//             gender,
+//             images,
+//             background,
+//             isticket,
+//             password: hashedPassword // Cập nhật mật khẩu mới hoặc giữ mật khẩu cũ
+//         };
+
+        
+
+//         const result = await Customers.updateCustomers(customers, id);
+
+//         res.status(200).json({
+//             result,
+//             data: customers
+//         });
+//     } catch (error) {
+//         console.error("Error:", error);
+//         res.status(500).json({
+//             error: 'Internal Server Error'
+//         });
+//     }
+// };
+
 exports.update = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const { username, email, full_name, role, gender, images, isticket, password } = req.body;
+        const { username, email, full_name, role, gender, images, isticket, password, background } = req.body;
 
-        console.log('Updating customer:', { id, username, email, full_name, role, gender, images, isticket, password }); // Log dữ liệu nhận được
+        console.log('Updating customer:', { id, username, email, full_name, role, gender, images, isticket, password, background });
 
-        // Lấy thông tin khách hàng hiện tại từ cơ sở dữ liệu
+        // Fetch the current customer information from the database
         const currentCustomer = await Customers.getUpdateCustomers(id);
         if (!currentCustomer) {
             return res.status(404).json({ error: 'Customer not found' });
         }
 
-        const { username: oldUsername, email: oldEmail, password: oldPassword } = currentCustomer;
+        const { username: oldUsername, email: oldEmail, password: oldPassword, background: oldBackground } = currentCustomer;
 
-        // Kiểm tra nếu username và email đã thay đổi
+        // Check if username and email have changed
         if (username !== oldUsername || email !== oldEmail) {
-            
-            // Kiểm tra xem có tồn tại username hoặc email trùng lặp trong cơ sở dữ liệu, loại trừ khách hàng hiện tại
+            // Check for existing username or email in the database, excluding the current customer
             const existingUser = await Customers.findUser(username, email, id);
 
-          
             if (existingUser.length > 0) {
                 return res.status(400).json({ error: 'Username hoặc email đã tồn tại.' });
             }
         }
 
-        // Xử lý mật khẩu
-        let hashedPassword = oldPassword; // Mặc định sử dụng mật khẩu cũ
+        // Handle password
+        let hashedPassword = oldPassword; // Default to the old password
 
         if (password) {
-            // Nếu có mật khẩu mới và mật khẩu mới không phải là mật khẩu đã băm
+            // If there is a new password and it's not already hashed
             if (!password.startsWith("$2b$10$")) {
                 hashedPassword = await bcrypt.hash(password, 10);
             } else {
-                hashedPassword = password; // Nếu mật khẩu mới đã được băm, không thay đổi
+                hashedPassword = password; // If the new password is already hashed, keep it
             }
         }
 
+        // Prepare the customer data for update
         const customers = {
             username,
             full_name,
@@ -190,11 +256,10 @@ exports.update = async (req, res, next) => {
             role,
             gender,
             images,
+            background: background || oldBackground, // Use the new background if provided, else keep the old one
             isticket,
-            password: hashedPassword // Cập nhật mật khẩu mới hoặc giữ mật khẩu cũ
+            password: hashedPassword // Update password or keep the old one
         };
-
-        
 
         const result = await Customers.updateCustomers(customers, id);
 
@@ -209,7 +274,6 @@ exports.update = async (req, res, next) => {
         });
     }
 };
-
 
 exports.delete = async (req, res, next) => {
     try {

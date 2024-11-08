@@ -273,6 +273,7 @@ function PostUser({ fetchPost }) {
                   name="images"
                   accept="image/*"
                   onChange={onFileChange}
+
                 />
                 <Progress percent={imgUploadProgress} />
               </div>
@@ -286,6 +287,7 @@ function PostUser({ fetchPost }) {
                   name="audio"
                   accept="audio/*"
                   onChange={onFileChange}
+
                 />
                 <Progress percent={audioUploadProgress} />
               </div>
@@ -331,7 +333,7 @@ function PostUser({ fetchPost }) {
                 >
                   Hủy
                 </Button>
-                <Button variant="primary" type="submit" className="mt-5">
+                <Button variant="primary" type="submit" className="mt-1">
                   Thêm
                 </Button>
               </div>

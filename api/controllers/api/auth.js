@@ -22,7 +22,7 @@ exports.login = async (req, res, next) => {
             const match = await bcrypt.compare(password, result[0].password);
             if (match) {
                 const payload = { username: result[0].username, role: result[0].role, id: result[0].id };
-                const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+                const token = jwt.sign(payload, secretKey, { expiresIn: '9h' });
 
                 if (result[0].role === 'user') {
                     return res.status(200).json({ data: [{id: result[0].id, username: result[0].username, images: result[0].images, email: result[0].email, role: result[0].role}], token, success: true, message: 'Đăng nhập thành công (user)' });

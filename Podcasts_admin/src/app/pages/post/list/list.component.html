@@ -47,7 +47,8 @@
                         <ul class="list-group">
                             <li class="list-group-item" *ngFor="let keyword of suggestedKeywords" (click)="selectKeyword(keyword.title)">
                                 <div class="keyword-item">
-                                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{keyword.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="30px" height="30px" alt="" class="rounded-circle">
+                                    <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{keyword.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+                                        width="30px" height="30px" alt="" class="rounded-circle">
                                     <span class="keyword-username">{{ keyword.title }}</span>
                                 </div>
                             </li>
@@ -61,36 +62,77 @@
                     <table class="table border text-center">
                         <ng-container>
                             <tr>
-                                <th>#</th>
-                                <th>Tiêu đề</th>
-                                <th>Hình ảnh</th>
-                                <th>Tổng yêu thích</th>
-                                <th>Tổng bình luận</th>
-                                <th>Tổng chia sẻ</th>
-                                <th></th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    #</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Tiêu đề</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Thể loại</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Người đăng</th>
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Ngày đăng</th>
+                                <!-- <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    Tổng chia sẻ</th> -->
+                                <th
+                                    class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                </th>
                             </tr>
                         </ng-container>
                         <ng-container>
-                            <tr *ngFor="let list of post; index as i">
+                            <tr *ngFor="let list of post; index as i" class="clickable-row">
+
                                 <td>{{ (current_page - 1) * 5 + i + 1 }}</td>
-                                <td>{{ list.title }}</td>
-                                <td><img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="100px" alt="" class="rounded-circle"></td>
-                                <td>{{ list.total_favorites }}</td>
-                                <td>{{ list.total_comments }}</td>
-                                <td>{{ list.total_shares }}</td>
-                                <td class="text-center">
-                                    <button nbButton routerLink="../edit/{{ list.id }}" [queryParams]="{ page: current_page }">
-                                        <nb-icon icon="edit-2-outline" pack="eva" class="fs-3"></nb-icon>
-                                    </button>
-                                    <button nbButton (click)="onDelete(list.id)">
-                                        <nb-icon icon="trash-2-outline" pack="eva" class="fs-3"></nb-icon>
-                                    </button>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.title}}</td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <!-- <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{list.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9"
+                                        width="100px" alt="" class="rounded-circle"> -->
+                                    {{ getCategoryName(list.categories_id) }}
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <!-- {{list.total_favorites}} -->
+                                    {{list.username}}
+                                </td>
+                                <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    <!-- {{list.total_comments}} -->
+                                    {{ list.create_date | date:'dd/MM/yyyy' }}
+                                </td>
+                                <!-- <td
+                                    class="ng-star-inserted nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted">
+                                    {{list.total_shares}}
+                                </td> -->
+                                <td
+                                    class=" nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
+                                    <button nbButton
+                                        class="mat-ripple size-medium shape-rectangle appearance-hero status-basic ng-star-inserted nb-transition mx-2"
+                                        routerLink="../preview-article/{{list.id}}">
+                                        <nb-icon icon="eye-outline" pack="eva" class="fs-3"></nb-icon></button>
+                                    <button nbButton
+                                        class="mat-ripple status-success appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition mx-2"
+                                        routerLink="../edit/{{list.id}}">
+                                        <nb-icon icon="edit-2-outline" pack="eva" class="fs-3"></nb-icon></button>
+                                    <button nbButton
+                                        class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2"
+                                        (click)="onDelete(list.id)">
+                                        <nb-icon icon="trash-2-outline" pack="eva" class="fs-3"></nb-icon></button>
                                 </td>
                             </tr>
                         </ng-container>
                     </table>
                     <ngx-paginator [apiUrl]="apiUrl" [current_page]="current_page" [last_page]="last_page"
                         (dataList)="getPage($event)"></ngx-paginator>
+                        
                 </div>
             </nb-card-body>
         </nb-card>

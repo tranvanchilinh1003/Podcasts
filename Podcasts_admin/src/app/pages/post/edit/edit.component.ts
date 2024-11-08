@@ -69,7 +69,7 @@ export class EditComponent {
     })
   }
   // list cate
-  getCate()  {
+  getCate() {
     this.spinner.show();
     this.categoriesService.getCategories().subscribe(res => {
       this.categories = res.data
@@ -81,7 +81,7 @@ export class EditComponent {
     })
   }
   // get id post and cate 
-   getIdCate() {
+  getIdCate() {
     let id = this.route.snapshot.params['id'];
     this.spinner.show();
     this.postService.getPostById(id).subscribe({
@@ -107,6 +107,69 @@ export class EditComponent {
   }
 
 
+  // Đã xử lý bấc đồng bộ load được dữ liệu cate mà bị lỗi cái khác
+  // async ngOnInit(): Promise<void> {
+  //   await this.loadData();
+  //   this.initializeForm();
+  // }
+
+  // async loadData(): Promise<void> {
+  //   try {
+  //     await this.getCate();
+  //     await this.getIdCate();
+  //   } catch (error) {
+  //     console.error('Error loading data', error);
+  //   }
+  // }
+
+  // async getCate(): Promise<void> {
+  //   try {
+  //     const res = await this.categoriesService.getCategories().toPromise();
+  //     this.categories = res.data;
+  //     console.log(this.categories);
+  //   } catch (error) {
+  //     console.log('Error fetching categories', error);
+  //   }
+  // }
+
+  // async getIdCate(): Promise<void> {
+  //   try {
+  //     let id = this.route.snapshot.params['id'];
+  //     const response = await this.postService.getPostById(id).toPromise();
+  //     this.postnew = response.data[0];
+  //     console.log(this.postnew);
+  //     const categoryId = this.postnew.categories_id;
+  //     const category = await this.categoriesService.edit(categoryId).toPromise();
+  //     this.editingCategory = category.data[0];
+  //     console.log(this.editingCategory);
+  //   } catch (error) {
+  //     console.error('Error fetching post or editing category', error);
+  //   }
+  // }
+
+
+  // initializeForm(): void {
+  //     this.postForm = new FormGroup({
+  //       title: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  //       description: new FormControl(''),
+  //       categories_id: new FormControl('', [Validators.required]),
+  //       images: new FormControl(''),
+  //       audio: new FormControl(''),
+  //       customers_id: new FormControl(''),
+  //     })
+  //   }
+
+
+
+
+
+
+
+
+
+
+
+
   onFileChange(event: any, fileType: string): void {
     const file = event.target.files[0];
     if (fileType === 'audio') {
@@ -115,6 +178,83 @@ export class EditComponent {
       this.fileImg = file;
     }
   }
+
+  // async upload(): Promise<void> {
+  //   if (!this.fileAudio || !this.fileImg) {
+  //     console.error('No file selected');
+  //     return;
+  //   }
+  //   this.isUploading = true;
+  //   const uploadFile = (file: File, path: string, progressCallback: (progress: number) => void): Promise<void> => {
+  //     const task = this.storage.upload(path, file);
+  //     return new Promise((resolve, reject) => {
+  //       task.percentageChanges().subscribe(progress => {
+  //         progressCallback(progress || 0);
+  //       });
+  //       task.then(() => resolve()).catch(error => reject(error));
+  //     });
+  //   };
+
+  //   // Di chuyển khai báo fileExtensionAudio và fileExtensionImg ra khỏi hàm upload
+  //   this.fileExtensionAudio = this.fileAudio.name.split('.').pop();
+  //   this.fileExtensionImg = this.fileImg.name.split('.').pop();
+  //   console.log(this.fileExtensionImg);
+
+  //   const currentDate = new Date();
+  //   this.newFileName = `${currentDate.toISOString().trim()}`;
+  //   const pathAudio = `audio/${this.newFileName}.${this.fileExtensionAudio}`;
+  //   const pathImg = `upload/${this.newFileName}.${this.fileExtensionImg}`;
+
+  //   console.log(this.newFileName);
+  //   await this.storage.upload(pathAudio, this.fileAudio);
+  //   await this.storage.upload(pathImg, this.fileImg);
+  //   console.log('Cập nhật thành công, new file name:', this.newFileName);
+  //   Promise.all([
+  //     uploadFile(this.fileAudio, pathAudio, (progress) => this.uploadProgressAudio = progress),
+  //     uploadFile(this.fileImg, pathImg, (progress) => this.uploadProgressImage = progress)
+  //   ]).then(() => {
+  //     // this.dialog.success('Đã thêm thành công!');
+  //     this.isUploading = false;
+  //   }).catch(error => {
+  //     console.error('Upload failed:', error);
+  //     this.isUploading = false;
+  //   });
+  // }
+
+  // async onUpdate(): Promise<void> {
+
+  //   if (this.postForm.invalid) {
+  //     return;
+  //   }
+
+  //   try {
+  //     if (this.fileImg || this.fileAudio) {
+  //       await this.upload();
+  //       this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
+  //       this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
+  //     }
+  //     this.postnew.customers_id;
+
+
+  //     const postId = this.route.snapshot.params['id'];
+  //     this.postnew.id = postId;
+
+  //     this.postService.updatePost(this.postnew, postId).subscribe({
+  //       next: () => {
+  //         this.dialog.success('Đã thêm thành công!');
+  //       },
+  //       error: error => {
+  //         console.error('Error updating post', error);
+  //       }
+  //     });
+
+  //   } catch (error) {
+  //     console.error('Error uploading image', error);
+  //   }
+  // }
+
+
+
 
   async upload(): Promise<void> {
     this.isUploading = true;

@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { IPost } from 'app/@core/interfaces/post.interface';
 import { PostService } from 'app/@core/services/apis/post.service';
 import { SpinnerService } from "../../../@theme/components/spinner/spinner.service";
+import { ICategories } from 'app/@core/interfaces/categories.interface';
+import { CategoriesService } from 'app/@core/services/apis/categories.service';
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +16,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ListComponent implements OnInit {
   post: IPost[] = [];
+  categories: ICategories[] = [];
   suggestedKeywords: string[] = [];
+  editingCategory: ICategories = { id: '', name: '' };
   last_page: number = 0;
   current_page: number = 0;
   isVoiceActive: boolean = false;
@@ -34,29 +38,48 @@ export class ListComponent implements OnInit {
     private spinner: SpinnerService,
     private postService: PostService,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private categoriesService: CategoriesService,
   ) { }
 
   ngOnInit(): void {
     this.getAll();
+    this.getCate();
   }
   getAll() {
     this.spinner.show();
-    this.postService.getPost().subscribe(res =>{
+    this.postService.getPost(this.current_page).subscribe(res => {
       this.post = res.data
       this.current_page = res.meta.current_page;
       this.last_page = res.meta.last_page;
       this.spinner.hide();
-      }, error => {
-        console.log(error);
-      })
+    }, error => {
+      console.log(error);
+    })
   }
+  getCate() {
+    this.spinner.show();
+    this.categoriesService.getCategories().subscribe(res => {
+      this.categories = res.data
+      // console.log(this.categories);
+      this.spinner.hide();
+    }, error => {
+      console.log(error);
+
+    })
+  }
+
+  getCategoryName(categoryId: string): string {
+    const category = this.categories.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Chưa chọn loại';
+  }
+
   deletePost(postId: string) {
     if (confirm('Bạn có chắc chắn muốn xóa?')) {
       this.postService.deletePost(postId).subscribe({
         next: (response: { message: string }) => {
           console.log(response.message);
-          this.getAll(); 
+          this.getAll();
         },
         error: error => {
           console.error('Error deleting post', error);
@@ -70,7 +93,7 @@ export class ListComponent implements OnInit {
         this.post = this.post.filter(post => post.id !== postId);
       }
     });
-  }
+}
   getPage(event: any): void {
     this.post = event.data
     this.current_page = event.meta.current_page;
@@ -102,7 +125,7 @@ export class ListComponent implements OnInit {
           },
           (error) => {
             console.error('Lỗi khi gợi ý từ khóa:', error);
-          
+
           }
         );
     } else {

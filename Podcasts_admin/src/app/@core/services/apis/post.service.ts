@@ -47,6 +47,7 @@ export class PostService extends ApiService {
             headers
         });
     }
+    
     deletePost(postId: string): Observable<{ message: string }> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
