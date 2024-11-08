@@ -20,7 +20,7 @@
           <div class='row mb-3'>
             <div class="col-sm-12">
               <label for="description" class="fw-bold col-form-label">Mô tả</label>
-              <textarea rows="5" nbInput id="description" name="description" fullWidth shape="round" placeholder="Mô tả..." class="input-full-width size-medium status-basic shape-rectangle nb-transition" formControlName="description" [(ngModel)]="editingCategory.description"></textarea>
+              <app-tinymce-editor id="description" name="description" formControlName="description"></app-tinymce-editor>
             </div>
           </div>
           <div class="mb-3 text-end">

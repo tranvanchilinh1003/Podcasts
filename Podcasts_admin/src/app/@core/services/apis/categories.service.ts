@@ -36,6 +36,13 @@ export class CategoriesService extends ApiService {
       headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
     });
   }
+
+  updateCategoryOrder(categories: ICategories[]): Observable<any> {
+    return this._http.put(API_BASE_URL + API_ENDPOINT.categories.updateOrder, categories, {
+      headers: new HttpHeaders().set('x-access-token', this.authservice.getToken())
+    });
+  }
+  
   
   create(post: ICategories): Observable<ICategories> {
     return this._http.post<ICategories>(API_BASE_URL + API_ENDPOINT.categories.categories, post);

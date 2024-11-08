@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th9 30, 2024 lúc 06:52 AM
+-- Thời gian đã tạo: Th10 17, 2024 lúc 06:14 AM
 -- Phiên bản máy phục vụ: 8.0.31
 -- Phiên bản PHP: 7.4.33
 
@@ -69,7 +69,8 @@ CREATE TABLE `comments` (
 INSERT INTO `comments` (`id`, `rating`, `contents`, `date`, `customers_id`, `post_id`) VALUES
 (26, 5, 'hayyyy', '2024-09-10', 94, 87),
 (31, 1, 'pp', '2024-09-24', 94, 87),
-(33, 4, '55', '2024-09-25', 7, 85);
+(33, 4, '55', '2024-09-25', 7, 85),
+(34, 5, '1111', '2024-10-17', 94, 87);
 
 -- --------------------------------------------------------
 
@@ -90,22 +91,23 @@ CREATE TABLE `customers` (
   `otp` int NOT NULL DEFAULT '0',
   `create_date` datetime DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
-  `otp_expires_at` datetime DEFAULT NULL
+  `otp_expires_at` datetime DEFAULT NULL,
+  `background` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `customers`
 --
 
-INSERT INTO `customers` (`id`, `username`, `full_name`, `password`, `email`, `role`, `gender`, `images`, `isticket`, `otp`, `create_date`, `update_date`, `otp_expires_at`) VALUES
-(7, 'admin1234', 'Admin Nè', '$2b$10$YSQwNFv/yRKBF4XetQaOMO.OHdPr1A.SikV7e2J8DOlkAMSn2JrBu', 'linhtvcpc06747@fpt.edu.vn', 'admin', 0, '2024-08-05T15-33-10-432Z.png', 'active', 54877, '2024-08-06 21:25:24', NULL, '2024-09-24 13:46:56'),
-(66, 'minhminh', 'Nguyễn Phước Minh', '$2b$10$xLlxQhler5kAVWQAyeFznuLEU2Zs1qn/S9.UN7vTaBtahcRORu0Cm', 'minhrip9@gmail.com', 'user', 0, '2024-08-11T13-20-31-959Z.jpg', 'inactive', 0, '2024-08-11 20:20:33', NULL, NULL),
-(78, 'dedede123', 'Nguyễn hoàng đệ', '$2b$10$v4v8IvqvP4ouHGo/9QyYqOiPD8ngndMAJlv2qVLumpztFfqTaE/l2', 'nguyenhoangde470@gmail.com', 'user', 0, '2024-08-13T15-17-09-332Z.jpg', 'inactive', 0, '2024-08-13 22:17:11', NULL, NULL),
-(79, 'nguyenhoangde', 'nguyễn hoàng đệ', '$2b$10$1kGV6kB1yr64XD05X8frvuk8zq/AZy9Hw4vGLwOlO9gPGa1P.KTQq', 'nguyenhoangdexyz@gmail.com', 'user', 0, '2024-08-13T15-18-19-954Z.jpg', 'active', 0, '2024-08-13 22:18:21', NULL, NULL),
-(88, 'foodcast', NULL, '$2b$10$U7yGXQviAIlcvHEEHn0WxOCYmri7AGep7yXsZVWY2MS8c06rJcBSq', 'foodcast440@gmail.com', 'user', 0, 'foodcast', 'inactive', 0, '2024-09-05 21:58:22', NULL, NULL),
-(94, 'tranvanchilinh', NULL, '$2b$10$zZVybG08ZkAbQEr1Hreckeef1o4/b59qj5DI/eZ1TQp8C6keYxKli', 'chilinh140220@gmail.com', 'user', 0, 'Trần Văn Chí Linh', 'inactive', 92337, '2024-09-10 20:20:47', NULL, '2024-09-24 13:40:24'),
-(95, 'linhzl', 'Trần Văn Chí Linh', '$2b$10$H83LJsmeoz91TFmyarjXnO2Yes0aBvCh/QFBNnUoU7.4zwCrvGr/m', 'linh123@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-09-24 10:01:15', NULL, NULL),
-(96, 'linhk4', 'linhtran', '$2b$10$kbcVbIzdLnHWg5RJrmtDvO75lRNCZKlLE53JtE6Aog1c6.QRpa2R6', 'linh1234@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-09-24 10:03:20', NULL, NULL);
+INSERT INTO `customers` (`id`, `username`, `full_name`, `password`, `email`, `role`, `gender`, `images`, `isticket`, `otp`, `create_date`, `update_date`, `otp_expires_at`, `background`) VALUES
+(7, 'admin1234', 'Admin Nè', '$2b$10$YSQwNFv/yRKBF4XetQaOMO.OHdPr1A.SikV7e2J8DOlkAMSn2JrBu', 'linhtvcpc06747@fpt.edu.vn', 'admin', 0, '2024-08-05T15-33-10-432Z.png', 'active', 54877, '2024-08-06 21:25:24', NULL, '2024-09-24 13:46:56', NULL),
+(66, 'minhminh', 'Nguyễn Phước Minh', '$2b$10$xLlxQhler5kAVWQAyeFznuLEU2Zs1qn/S9.UN7vTaBtahcRORu0Cm', 'minhrip9@gmail.com', 'user', 0, '2024-08-11T13-20-31-959Z.jpg', 'inactive', 0, '2024-08-11 20:20:33', NULL, NULL, NULL),
+(78, 'dedede123', 'Nguyễn hoàng đệ', '$2b$10$v4v8IvqvP4ouHGo/9QyYqOiPD8ngndMAJlv2qVLumpztFfqTaE/l2', 'nguyenhoangde470@gmail.com', 'user', 0, '2024-08-13T15-17-09-332Z.jpg', 'inactive', 0, '2024-08-13 22:17:11', NULL, NULL, NULL),
+(79, 'nguyenhoangde', 'nguyễn hoàng đệ', '$2b$10$1kGV6kB1yr64XD05X8frvuk8zq/AZy9Hw4vGLwOlO9gPGa1P.KTQq', 'nguyenhoangdexyz@gmail.com', 'user', 0, '2024-08-13T15-18-19-954Z.jpg', 'active', 0, '2024-08-13 22:18:21', NULL, NULL, NULL),
+(94, 'tranvanchilinh', 'Linhhhhh', '$2b$10$zZVybG08ZkAbQEr1Hreckeef1o4/b59qj5DI/eZ1TQp8C6keYxKli', 'chilinh140220@gmail.com', 'user', 0, '2024-10-15T04-03-53-900Z.jpg', 'active', 92337, '2024-09-10 20:20:47', NULL, '2024-09-24 13:40:24', '2024-10-16T03-34-09-641Z.jpg'),
+(95, 'linhzl', 'Trần Văn Chí Linh', '$2b$10$H83LJsmeoz91TFmyarjXnO2Yes0aBvCh/QFBNnUoU7.4zwCrvGr/m', 'linh123@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-09-24 10:01:15', NULL, NULL, NULL),
+(96, 'linhk4', 'linhtran', '$2b$10$kbcVbIzdLnHWg5RJrmtDvO75lRNCZKlLE53JtE6Aog1c6.QRpa2R6', 'linh1234@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-09-24 10:03:20', NULL, NULL, NULL),
+(97, 'foodcast', NULL, '$2b$10$7GM9R6r90bUzuR2vOVaOIut5hJR9v0.EsEJGiyDkCBe9gajqVks1e', 'foodcast440@gmail.com', 'user', 0, 'foodcast', 'inactive', 0, '2024-09-30 14:02:38', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -119,13 +121,6 @@ CREATE TABLE `favourite` (
   `customers_id` int NOT NULL,
   `post_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `favourite`
---
-
-INSERT INTO `favourite` (`id`, `date`, `customers_id`, `post_id`) VALUES
-(7, '2024-09-15', 94, 85);
 
 -- --------------------------------------------------------
 
@@ -145,11 +140,10 @@ CREATE TABLE `follow` (
 --
 
 INSERT INTO `follow` (`id`, `follower_id`, `followed_id`, `follow_date`) VALUES
-(43, 94, 7, '2024-09-27 12:05:15'),
-(44, 88, 7, '2024-09-27 13:24:31'),
-(45, 96, 7, '2024-09-27 13:24:46'),
-(54, 7, 94, '2024-09-27 13:47:44'),
-(55, 88, 94, '2024-09-27 14:04:50');
+(65, 97, 7, '2024-10-02 13:00:15'),
+(67, 97, 94, '2024-10-02 13:11:32'),
+(69, 96, 7, '2024-10-05 12:36:55'),
+(143, 94, 7, '2024-10-17 13:10:46');
 
 -- --------------------------------------------------------
 
@@ -168,13 +162,54 @@ CREATE TABLE `like` (
 --
 
 INSERT INTO `like` (`id`, `customers_id`, `post_id`) VALUES
-(26, 88, 87),
-(98, 94, 87),
-(99, 94, 87),
-(106, 7, 87),
-(111, 7, 96),
-(115, 94, 99),
-(124, 7, 97);
+(128, 7, 85),
+(137, 97, 85),
+(141, 97, 99),
+(145, 96, 97),
+(146, 96, 96),
+(147, 96, 87),
+(148, 96, 85),
+(151, 7, 96),
+(153, 7, 91),
+(154, 7, 99),
+(163, 7, 97),
+(165, 7, 110),
+(166, 7, 110),
+(177, 7, 87),
+(270, 94, 96),
+(297, 94, 99),
+(300, 94, 85),
+(301, 94, 97),
+(302, 94, 91),
+(304, 94, 77),
+(305, 94, 87),
+(307, 94, 88);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `sender_id` int DEFAULT NULL,
+  `type` enum('like','follow') COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `post_id` int DEFAULT NULL,
+  `isread` enum('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `sender_id`, `type`, `created_at`, `post_id`, `isread`) VALUES
+(252, 7, 94, 'like', '2024-10-11 20:26:52', 77, 'active'),
+(253, 7, 94, 'like', '2024-10-16 23:08:42', 87, 'active'),
+(255, 7, 94, 'follow', '2024-10-16 23:10:46', NULL, 'active'),
+(257, 7, 94, 'like', '2024-10-16 23:11:43', 88, 'active');
 
 -- --------------------------------------------------------
 
@@ -206,7 +241,7 @@ INSERT INTO `post` (`id`, `title`, `images`, `audio`, `description`, `categories
 (80, 'Bún riêu cua', '2024-08-05T15:56:19.884Z.jpg', '2024-08-05T15:56:21.869Z.mp3', 'Bún riêu cua là một món ăn truyền thống nổi tiếng của Việt Nam, đặc biệt với hương vị thơm ngon từ cua đồng, nước dùng thanh nhẹ và sự kết hợp hoàn hảo của các loại rau củ. Món bún này không chỉ ngon miệng mà còn mang lại cảm giác ấm cúng, phù hợp cho những bữa ăn gia đình hoặc những ngày trời se lạnh. Dưới đây là công thức làm bún riêu cua đơn giản mà vẫn giữ được hương vị đặc trưng của món ăn.', 78, 7, 2, '2024-07-15 23:33:20', NULL),
 (85, 'Hủ tiếu', '2024-08-05T16:07:19.107Z.jpg', '2024-08-05T16:07:21.866Z.mp3', 'Hủ tiếu là một món ăn truyền thống nổi tiếng của ẩm thực Việt Nam, đặc biệt phổ biến ở miền Nam. Với sợi hủ tiếu mềm mịn, nước dùng trong và thanh, cùng với các thành phần tươi ngon như thịt, tôm, và rau củ, món ăn này chắc chắn sẽ làm hài lòng cả gia đình bạn. Dưới đây là cách làm hủ tiếu đơn giản tại nhà, giúp bạn thưởng thức món ăn đậm đà hương vị ngay tại căn bếp của mình.', 78, 7, 0, '2024-08-05 00:00:00', NULL),
 (86, 'Mì xào bò', '2024-08-05T16:10:35.591Z.jpg', '2024-08-05T16:10:37.977Z.mp3', 'Mì xào bò là món ăn nhanh gọn và dễ làm, lý tưởng cho những buổi tối bận rộn hoặc khi bạn muốn thưởng thức một bữa ăn ngon miệng mà không mất quá nhiều thời gian. Với hương vị thơm ngon từ thịt bò xào mềm, mì dai và các loại rau củ tươi ngon, món mì xào bò này chắc chắn sẽ làm hài lòng cả gia đình bạn.', 77, 7, 6, '2024-08-05 00:00:00', NULL),
-(87, 'Mì xào hải sản', '2024-08-05T16:11:45.852Z.jpg', '2024-08-05T16:11:48.031Z.mp3', 'Mì xào hải sản là một món ăn hấp dẫn, kết hợp hương vị tươi ngon của hải sản với sợi mì mềm dai và các loại rau củ tươi mát. Với cách làm đơn giản và nhanh chóng, món ăn này phù hợp cho những buổi tối bận rộn hoặc những dịp bạn muốn thưởng thức một bữa ăn phong phú và đầy đủ dinh dưỡng. Hãy cùng khám phá cách làm mì xào hải sản thơm ngon ngay tại nhà!', 77, 7, 12, '2024-08-05 00:00:00', NULL),
+(87, 'Mì xào hải sản', '2024-08-05T16:11:45.852Z.jpg', '2024-08-05T16:11:48.031Z.mp3', 'Mì xào hải sản là một món ăn hấp dẫn, kết hợp hương vị tươi ngon của hải sản với sợi mì mềm dai và các loại rau củ tươi mát. Với cách làm đơn giản và nhanh chóng, món ăn này phù hợp cho những buổi tối bận rộn hoặc những dịp bạn muốn thưởng thức một bữa ăn phong phú và đầy đủ dinh dưỡng. Hãy cùng khám phá cách làm mì xào hải sản thơm ngon ngay tại nhà!', 77, 7, 14, '2024-08-05 00:00:00', NULL),
 (88, 'Cách làm cơm tắm siêu đơn giản', '2024-08-05T16:12:58.556Z.jpg', '2024-08-05T16:13:00.927Z.mp3', '', 76, 7, 1, '2024-08-05 00:00:00', NULL),
 (89, 'Cách làm hủ tiếu đơn giản tại nhà', '2024-08-05T16:13:58.123Z.jpg', '2024-08-05T16:14:00.029Z.mp3', 'Hủ tiếu là một món ăn truyền thống của người Việt Nam, nổi tiếng với hương vị đậm đà, hấp dẫn và dễ dàng chinh phục cả những thực khách khó tính nhất. Nếu bạn yêu thích món hủ tiếu nhưng chưa biết làm tại nhà, hãy tham khảo cách làm đơn giản dưới đây để có một tô hủ tiếu thơm ngon, dễ làm mà không cần quá nhiều thời gian và công sức.', 78, 7, 9, '2024-08-05 00:00:00', NULL),
 (90, 'Nem rán siêu ngon cực dễ làm', '2024-08-05T16:14:51.083Z.jpg', '2024-08-05T16:14:52.928Z.mp3', '', 75, 7, 0, '2024-08-05 00:00:00', NULL),
@@ -253,7 +288,8 @@ INSERT INTO `share` (`id`, `date`, `customers_id`, `post_id`) VALUES
 (29, '2024-09-30', 94, 97),
 (31, '2024-09-30', 94, 99),
 (34, '2024-09-30', 7, 97),
-(35, '2024-09-30', 7, 97);
+(35, '2024-09-30', 7, 97),
+(36, '2024-10-12', 94, 86);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -304,6 +340,12 @@ ALTER TABLE `like`
   ADD KEY `fk_like_Post1_idx` (`post_id`);
 
 --
+-- Chỉ mục cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Chỉ mục cho bảng `post`
 --
 ALTER TABLE `post`
@@ -343,13 +385,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT cho bảng `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT cho bảng `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT cho bảng `favourite`
@@ -361,19 +403,25 @@ ALTER TABLE `favourite`
 -- AUTO_INCREMENT cho bảng `follow`
 --
 ALTER TABLE `follow`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
 
 --
 -- AUTO_INCREMENT cho bảng `like`
 --
 ALTER TABLE `like`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=308;
+
+--
+-- AUTO_INCREMENT cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
 
 --
 -- AUTO_INCREMENT cho bảng `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
 
 --
 -- AUTO_INCREMENT cho bảng `repcomments`
@@ -385,7 +433,7 @@ ALTER TABLE `repcomments`
 -- AUTO_INCREMENT cho bảng `share`
 --
 ALTER TABLE `share`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -416,8 +464,7 @@ ALTER TABLE `follow`
 -- Các ràng buộc cho bảng `like`
 --
 ALTER TABLE `like`
-  ADD CONSTRAINT `fk_like_Customers1` FOREIGN KEY (`customers_id`) REFERENCES `customers` (`id`),
-  ADD CONSTRAINT `fk_like_Post1` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`);
+  ADD CONSTRAINT `fk_like_Customers1` FOREIGN KEY (`customers_id`) REFERENCES `customers` (`id`);
 
 --
 -- Các ràng buộc cho bảng `post`

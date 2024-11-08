@@ -1,0 +1,94 @@
+<div class="row">
+    <div class="col-lg-12">
+        <nb-card>
+            <nb-card-header>Xem trước bài viết</nb-card-header>
+            <nb-card-body>
+                <form class="form" enctype="multipart/form-data">
+                    <section class="latest-podcast-section section-padding pb-0" id="section_2">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-10 col-12">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-12">
+                                            <div class="custom-block-icon-wrap">
+                                                <div class="custom-block-image-wrap custom-block-image-detail-page">
+                                                    <img [src]="postnew.images ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F' + postnew.images + '?alt=media' : ''"
+                                                        class="custom-block-image img-fluid rounded  w-auto"
+                                                        style="width: auto ; height: 150px; object-fit: cover;"
+                                                        alt="" />
+                                                </div>
+                                                <div class="custom-block-bottom justify-content-around d-flex mt-3">
+                                                    <p class="bi-headphones me-1">
+                                                        <nb-icon icon="headphones-outline" pack="eva" class="fs-6"></nb-icon>
+                                                        <span>{{ postnew.view }}</span>
+                                                    </p>
+
+                                                    <p>
+                                                        <nb-icon icon="heart-outline" pack="eva" class="fs-6"></nb-icon>
+                                                        <span>{{postnew.total_likes}}</span>
+                                                    </p>
+
+                                                    <p>
+                                                        <nb-icon icon="message-circle-outline" pack="eva" class="fs-6"></nb-icon>
+                                                        <span class="me-1">{{postnew.total_comments}}</span>
+                                                    </p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-9 col-12">
+                                            <div class="custom-block-info">
+                                                <div class="custom-block-top d-flex mb-1">
+                                                    <small>
+                                                        <i class="bi-clock-fill custom-icon">
+                                                            <nb-icon icon="clock-outline" pack="eva" class="fs-6"></nb-icon>
+                                                            {{ postnew.create_date | date: 'dd/MM/yyyy' }}
+                                                        </i>
+                                                    </small>
+                                                </div>
+                                                <h2 class="mb-2">{{ postnew.title}}</h2>
+                                                <div class="profile-block profile-detail-block align-items-center">
+                                                    <div class="d-flex mb-3 mb-lg-0 mb-md-0 align-items-center">
+                                                        <img [src]="postnew.images_customers ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F' + postnew.images_customers + '?alt=media' : ''"
+                                                            class="profile-block-image img-fluid rounded-circle" alt=""
+                                                            style="max-width: 50px; height: 50px;" />
+                                                        <div class="ml-2 mx-2">
+                                                            <p class="mb-0 d-flex">{{postnew.username}}
+                                                                <img *ngIf="postnew.isticket === 'active'" 
+                                                                src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                                                                class="verified-image img-fluid" alt="Verified" 
+                                                                style="width: auto; height: 20px"
+                                                                />
+                                                            </p>
+                                                           
+                                                            <p class="mb-0"><strong>Người đăng</strong></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div [innerHTML]="isExpanded ? postnew.description : truncatedDescription"
+                                                    class="mt-2">
+                                                </div>
+                                                <a *ngIf="postnew.description.length > 100" (click)="toggleExpand()"
+                                                    class=" hover-pointer">
+                                                    {{ isExpanded ? 'Ẩn bớt' : 'Xem thêm' }}
+                                                </a>
+                                                <div class="mt-2">
+                                                    <audio class="w-100" controls loop
+                                                        [src]="postnew.audio ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F' + postnew.audio + '?alt=media' : ''">
+                                                    </audio>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </section>
+                </form>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>

@@ -167,12 +167,15 @@ function PostUser({ fetchPost  }) {
             <div className='row'>
               <div className='col-6'>
                 <label>Tiêu đề</label>
-                <input type='text' className='form-control'
+                <input
+                  type='text'
+                  className='form-control'
                   id="title"
                   name="title"
                   placeholder="Tiêu đề..."
-                  {...register('title', { required: true })} />
-                {errors.title && <span className='text-danger'>Vui lòng nhập tiêu đề!</span>}
+                  {...register('title', { required: true, minLength: { value: 8, message: 'Tiêu đề quá ngắn, vui lòng nhập đầy đủ tiêu đề!' } })}
+                />
+                {errors.title && <span className='text-danger'>{errors.title.message || 'Vui lòng nhập tiêu đề!'}</span>}
               </div>
               <div className='col-6'>
                 <label>Hình ảnh</label>

@@ -1,24 +1,16 @@
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-import { JwtHelperService } from '@auth0/angular-jwt';
-
-import { IAlertMessage } from "../../../@theme/components/alert/ngx-alerts.component";
 import { ApiService, LocalStorageService } from "../common";
 import { IPost } from "../../interfaces/post.interface";
-import { ICategories } from "../../interfaces/categories.interface";
 import { API_BASE_URL, API_ENDPOINT } from "../../config/api-endpoint.config";
-import { UserInfoModel } from "../../model/user-info.model";
-import { LOCALSTORAGE_KEY } from "../../config";
 import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PostService extends ApiService {
-
 
     constructor(
         private _http: HttpClient,
@@ -27,67 +19,75 @@ export class PostService extends ApiService {
         private authservice: AuthService,
         @Inject('INTERCEPTOR_FILTER') private interceptorFilter: any
     ) {
-        super(_http);
+        super(_http); // Gọi hàm constructor của ApiService và truyền _http
     }
 
+    
     getPost(): Observable<any> {
-        const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
-            new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.get<{ data: IPost[] }>(API_BASE_URL + API_ENDPOINT.post.post, { headers });
+        const headers = new HttpHeaders().set('x-access-token', this.authservice.getToken());
+        return this._http.get<{ data: IPost[] }>(`${API_BASE_URL}${API_ENDPOINT.post.post}`, { headers });
     }
+
     getPostById(postId: string): Observable<{ data: IPost[] }> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.get<{ data: IPost[] }>(API_BASE_URL + API_ENDPOINT.post.post + `/${postId}`, {
+        return this._http.get<{ data: IPost[] }>(`${API_BASE_URL}${API_ENDPOINT.post.post}/${postId}`, {
             headers
         });
     }
+
     deletePost(postId: string): Observable<{ message: string }> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.delete<{ message: string }>(API_BASE_URL + API_ENDPOINT.post.post + `/${postId}`, {
+        return this._http.delete<{ message: string }>(`${API_BASE_URL}${API_ENDPOINT.post.post}/${postId}`, {
             headers
         });
     }
-    createPost(post): Observable<IPost> {
+
+    createPost(post: IPost): Observable<IPost> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.post<IPost>(API_BASE_URL + API_ENDPOINT.post.post, post, {
+        return this._http.post<IPost>(`${API_BASE_URL}${API_ENDPOINT.post.post}`, post, {
             headers
         });
     }
+
     updatePost(post: IPost, postId: string): Observable<IPost> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.patch<IPost>(API_BASE_URL + API_ENDPOINT.post.post + `/${postId}`, post, {
+        return this._http.patch<IPost>(`${API_BASE_URL}${API_ENDPOINT.post.post}/${postId}`, post, {
             headers
         });
     }
+
     getSearch(key: string): Observable<any> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.get<IPost>(API_BASE_URL + API_ENDPOINT.post.search + `?messages=${key}`, {
+        return this._http.get<IPost>(`${API_BASE_URL}${API_ENDPOINT.post.search}?messages=${key}`, {
             headers
         });
     }
+
     suggestKeywords(keyword: string): Observable<any> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.get<any>(API_BASE_URL + API_ENDPOINT.post.suggest_keywords + `?keyword=${keyword}`, {
+        return this._http.get<any>(`${API_BASE_URL}${API_ENDPOINT.post.suggest_keywords}?keyword=${keyword}`, {
             headers
         });
     }
+
     dataChart(): Observable<any> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.get<any>(API_BASE_URL + API_ENDPOINT.post.data, {
+        return this._http.get<any>(`${API_BASE_URL}${API_ENDPOINT.post.data}`, {
             headers
         });
     }
+
     Chart(): Observable<any> {
         const headers = this.interceptorFilter({ headers: new HttpHeaders() }) ?
             new HttpHeaders().set('x-access-token', this.authservice.getToken()) : new HttpHeaders();
-        return this._http.get<any>(API_BASE_URL + API_ENDPOINT.post.chart, {
+        return this._http.get<any>(`${API_BASE_URL}${API_ENDPOINT.post.chart}`, {
             headers
         });
     }
