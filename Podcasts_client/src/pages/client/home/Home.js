@@ -110,8 +110,8 @@ function Home() {
                     <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${follow.images}?alt=media`} className="owl-carousel-image img-fluid" alt="Chef 1"
                       style={{
                         maxWidth: "auto",
-                        height: "100%",
-                        width: "100%",
+                        height: "350px",
+                        
                       }}
                     />
                     <div className="owl-carousel-info text-center">

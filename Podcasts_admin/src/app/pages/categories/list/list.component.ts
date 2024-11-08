@@ -54,5 +54,7 @@ export class ListComponent implements OnInit {
   }
   getPage(event: any): void {
     this.categories = event.data
+    this.current_page = event.meta.current_page;
+    this.last_page = event.meta.last_page;
   }
 }

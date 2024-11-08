@@ -1,32 +1,53 @@
 <nb-card class="row mx-0">
-  <nb-card-body class="row mx-0 ">
-    <h6>Biểu đồ thống kê</h6>
+  <nb-card-body class="row mx-0">
+    <h6>Biểu đồ thống kê khách hàng và bài đăng theo tháng</h6>
     <div style="display: block;">
-      <canvas baseChart
+      <canvas 
+        baseChart
         [datasets]="lineChartData"
         [labels]="lineChartLabels"
         [options]="lineChartOptions"
         [legend]="lineChartLegend"
-        [chartType]="lineChartType"
-        [colors]="chartColor">
+        [chartType]="lineChartType">
       </canvas>
     </div>
-    
-    <div style="display: block;">
-      <canvas class="mt-5" baseChart
-              [data]="chartData"
-              [labels]="chartLabels"
-              [chartType]="'doughnut'"
-              [colors]="chartColors"
-              [options]="chartOptions"
-              [legend]="true">
-      </canvas>
+  </nb-card-body>
+</nb-card>
+
+<nb-card class="row mx-0">
+  <nb-card-body class="row mx-0">
+    <h6>Lượt xem cao nhất</h6>
+    <div>
+      <div class="d-flex justify-content-between">
+      
+        <div class="d-flex">
+        
+          <input type="datetime-local" class="form-control" name="startDate" id="startDate" 
+            [(ngModel)]="startDate" 
+            [min]="minDate ? formatDate(minDate) : ''"
+            (ngModelChange)="onDateChange()">
+          <span class="mx-2">đến</span>
+
+        
+          <input type="datetime-local" class="form-control" name="endDate" id="endDate" 
+            [(ngModel)]="endDate" 
+            [min]="minDate ? formatDate(minDate) : ''"
+            (ngModelChange)="onDateChange()">
+        </div>
+
+        
+        <button nbButton status="primary" class="btn btn-primary" (click)="filterData()">Lọc</button>
+      </div>
     </div>
 
-    
-  
-    
-    
-    
+    <div style="display: block;">
+      <canvas 
+        baseChart
+        [datasets]="topPostsChartData"
+        [labels]="topPostsChartLabels"
+        [options]="topPostsChartOptions"
+        [chartType]="topPostsChartType">
+      </canvas>
+    </div>
   </nb-card-body>
 </nb-card>

@@ -600,14 +600,14 @@ function Account() {
             <div className="content content-full-width">
               <div className="profile">
                 <div className="profile-header">
-                  <div className="profile-header-cover">
+                  <div className="profile-header-cover ">
                     <img
                       // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}}
                       src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
-                      style={{ width: "100%", height: "100%" }}
+                      style={{ width:'100%', height: '100%', objectFit: "cover" }}
                     />
                   </div>
-                  <div className="profile-header-content">
+                  <div className="profile-header-content py-5">
                     <div className="profile-header-img rounded-circle">
                       <img
                         src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
@@ -797,7 +797,7 @@ function Account() {
                                                     alt="Hồ sơ"
                                                     style={{
                                                       maxWidth: "auto",
-                                                      // height: "100%",
+                                                      height: "100%",
                                                       width: "100%",
                                                       borderRadius: "50%",
                                                     }}
@@ -1083,6 +1083,7 @@ function Account() {
                                                 src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
                                                 alt="Your image description"
                                                 className="border rounded"
+                                          
                                               />
 
                                               <span

@@ -218,7 +218,7 @@ function Post() {
     window.addEventListener('scroll', handleScroll);
     
     return () => {
-      window.removeEventListener('scroll', handleScroll); // Dọn dẹp
+      window.removeEventListener('scroll', handleScroll); 
     };
   }, [visibleCount, loadingMore]);
 
@@ -464,7 +464,7 @@ const roundTo = (num, places) => {
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-12 col-12">
-            <div className="section-title-wrap mb-5">
+            <div className="section-title-wrap mb-4">
               <h4 className="section-title">Bài viết</h4>
             </div>
           </div>
@@ -528,7 +528,7 @@ const roundTo = (num, places) => {
                           style={{ cursor: "pointer" }}
                           onClick={() => handleCommentClick(post.data.id)}
                         >
-                          <span className="me-1">
+                          <span className="me-1 ms-1">
                             {post.data.total_comments}
                           </span>
                         </span>

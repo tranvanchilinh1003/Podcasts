@@ -149,3 +149,24 @@
   .list-group-item:hover {
     background-color: #f8f9fa;
   }
+  .voice-search {
+    transition: transform 0.2s ease;  /* Thêm hiệu ứng khi thay đổi trạng thái */
+  }
+  
+  .voice-search.active {
+    transform: scale(1.2);  /* Phóng to biểu tượng khi nhận diện giọng nói */
+    animation: blinkEffect 1s infinite;  /* Thêm hiệu ứng nhấp nháy */
+  }
+  
+  @keyframes blinkEffect {
+    0% {
+      fill: #4285f4;
+    }
+    50% {
+      fill: #ea4335;
+    }
+    100% {
+      fill: #4285f4;
+    }
+  }
+  

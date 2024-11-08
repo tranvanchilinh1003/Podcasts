@@ -77,14 +77,14 @@ function sendEmail(email, otp) {
   const expiresAt = otpExpires.toLocaleTimeString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
   async function main() {
     const mailOptions = {
-      from: '"Foodcast Forum" <foodcast440@gmail.com>', // Địa chỉ người gửi
+      from: '"Cuisine Podcasts" <foodcast440@gmail.com>', // Địa chỉ người gửi
       to: email, 
-      subject: "Foodcast Forum Gửi Mã OTP", // Chủ đề email
+      subject: "Cuisine Podcasts Gửi Mã OTP", // Chủ đề email
       text: `Mã OTP của bạn là: ${otp}\nHết hạn vào: ${expiresAt}`,
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background-color: #f9f9f9; padding: 20px; text-align: center; border-radius: 10px;">
-          <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Foodcast Forum Logo" style="max-width: 100px;">
+          <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Cuisine Podcasts Logo" style="max-width: 100px;">
           <h2 style="color: #333;">Xác nhận Email của bạn</h2>
           <p style="color: #666;">Mã OTP của bạn là:</p>
           <h1 style="background-color: #007bff; color: #fff; padding: 10px; border-radius: 5px; margin: 20px 0;">${otp}</h1>

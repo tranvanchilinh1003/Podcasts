@@ -156,7 +156,7 @@ function SearchResults() {
                         {results.length > 0 ? (
                             results.map((post) => (
                                 <div className="col-lg-3 col-md-4 col-6 product-item" key={post.id}>
-                                    <div className="custom-block custom-block-full position-relative">
+                                    <div className="custom-block custom-block-full position-relative p-3">
                                         <div className="custom-block-image-wrap">
                                             <Link to={`/getId_post/${post.id}`}>
                                                 <img
@@ -206,14 +206,7 @@ function SearchResults() {
                                             </div>
                                         </div>
 
-                                        <div className="social-share d-flex flex-column ms-auto">
-                                            <a href="#" className="badge ms-auto">
-                                                <i className="bi-heart"></i>
-                                            </a>
-                                            <a href="#" className="badge ms-auto">
-                                                <i className="bi bi-share-fill"></i>
-                                            </a>
-                                        </div>
+                                      
                                     </div>
                                 </div>
                             ))

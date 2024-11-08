@@ -3,69 +3,11 @@ import "./Spinner.css";
 
 function Spinner() {
   return (
-
-<div className="loaderViewPort">
-  <div className="loaders">
-    <div className="side front">
-      <div className="dot"></div>
-    </div>
-    <div className="side back">
-      <div className="dotContainer">
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </div>
-    </div>
-    <div className="side left">
-      <div className="dotContainer">
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </div>
-    </div>
-    <div className="side right">
-      <div className="dotContainer">
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-      </div>
-    </div>
-    <div className="side top">
-      <div className="dotContainer">
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-        <div className="subDotContainer">
-          <div className="dot"></div>
-        </div>
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-      </div>
-    </div>
-    <div className="side bottom">
-      <div className="dotContainer">
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-        <div className="subDotContainer">
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+/* From Uiverse.io by lenin55 */ 
+<div className="ui-loader loader-blk d-flex m-auto fixed-bottom">
+    <svg viewBox="22 22 44 44" className="multiColor-loader">
+        <circle cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6" className="loader-circle loader-circle-animation"></circle>
+    </svg>
 </div>
 
   );

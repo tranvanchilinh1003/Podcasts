@@ -107,15 +107,15 @@ exports.listFollower = async (req, res, next) => {
 };
 exports.topFollow = async (req, res, next) => {
   try {
-    const follows = await Follow.checkTopFollow(); // Không cần truyền id
+    const follows = await Follow.checkTopFollow()
     res.status(200).json({
       data: follows,
     });
   } catch (err) {
-    console.error(err); // Ghi log lỗi
+    console.error(err); 
     res.status(500).json({
       message: 'Có lỗi xảy ra khi lấy danh sách follow',
-      error: err.message, // Có thể không trả về lỗi chi tiết trong môi trường sản xuất
+      error: err.message, 
     });
   }
 };

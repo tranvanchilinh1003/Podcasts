@@ -57,7 +57,7 @@ function Footer({ userId, user, categories }) {
             </div>
             <div className="col-lg-10 col-md-12 d-flex align-items-center justify-content-center">
               <p className="copyright-text text-center mb-0">
-                Copyright © 2024 &#128525; &#128536; by FOODCAST FORUM
+                Copyright © 2024 &#128525; &#128536; by CUISINE PODCASTS
               </p>
             </div>
           </div>

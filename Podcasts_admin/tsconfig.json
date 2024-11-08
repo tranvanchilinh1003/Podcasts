@@ -31,5 +31,9 @@
     "plugins": [
       { "name": "tslint-language-service"}
     ]
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/app/@core/interfaces/global.d.ts"  
+  ]
 }

@@ -147,7 +147,31 @@ ORDER BY
   }
   static async getIdPost(postId) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id WHERE post.id = ${postId};`;
+      let sql = `SELECT 
+    p.*, 
+    c.images AS images_customers,
+    c.username,
+    c.isticket,
+    COUNT(DISTINCT cm.id) AS total_comments,
+    COUNT(DISTINCT s.id) AS total_shares,
+    COUNT(DISTINCT l.id) AS total_likes,
+    COALESCE(AVG(cm.rating), 0) AS average_comment_rating
+FROM 
+    post AS p
+JOIN 
+    customers AS c ON p.customers_id = c.id
+LEFT JOIN 
+    comments AS cm ON p.id = cm.post_id
+LEFT JOIN 
+    share AS s ON p.id = s.post_id
+LEFT JOIN
+    \`like\` AS l ON p.id = l.post_id
+  
+WHERE p.id = ${postId}
+
+ORDER BY 
+    p.create_date DESC
+    `;
       connect.query(sql, function (err, data) {
         if (err) {
           reject(err);
@@ -160,7 +184,7 @@ ORDER BY
   //get All Pots Cate
   static async getAllPost() {
     return new Promise((resolve, reject) => {
-        let sql = `
+      let sql = `
              SELECT 
     p.*, 
     c.images AS images_customers,
@@ -188,17 +212,16 @@ ORDER BY
     p.create_date DESC;
         `;
 
-        connect.query(sql,  function (err, data) {
-            if (err) {
-                console.error('SQL Error:', err); // In lỗi ra console
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
+      connect.query(sql, function (err, data) {
+        if (err) {
+          console.error("SQL Error:", err); // In lỗi ra console
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
     });
-}
-
+  }
 
   // Delete
   static deletePost(id) {
@@ -269,18 +292,38 @@ ORDER BY
     });
   }
 
-  static async getData() {
+  static async getData(startDate, endDate) {
+    // Truy vấn SQL sử dụng ngày đã được format với `DATE_FORMAT`
+    const sql = `
+        SELECT 
+            DATE_FORMAT(p.create_date, '%Y-%m-%d') AS day, 
+            p.title,
+            c.username,
+            SUM(p.view) AS total_views
+        FROM post p
+        JOIN customers c ON p.customers_id = c.id
+        WHERE p.create_date BETWEEN ? AND ? 
+        GROUP BY day, p.title, c.username
+        ORDER BY total_views DESC
+        LIMIT 5;
+    `;
+
     return new Promise((resolve, reject) => {
-      let sql = `SELECT lo.id, lo.name, COUNT(*) so_luong FROM post JOIN categories lo   ON lo.id = post.categories_id GROUP BY lo.id, lo.name  `;
-      connect.query(sql, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
+        // Thực hiện truy vấn với tham số startDate và endDate đã được truyền vào
+        connect.query(sql, [startDate, endDate], (err, results) => {
+            if (err) {
+                // Log lỗi và trả về lời hứa bị từ chối
+                console.error("Database error:", err);
+                reject(err);
+            } else {
+                
+                resolve(results);
+            }
+        });
     });
-  }
+}
+
+
   static async getChart() {
     return new Promise((resolve, reject) => {
       const query = `

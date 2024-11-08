@@ -43,6 +43,7 @@ function Follow() {
   const [oldPassword, setOldPassword] = useState("");
   const [expandedPostId, setExpandedPostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [backGround, setBackGround] = useState("");
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
   const currentUserId = localStorage.getItem("userId");
@@ -230,6 +231,7 @@ function Follow() {
       setUserInfo(user);
       setOldImage(user.images);
       setOldPassword(user.password);
+      setBackGround(user.background);
       setValue("username", user.username);
       setValue("full_name", user.full_name);
       setValue("email", user.email);
@@ -463,7 +465,13 @@ function Follow() {
             <div className="content content-full-width">
               <div className="profile">
                 <div className="profile-header">
-                  <div className="profile-header-cover"></div>
+                  <div className="profile-header-cover">
+                  <img
+                      // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}}
+                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
+                      style={{ width: "100%", height: "100%", objectFit: 'cover' }}
+                    />
+                  </div>
                   <div className="profile-header-content">
                     <div className="profile-header-img rounded-circle">
                       <img
@@ -521,7 +529,7 @@ function Follow() {
                         aria-selected="true"
                         className="nav-link active"
                       >
-                        Bài đăng
+                        BÀI ĐĂNG
                       </a>
                     </li>
                     <li className="nav-item">
@@ -534,7 +542,7 @@ function Follow() {
                         aria-selected="false"
                         className="nav-link"
                       >
-                        Thông tin
+                        THÔNG TIN
                       </a>
                     </li>
                     <li className="nav-item">

@@ -36,7 +36,7 @@ https://templatemo.com/tm-584-pod-talk
   --menu-font-size:               14px;
 
   --border-radius-large:          100px;
-  --border-radius-medium:         20px;
+  --border-radius-medium:         16px;
   --border-radius-small:          10px;
 
   --font-weight-light:            300;
@@ -160,7 +160,7 @@ strong {
 
 .section-title {
   background: var(--section-bg-color);
-  border-radius: var(--border-radius-large);
+  border-radius: var(--border-radius-small);
   display: inline-block;
   position: relative;
   z-index: 2;

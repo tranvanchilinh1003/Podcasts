@@ -17,6 +17,7 @@ export class ListComponent implements OnInit {
   suggestedKeywords: string[] = [];
   last_page: number = 0;
   current_page: number = 0;
+  isVoiceActive: boolean = false;
   apiUrl = `${API_BASE_URL}${API_ENDPOINT.post.post}`;
   query: string = '';
   newPost: IPost = {
@@ -72,13 +73,16 @@ export class ListComponent implements OnInit {
   }
   getPage(event: any): void {
     this.post = event.data
+    this.current_page = event.meta.current_page;
+    this.last_page = event.meta.last_page;
   }
   searchPosts() {
     this.postService.getSearch(this.query)
       .subscribe(
         (data) => {
           this.post = data.data; 
-          console.log(data.data);
+          this.current_page = data.meta.current_page;
+          this.last_page = data.meta.last_page;
           
           
         },
@@ -111,4 +115,36 @@ export class ListComponent implements OnInit {
     this.suggestedKeywords = []; // Xóa danh sách gợi ý sau khi chọn từ khóa
   }
 
+
+startVoiceSearch() {
+  if ('webkitSpeechRecognition' in window) {
+    this.isVoiceActive = true; 
+    const recognition = new (window as any).webkitSpeechRecognition();  // Khởi tạo đối tượng nhận diện giọng nói
+    recognition.lang = 'vi-VN';  // Cài đặt ngôn ngữ là Tiếng Việt
+    recognition.continuous = false;  // Không nhận diện liên tục
+    recognition.interimResults = false;  // Không nhận diện kết quả tạm thời
+    recognition.maxAlternatives = 1;  // Chỉ nhận diện 1 kết quả
+
+    recognition.start();  // Bắt đầu nhận diện giọng nói
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;  // Lấy văn bản nhận diện được
+      this.query = transcript;  // Cập nhật ô tìm kiếm với văn bản nhận diện được
+      this.suggestKeywords();  // Gọi hàm gợi ý từ khóa
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Lỗi nhận diện giọng nói:", event);  // Xử lý lỗi nếu có
+    };
+  } else {
+    console.error("Trình duyệt không hỗ trợ nhận diện giọng nói.");
+  }
 }
+
+stopVoiceSearch() {
+  this.isVoiceActive = false;
+  const recognition = new (window as any).webkitSpeechRecognition(); 
+  recognition.stop();  // Dừng nhận diện giọng nói
+}
+}
+

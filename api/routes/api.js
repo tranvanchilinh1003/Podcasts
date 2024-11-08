@@ -128,4 +128,6 @@ router.post('/notification', notification.Createnotification)
 router.delete('/notification/:id', notification.delete)
 router.get('/notification_userId/:id', notification.getList)
 router.patch('/notification/:id', notification.update)
+router.post('/notify', notification.notify)
+
 module.exports = router;

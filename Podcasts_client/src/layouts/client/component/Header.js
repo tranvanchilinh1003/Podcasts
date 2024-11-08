@@ -5,7 +5,7 @@ import { useAuthClient } from "../../../pages/client/login/AuthContext";
 import { DialogService } from "../../../services/common/DialogService";
 import { gapi } from "gapi-script";
 import Spinner from "../../../pages/client/Spinner/Spinner";
-import './header.css';
+import "./header.css";
 const CLIENT_ID =
   "973247984258-riadtumd7jcati9d9g9ip47tuqfqdkhc.apps.googleusercontent.com";
 const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
@@ -13,6 +13,7 @@ const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
 function Header() {
   const [userInfo, setUserInfo] = useState(null);
   const [oldImage, setOldImage] = useState("");
+  const [username, setUsername] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -63,7 +64,26 @@ function Header() {
       setLoading(false);
     }
   };
-
+  const fetchUserInfo = async () => {
+    try {
+      const customer = getUserFromLocalStorage();
+      const userId = customer ? customer.id : null;
+      const response = await axios.get(
+        `http://localhost:8080/api/customers/${userId}`
+      );    
+      setUserInfo(response.data.data[0]);
+      setOldImage(response.data.data[0].images);
+      setUsername(response.data.data[0].username)
+    } catch (err) {
+    
+  
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchUserInfo();
+  })
   useEffect(() => {
     setNotificationCount(5);
     fetNotification();
@@ -89,47 +109,31 @@ function Header() {
 
     initializeGapi();
   }, []);
-const fetchUserInfo = async () => {
-  try {
-    const customer = getUserFromLocalStorage();
-    const userId = customer ? customer.id : null;
-    const response = await axios.get(
-      `http://localhost:8080/api/customers/${userId}`
-    );
-    setUserInfo(response.data.data[0]);
-    setOldImage(response.data.data[0].images);
-  } catch (err) {
-    console.error("Failed to fetch user info:", err);
-    setError(err);
-  } finally {
-    setLoading(false);
-  }
-};
 
-useEffect(() => {
-  const token = localStorage.getItem("userToken");
-  const user = JSON.parse(localStorage.getItem("customer"));
 
-  if (token && user) {
-    fetchUserInfo();
-  } else {
-    logout();
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("userToken");
+    const user = JSON.parse(localStorage.getItem("customer"));
 
-  const handleStorageChange = (event) => {
-    if (event.key === 'customer') {
+    if (token && user) {
       fetchUserInfo();
+    } else {
+      logout();
     }
-  };
 
-  window.addEventListener('storage', handleStorageChange);
+    const handleStorageChange = (event) => {
+      if (event.key === "customer") {
+        fetchUserInfo();
+      }
+    };
 
-  // Cleanup event listener on unmount
-  return () => {
-    window.removeEventListener('storage', handleStorageChange);
-  };
-}, [logout]);
+    window.addEventListener("storage", handleStorageChange);
 
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, [logout]);
 
   const handleLogout = async () => {
     try {
@@ -278,6 +282,9 @@ useEffect(() => {
               style={{ width: "50px", height: "50px" }}
             />
           </Link>
+          <label className="text-white fst-italic fw-bold ms-0" style={{fontSize: '16px'}}>
+            CUISINE PODCASTS
+          </label>
         </div>
         <button
           className="navbar-toggler"
@@ -291,16 +298,9 @@ useEffect(() => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div
-          className="collapse navbar-collapse justify-content-center"
+          className="collapse navbar-collapse justify-content-end mr-4"
           id="navbarNav"
         >
-          <Link
-            className="navbar-brand me-lg-3 me-0"
-            to="/"
-            onClick={scrollToTop}
-          >
-            <i className="bi bi-house-fill fs-2"></i>
-          </Link>
           <div className="custom-search">
             <form
               onSubmit={handleSearchSubmit}
@@ -322,7 +322,7 @@ useEffect(() => {
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
-                <button type="submit" className="form-control" id="submit">
+                <button type="submit" className="form-control rounded-end" id="submit">
                   <i className="bi-search"></i>
                 </button>
               </div>
@@ -381,7 +381,7 @@ useEffect(() => {
               {customer && customer.length > 0 && (
                 <div className="nav-items dropdown dropend d-flex align-items-center">
                   <div
-                    className="notification-icon me-5"
+                    className="notification-icon me-4"
                     onClick={toggleNotifications}
                   >
                     <i className="bi bi-bell text-white position-relative fs-5">
@@ -407,109 +407,151 @@ useEffect(() => {
                     </i>
                   </div>
                   {showNotifications && (
-  <ul className="dropdown-menu" style={{ flexDirection: "column" }}>
-    {notifications.length > 0 ? (
-      notifications.slice(0, notificationCount).map((notification, index) => (
-        <li
-          key={index}
-          className={`dropdown-item d-flex align-items-center justify-content-between px-3 notification `}
-        >
-          <div className={`d-flex align-items-center item ${
-            notification.isread === "inactive" ? "notification-inactive" : ""
-          }`}>
-            <Link
-              to={`/follow/${notification.sender_id}`}
-              style={{
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-              }}
-            >
-              <img
-                src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${notification.images}?alt=media`}
-                alt={notification.username}
-                className="img-thumbnail me-2"
-                style={{
-                  width: "30px",
-                  height: "30px",
-                  borderRadius: "50%",
-                }}
-              />
-            </Link>
-            <div className="ms-2">
-              <div className="d-flex align-items-center">
-                <Link className="fw-bold" to={`/follow/${notification.sender_id}`}>
-                  {notification.username}
-                </Link>
-                <span style={{ fontSize: "7px", marginLeft: "5px" }}>
-                  {formatDate(notification.created_at)}
-                </span>
-              </div>
-              <div style={{ fontSize: "12px", textTransform: "none" }}>
-                {notification.type === "like"
-                  ? "Đã thích bài viết của bạn."
-                  : "Đã theo dõi bạn."}
-              </div>
-            </div>
-          </div>
-          <div className="dropdown">
-            <i
-              className="bi bi-three-dots"
-              onClick={() => toggleDropdown(notification.id)}
-              style={{
-                cursor: "pointer",
-                fontSize: "16px",
-                marginLeft: "0px",
-                color: "black", // Always visible
-              }}
-            ></i>
-            {dropdownOpen[notification.id] && (
-              <ul className="dropdown-menu text-center show p-2" style={{ padding: "0", opacity: 1 }}>
-                {notification.isread === "active" ? (
-                  <li className="button-read" style={{ listStyle: "none", marginBottom: "5px", opacity: 1 }}>
-                    <a
-                      className="dropdown-item button-read"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => markAsRead(notification.id)}
+                    <ul
+                      className="dropdown-menu"
+                      style={{ flexDirection: "column" }}
                     >
-                      Đánh dấu đã đọc
-                    </a>
-                  </li>
-                ) : null}
-                <li className="button-read" style={{ listStyle: "none", opacity: 1 }}>
-                  <a
-                    style={{ cursor: "pointer" }}
-                    className="dropdown-item button-read "
-                    onClick={() => handleDelete(notification.id)}
-                  >
-                    Gỡ thông báo này
-                  </a>
-                </li>
-              </ul>
-            )}
-          </div>
-        </li>
-      ))
-    ) : (
-      <li className="dropdown-item">Không có thông báo mới.</li>
-    )}
-    {notifications.length > notificationCount && (
-      <li
-        className="dropdown-item text-center btn"
-        style={{
-          cursor: "pointer",
-          color: "black",
-          backgroundColor: "#d1d4d7",
-          fontSize: "12px",
-        }}
-        onClick={handleSeeMore}
-      >
-        Xem thông báo trước đó
-      </li>
-    )}
-  </ul>
-)}
-
+                      {notifications.length > 0 ? (
+                        notifications
+                          .slice(0, notificationCount)
+                          .map((notification, index) => (
+                            <li
+                              key={index}
+                              className={`dropdown-item d-flex align-items-center justify-content-between px-3 notification `}
+                            >
+                              <div
+                                className={`d-flex align-items-center item ${
+                                  notification.isread === "inactive"
+                                    ? "notification-inactive"
+                                    : ""
+                                }`}
+                              >
+                                <Link
+                                  to={`/follow/${notification.sender_id}`}
+                                  style={{
+                                    width: "30px",
+                                    height: "30px",
+                                    borderRadius: "50%",
+                                  }}
+                                >
+                                  <img
+                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${notification.images}?alt=media`}
+                                    alt={notification.username}
+                                    className="img-thumbnail me-2"
+                                    style={{
+                                      width: "30px",
+                                      height: "30px",
+                                      borderRadius: "50%",
+                                    }}
+                                  />
+                                </Link>
+                                <div className="ms-2">
+                                  <div className="d-flex align-items-center">
+                                    <Link
+                                      className="fw-bold"
+                                      to={`/follow/${notification.sender_id}`}
+                                    >
+                                      {notification.username}
+                                    </Link>
+                                    <span
+                                      style={{
+                                        fontSize: "7px",
+                                        marginLeft: "5px",
+                                      }}
+                                    >
+                                      {formatDate(notification.created_at)}
+                                    </span>
+                                  </div>
+                                  <div
+                                    style={{
+                                      fontSize: "12px",
+                                      textTransform: "none",
+                                    }}
+                                  >
+                                    {notification.type === "like"
+                                      ? "Đã thích bài viết của bạn."
+                                      : "Đã theo dõi bạn."}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="dropdown">
+                                <i
+                                  className="bi bi-three-dots"
+                                  onClick={() =>
+                                    toggleDropdown(notification.id)
+                                  }
+                                  style={{
+                                    cursor: "pointer",
+                                    fontSize: "16px",
+                                    marginLeft: "0px",
+                                    color: "black", // Always visible
+                                  }}
+                                ></i>
+                                {dropdownOpen[notification.id] && (
+                                  <ul
+                                    className="dropdown-menu text-center show p-2 "
+                                    style={{ padding: "0", opacity: 1 }}
+                                  >
+                                    {notification.isread === "active" ? (
+                                      <li
+                                        className="button-read"
+                                        style={{
+                                          listStyle: "none",
+                                          marginBottom: "5px",
+                                          opacity: 1,
+                                        }}
+                                      >
+                                        <a
+                                          className="dropdown-item button-read"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() =>
+                                            markAsRead(notification.id)
+                                          }
+                                        >
+                                          Đánh dấu đã đọc
+                                        </a>
+                                      </li>
+                                    ) : null}
+                                    <li
+                                      className="button-read"
+                                      style={{ listStyle: "none", opacity: 1 }}
+                                    >
+                                      <a
+                                        style={{ cursor: "pointer" }}
+                                        className="dropdown-item button-read "
+                                        onClick={() =>
+                                          handleDelete(notification.id)
+                                        }
+                                      >
+                                        Gỡ thông báo này
+                                      </a>
+                                    </li>
+                                  </ul>
+                                )}
+                              </div>
+                            </li>
+                          ))
+                      ) : (
+                        <li className="dropdown-item">
+                          Không có thông báo mới.
+                        </li>
+                      )}
+                      {notifications.length > notificationCount && (
+                        <li
+                          className="dropdown-item text-center btn"
+                          style={{
+                            cursor: "pointer",
+                            color: "black",
+                            backgroundColor: "#d1d4d7",
+                            fontSize: "12px",
+                          }}
+                          onClick={handleSeeMore}
+                        >
+                          Xem thông báo trước đó
+                        </li>
+                      )}
+                    </ul>
+                  )}
 
                   <div
                     onClick={toggleAccountMenu}
@@ -522,17 +564,20 @@ useEffect(() => {
                       height={40}
                       alt="Profile"
                     />
+                    <label className="text-white ms-1" style={{fontSize: '14px'}}>
+                      {username}
+                    </label>
                     {showAccountMenu && (
                       <ul
-                        className="dropdown-menu dropdown-menu-light"
+                        className="dropdown-menu dropdown-menu-light mt-1"
                         style={{
-                          transform: "translateX(-88px)",
+                          transform: "translateX(-10px)",
                           pointerEvents: "auto",
                           zIndex: 1080,
                         }}
                       >
                         <li className="dropdown-item">
-                          <strong>{userInfo.username}</strong>
+                          <strong>{username}</strong>
                         </li>
                         <li>
                           <Link

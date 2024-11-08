@@ -1,5 +1,10 @@
 const Notification  = require('../../models/notification'); 
-
+const express = require("express");
+const bcrypt = require("bcrypt");
+const app = express();
+app.use(express.json());
+const moment = require('moment-timezone');
+const nodemailer = require("nodemailer");
 
 exports.Createnotification = async (req, res, next) => {
     const { user_id, sender_id, action, post_id } = req.body;
@@ -51,3 +56,59 @@ exports.update = async (req, res, next) => {
 
     })
 };
+exports.notify = async (req, res, next) => {
+    const { email, message } = req.body; 
+
+    const result = await sendEmail(email, message); 
+};
+
+
+
+
+
+function sendEmail(to, message) {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'foodcast440@gmail.com',
+            pass: 'clnj hmwa zwfh gfcl',
+        },
+    });
+
+    async function main() {
+        const mailOptions = {
+            from: '"Cuisine Podcasts" <foodcast440@gmail.com>', // Địa chỉ người gửi
+            to: to,
+            subject: `CuisinePodcast thân gửi đến ${to}`, // Chủ đề email
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                    <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
+                        <h1 style="margin: 10px 0;">Cuisine Podcasts!</h1>
+                    </div>
+                    <div style="padding: 20px; background-color: #f9f9f9;">
+                        <h2 style="color: #333; margin-top: 0;">Thông báo từ Cuisine Podcasts</h2>
+                        <p style="color: #666;">${message}</p>
+                    
+                    </div>
+                    <div style="background-color: #333; color: #fff; padding: 10px; text-align: center;">
+                        <p style="margin: 0;">Đây là email tự động, vui lòng không phản hồi.</p>
+                        <p style="margin: 0;">© 2024 Cuisine Podcasts. All rights reserved.</p>
+                    </div>
+                </div>
+            `, // Sử dụng HTML cho nội dung
+        };
+
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log("Message sent: %s", info.messageId);
+            return { success: true, messageId: info.messageId };
+        } catch (error) {
+            console.error("Error sending email: %s", error);
+            return { success: false, error: error };
+        }
+    }
+
+    main().catch(console.error);
+}
+

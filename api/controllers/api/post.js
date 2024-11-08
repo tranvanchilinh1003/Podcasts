@@ -215,18 +215,21 @@ exports.suggestKeywords = async (req, res, next) => {
     }
 };
 exports.data = async (req, res, next) => {    
-    
     try {
+        const { startDate, endDate } = req.query; 
+        if (!startDate || !endDate) {
+            return res.status(400).json({ error: "startDate và endDate là bắt buộc" });
+        }
+        const data = await Post.getData(startDate, endDate);
         
-        const data = await Post.getData();
-        res.status(200).json({
-            data
-        });
+        // Trả về dữ liệu nếu không có lỗi
+        res.status(200).json({ data });
     } catch (error) {
-        console.error("Error suggesting keywords:", error);
+        console.error("Error fetching data:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
 
 
 exports.chart = async (req, res, next) => {    

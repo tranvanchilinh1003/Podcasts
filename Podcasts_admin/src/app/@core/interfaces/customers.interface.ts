@@ -9,3 +9,6 @@ export interface ICustomer{
     images?: string,
     isticket?: string,
 }
+interface Window {
+    webkitSpeechRecognition: any;
+  }

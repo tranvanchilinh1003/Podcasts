@@ -303,24 +303,24 @@ exports.chart = async (req, res, next) => {
     
         async function main() {
             const mailOptions = {
-                from: '"Foodcast Forum" <foodcast440@gmail.com>', // Địa chỉ người gửi
+                from: '"Cuisine Podcasts" <foodcast440@gmail.com>', // Địa chỉ người gửi
                 to: email, 
                 subject: "Chào mừng bạn đã đăng ký thành công", // Chủ đề email
-                text: "Chào mừng bạn đã đăng ký thành công tài khoản Foodcast Forum!", // Nội dung văn bản
+                text: "Chào mừng bạn đã đăng ký thành công tài khoản Cuisine Podcasts!", // Nội dung văn bản
                 html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
                     <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Foodcast Forum Logo" style="max-width: 120px; border-radius: 50%;">
-                        <h1 style="margin: 10px 0;">Chào mừng đến với Foodcast Forum!</h1>
+                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
+                        <h1 style="margin: 10px 0;">Chào mừng đến với Cuisine Podcasts!</h1>
                     </div>
                     <div style="padding: 20px; background-color: #f9f9f9;">
                         <h2 style="color: #333; margin-top: 0;">Chúng tôi rất vui khi có bạn!</h2>
-                        <p style="color: #666;">Cảm ơn bạn đã đăng ký tài khoản với Foodcast Forum. Chúng tôi rất vui khi có bạn tham gia cộng đồng của chúng tôi.</p>
+                        <p style="color: #666;">Cảm ơn bạn đã đăng ký tài khoản với Cuisine Podcasts. Chúng tôi rất vui khi có bạn tham gia cộng đồng của chúng tôi.</p>
                         <p style="color: #666;">Nếu bạn có bất kỳ câu hỏi nào hoặc cần hỗ trợ, đừng ngần ngại liên hệ với chúng tôi.</p>
                     </div>
                     <div style="background-color: #333; color: #fff; padding: 10px; text-align: center;">
                         <p style="margin: 0;">Đây là email tự động, vui lòng không phản hồi.</p>
-                        <p style="margin: 0;">© 2024 Foodcast Forum. All rights reserved.</p>
+                        <p style="margin: 0;">© 2024 Cuisine Podcasts. All rights reserved.</p>
                     </div>
                 </div>
                 `,
