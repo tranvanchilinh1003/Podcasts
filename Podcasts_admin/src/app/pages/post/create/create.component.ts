@@ -28,7 +28,7 @@ export class CreateComponent implements OnInit {
   newFileName: string = '';
   private fileExtensionImg: string;
   private fileExtensionAudio: string;
-  imgPreview: string = ''; 
+  imgPreview: string | ArrayBuffer | null = null;
   postnew: IPost = {
     id: '',
     title: '',

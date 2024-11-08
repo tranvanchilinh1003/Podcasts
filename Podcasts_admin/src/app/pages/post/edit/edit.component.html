@@ -26,6 +26,11 @@
                         </div>
                         <div class="col-sm-3">
                             <label for="images" class="fw-bold col-form-label">Hình ảnh</label>
+                            <!-- <input type="file"
+                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
+                                nbInput fullWidth id="img" accept="image/*" (change)="onFileChange($event, 'image')"
+                                name="images" formControlName="images">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F{{postnew.images}}?alt=media&token=c6dc72e8-a1b0-41bb-b1f5-84f63f7397e9" width="50px"> -->
                             <div class="input-container">
                                 <input type="file"
                                     class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
@@ -64,9 +69,9 @@
                     <div class='row mt-3'>
                         <div class="col-sm-12">
                             <label for="description" class="fw-bold col-form-label">Mô tả</label>
-                            <textarea _ngcontent-utl-c232="" rows="5" nbinput="" id="decription" name="description"
-                                fullwidth="" shape="round" placeholder="Mô tả..."
-                                class="input-full-width size-medium status-basic shape-rectangle nb-transition" formControlName="description" [(ngModel)]="postnew.description"></textarea>
+                            
+                    <app-tinymce-editor id="description" name="description" formControlName="description" [(ngModel)]="postnew.description"></app-tinymce-editor>
+
                             <span class="err text-danger"></span>
                         </div>
                     </div>
