@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Spinner from "../Spinner/Spinner";
 import CommentList from "../comments/CommentList";
-import CommentBox from "../comments/CommentBox";
-import { SocketProvider } from "../../../config/SocketContext";
 
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
@@ -63,65 +61,42 @@ function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [commentBoxVisibility, setCommentBoxVisibility] = useState({});
-  const [customer, setCustomerImage] = useState("");
-  const [commentToEdit, setCommentToEdit] = useState(null);
-  const [postComments, setPostComments] = useState({});
+  const [customer, setCustomer] = useState(null);
 
   useEffect(() => {
-    // Lấy URL hình ảnh từ localStorage
-    const imageUrl = JSON.parse(localStorage.getItem("customer"));
-    if (imageUrl) {
-      setCustomerImage(imageUrl);
+    const customers = localStorage.getItem("customer");
+    if (customers) {
+      try {
+        const parsedCustomer = JSON.parse(customers);
+        setCustomer(parsedCustomer[0]);
+      } catch (err) {
+        console.error("Lỗi phân tích dữ liệu khách hàng:", err);
+      }
     }
   }, []);
 
-  useEffect(() => {
-    if (Object.keys(commentBoxVisibility).length) {
-      Object.keys(commentBoxVisibility).forEach((postId) => {
-        if (commentBoxVisibility[postId]) {
-          fetchComments(postId);
-        }
-      });
-    }
-  }, [commentBoxVisibility]);
+  const handleCommentClick = useCallback((postId) => {
+    setCommentBoxVisibility((prevState) => {
+      const newState = { ...prevState, [postId]: !prevState[postId] };
+      return newState;
+    });
+  }, []);
 
-  const fetchComments = async (postId) => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/comments", {
-        params: { postId: postId },
-      });
-
-      setPostComments((prevComments) => ({
-        ...prevComments,
-        [postId]: response.data.data,
-      }));
-      fetchPost();
-    } catch (error) {
-      console.error("Error loading comments:", error);
-    }
-  };
-
-  const handleEditComment = (comment) => {
-    setCommentToEdit(comment); // Lưu bình luận cần chỉnh sửa
-  };
-
-  const handleCommentClick = (postId) => {
-    setCommentBoxVisibility((prevState) => ({
-      ...prevState,
-      [postId]: !prevState[postId],
-    }));
-  };
-
-  const handleReply = (commentId) => {
-    setPostComments((prevComments) => ({
-      ...prevComments,
-      [currentPostId]: prevComments[currentPostId].map((comment) =>
-        comment.id === commentId
-          ? { ...comment, showReplyForm: !comment.showReplyForm }
-          : comment
-      ),
-    }));
-  };
+  const updateTotalComments = useCallback((postId, newTotal) => {
+    setData((prevData) =>
+        prevData.map((post) =>
+            post.data.id === postId
+                ? {
+                      ...post,
+                      data: {
+                          ...post.data,
+                          total_comments: newTotal,
+                      },
+                  }
+                : post
+        )
+    );
+}, []);
 
   const fetchPost = async () => {
     try {
@@ -529,7 +504,7 @@ const roundTo = (num, places) => {
                           onClick={() => handleCommentClick(post.data.id)}
                         >
                           <span className="me-1 ms-1">
-                            {post.data.total_comments}
+                          {post.data.total_comments}
                           </span>
                         </span>
                     </div>
@@ -616,36 +591,7 @@ const roundTo = (num, places) => {
                   </div>
                   </div>
                   {commentBoxVisibility[post.data.id] && (
-                    <div>
-                      <div>
-                        <CommentList
-                          comments={postComments[post.data.id] || []}
-                          onEdit={handleEditComment}
-                          userId={customer[0]?.id}
-                          onReply={handleReply}
-                          fetchPost={fetchPost}
-                          fetchComments={fetchComments}
-                        />
-                      </div>
-
-                      {customer[0]?.id ? (
-                        <div>
-                          <SocketProvider>
-                            <CommentBox
-                              postId={post.data.id}
-                              custommer={customer}
-                              fetchComments={() => fetchComments(post.data.id)}
-                              commentToEdit={commentToEdit}
-                              setCommentToEdit={setCommentToEdit}
-                            />
-                          </SocketProvider>
-                        </div>
-                      ) : (
-                        <div className=" mt-5 text-center">
-                          <p>Đăng nhập để bình luận</p>
-                        </div>
-                      )}
-                    </div>
+                    <CommentList postId={post.data.id} customer={customer}  onUpdateTotalComments={updateTotalComments} totalComments={post.data.total_comments} />
                   )}
                 </div>
               </div>

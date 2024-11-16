@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import CommentForm from "../comments/CommentForm";
@@ -7,38 +7,38 @@ import { Link, useNavigate } from "react-router-dom";
 import "./details.css";
 
 const StarRating = ({ rating }) => {
-    const percent = (rating / 5) * 100;
-    return (
-      <div
-        style={{
-          position: "relative",
-          display: "inline-block",
-          width: "35px",
-          height: "35px",
-        }}
-      >
-        <svg width="35" height="35" fill="lightgray" viewBox="0 0 25 25">
+  const percent = (rating / 5) * 100;
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "inline-block",
+        width: "35px",
+        height: "35px",
+      }}
+    >
+      <svg width="35" height="35" fill="lightgray" viewBox="0 0 25 25">
+        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+      </svg>
+      {percent > 0 && (
+        <svg
+          width="35"
+          height="35"
+          fill="gold"
+          viewBox="0 0 25 25"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            clipPath: `inset(0 ${100 - percent}% 0 0)`,
+          }}
+        >
           <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
         </svg>
-        {percent > 0 && (
-          <svg
-            width="35"
-            height="35"
-            fill="gold"
-            viewBox="0 0 25 25"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              clipPath: `inset(0 ${100 - percent}% 0 0)`,
-            }}
-          >
-            <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
-          </svg>
-        )}
-      </div>
-    );
-  };
+      )}
+    </div>
+  );
+};
 function formatDate(dateString) {
   const options = {
     year: "numeric",
@@ -56,9 +56,22 @@ function CategoriesDetail() {
   const [comments, setComments] = useState([]);
   const [userId, setUserId] = useState(null);
   const [expandedPostId, setExpandedPostId] = useState(null);
-  const [audioPlayed, setAudioPlayed] = useState(0); 
-  const audioRef = React.createRef(); 
+  const [audioPlayed, setAudioPlayed] = useState(0);
+  const audioRef = React.createRef();
   const [viewUpdated, setViewUpdated] = useState(false);
+  const [customer, setCustomer] = useState(null);
+
+  useEffect(() => {
+    const customers = localStorage.getItem("customer");
+    if (customers) {
+      try {
+        const parsedCustomer = JSON.parse(customers);
+        setCustomer(parsedCustomer[0]);
+      } catch (err) {
+        console.error("Lỗi phân tích dữ liệu khách hàng:", err);
+      }
+    }
+  }, []);
   const truncateTextWithHtml = (html, maxLength) => {
     const tempElement = document.createElement("div");
     tempElement.innerHTML = html;
@@ -77,30 +90,35 @@ function CategoriesDetail() {
 
     return trimmedHtml + "...";
   };
-  const fetchComments = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/comments", {
-        params: { postId: id },
-      });
-      setComments(response.data.data);
-    } catch (error) {
-      console.error("Error loading comments:", error);
+
+  const updateTotalComments = useCallback((postId, newTotal) => {
+    if (category?.id === postId) {
+      setCategory(prevCategory => ({
+        ...prevCategory,
+        total_comments: newTotal
+      }));
     }
-  };
+  }, []);  
+
   const fetchCategoryData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/getId_post/${id}`);
+      const response = await axios.get(
+        `http://localhost:8080/api/getId_post/${id}`
+      );
       const categoryData = response.data.data[0];
       const customer = getUserFromLocalStorage();
       const userId = customer ? customer.id : null;
-  
+
       if (userId) {
-        const likeResponse = await axios.get("http://localhost:8080/api/check-likes", {
-          params: { userId, postId: categoryData.id }, // Add the postId if needed
-        });
-  
+        const likeResponse = await axios.get(
+          "http://localhost:8080/api/check-likes",
+          {
+            params: { userId, postId: categoryData.id }, // Add the postId if needed
+          }
+        );
+
         const likedPostIds = likeResponse.data.map((item) => item.post_id); // Ensure to access the correct data structure
-  
+
         // Update isLiked based on whether the post is in likedPostIds
         const updatedCategoryData = {
           ...categoryData,
@@ -117,12 +135,9 @@ function CategoriesDetail() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
-
-
     fetchCategoryData();
-    fetchComments();
   }, [id]);
 
   useEffect(() => {
@@ -131,80 +146,40 @@ function CategoriesDetail() {
     setUserId(parsedUser ? parsedUser[0].id : null);
   }, []);
 
-  const handleCommentSubmit = async (newComment) => {
-    try {
-      await axios.post("http://localhost:8080/api/comments", newComment);
-      fetchComments(); // Update comments after successful submission
-    } catch (error) {
-      console.error("Error submitting comment:", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/comments/${id}`);
-      fetchComments(); // Update comments after successful deletion
-    } catch (error) {
-      console.error("Error deleting comment:", error);
-    }
-  };
-
-  const handleReply = (commentId) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === commentId
-          ? { ...comment, showReplyForm: !comment.showReplyForm }
-          : comment
-      )
-    );
-  };
-
-  const handleLike = async (commentId, userId, postId) => {
-    try {
-      await axios.post("http://localhost:8080/api/likes", {
-        commentId,
-        userId,
-        postId,
-      });
-      // Cập nhật số lượng thích bình luận hoặc làm gì đó sau khi thích thành công
-    } catch (error) {
-      console.error("Error liking comment:", error);
-    }
-  };
-
-
   const handleAudioTimeUpdate = () => {
     if (audioRef.current) {
-        const percentage = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+      const percentage =
+        (audioRef.current.currentTime / audioRef.current.duration) * 100;
 
-        if (percentage >= 80 && !viewUpdated) {
-            updateViewCount();
-            setViewUpdated(true); // Set the flag to true to prevent further updates
-        }
+      if (percentage >= 80 && !viewUpdated) {
+        updateViewCount();
+        setViewUpdated(true); // Set the flag to true to prevent further updates
+      }
     }
-};
+  };
 
-const updateViewCount = async () => {
+  const updateViewCount = async () => {
     try {
-        await axios.post(`http://localhost:8080/api/update_view/${category.id}`);
-        fetchCategoryData()
+      await axios.post(`http://localhost:8080/api/update_view/${category.id}`);
+      fetchCategoryData();
     } catch (error) {
-        console.error("Error updating view count:", error);
+      console.error("Error updating view count:", error);
     }
-};
+  };
 
-
-useEffect(() => {
+  useEffect(() => {
     if (audioRef.current) {
-        audioRef.current.addEventListener('timeupdate', handleAudioTimeUpdate);
+      audioRef.current.addEventListener("timeupdate", handleAudioTimeUpdate);
     }
     return () => {
-        if (audioRef.current) {
-            audioRef.current.removeEventListener('timeupdate', handleAudioTimeUpdate);
-        }
+      if (audioRef.current) {
+        audioRef.current.removeEventListener(
+          "timeupdate",
+          handleAudioTimeUpdate
+        );
+      }
     };
-}, [audioRef]);
-
+  }, [audioRef]);
 
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
@@ -225,70 +200,68 @@ useEffect(() => {
 
     const customer = getUserFromLocalStorage();
     if (!customer) {
-        navigate("/login");
-        return;
+      navigate("/login");
+      return;
     }
 
-    const isLiked = category.isLiked; 
+    const isLiked = category.isLiked;
 
     const updatedCategory = {
-        ...category,
-        isLiked: !isLiked,
-        data: {
-            ...category.data,
-            total_likes: isLiked ? category.total_likes - 1 : category.total_likes + 1,
-        },
-    };    
+      ...category,
+      isLiked: !isLiked,
+      data: {
+        ...category.data,
+        total_likes: isLiked
+          ? category.total_likes - 1
+          : category.total_likes + 1,
+      },
+    };
     setCategory(updatedCategory);
     try {
-        if (isLiked) {            
-            if (category.notificationId) {
-                await axios.delete(`http://localhost:8080/api/notification/${category.notificationId}`);
-            }
-
-            await axios.delete("http://localhost:8080/api/like", {
-                data: {
-                    post_id: category.id,
-                    customers_id: customer.id,
-                },
-            });
-
-            updatedCategory.data.notificationId = null;
-            setCategory(updatedCategory);
-        } else {
-        
-            
-            if (customer.id !== category.customers_id) {
-                const response = await axios.post("http://localhost:8080/api/notification", {
-                    user_id: category.customers_id,
-                    sender_id: customer.id,
-                    action: "like",
-                    post_id: category.id,
-                });
-                
-                
-                const notificationId = response.data.notification_id;
-
-                
-                updatedCategory.notificationId = notificationId;
-                setCategory(updatedCategory);
-            }
-
-            await axios.post("http://localhost:8080/api/like", {
-                post_id: category.id,
-                customers_id: customer.id,
-            });
+      if (isLiked) {
+        if (category.notificationId) {
+          await axios.delete(
+            `http://localhost:8080/api/notification/${category.notificationId}`
+          );
         }
-        fetchCategoryData();
-    
+
+        await axios.delete("http://localhost:8080/api/like", {
+          data: {
+            post_id: category.id,
+            customers_id: customer.id,
+          },
+        });
+
+        updatedCategory.data.notificationId = null;
+        setCategory(updatedCategory);
+      } else {
+        if (customer.id !== category.customers_id) {
+          const response = await axios.post(
+            "http://localhost:8080/api/notification",
+            {
+              user_id: category.customers_id,
+              sender_id: customer.id,
+              action: "like",
+              post_id: category.id,
+            }
+          );
+
+          const notificationId = response.data.notification_id;
+
+          updatedCategory.notificationId = notificationId;
+          setCategory(updatedCategory);
+        }
+
+        await axios.post("http://localhost:8080/api/like", {
+          post_id: category.id,
+          customers_id: customer.id,
+        });
+      }
+      fetchCategoryData();
     } catch (error) {
-        console.error("Error updating like status:", error);
-        
+      console.error("Error updating like status:", error);
     }
-};
-
-
-
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -347,7 +320,6 @@ useEffect(() => {
                         <span
                           className="bi-chat me-1"
                           style={{ cursor: "pointer" }}
-                          
                         >
                           <span className="me-1">
                             {category.total_comments}
@@ -363,12 +335,12 @@ useEffect(() => {
                     <div className="custom-block-top d-flex ">
                       <small>{formatDate(category.create_date)}</small>
                       <label href="#" className=" ms-auto">
-                      {roundTo(category.average_comment_rating, 1)}/5{" "}
-                      <StarRating rating={category.average_comment_rating} />
-                    </label>
+                        {roundTo(category.average_comment_rating, 1)}/5{" "}
+                        <StarRating rating={category.average_comment_rating} />
+                      </label>
                     </div>
                     <h2 className="mb-2">{category.title || "No Title"}</h2>
-                    
+
                     <p className="description-text">
                       {expandedPostId === category.id ? (
                         <span
@@ -404,13 +376,13 @@ useEffect(() => {
                       )}
                     </p>
                     <div className="mt-5">
-                    <audio
-                    className="w-100"
-                    controls
-                    loop
-                    ref={audioRef}
-                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F${category.audio}?alt=media`}
-                />
+                      <audio
+                        className="w-100"
+                        controls
+                        loop
+                        ref={audioRef}
+                        src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F${category.audio}?alt=media`}
+                      />
                     </div>
                     <div className="profile-block profile-detail-block d-flex flex-wrap align-items-center mt-5 rounded-3">
                       <div className="d-flex mb-3 mb-lg-0 mb-md-0">
@@ -432,7 +404,6 @@ useEffect(() => {
                             className="social-icon-link bi bi-info-circle-fill"
                           ></Link>
                         </li>
-                
                       </ul>
                     </div>
                   </div>
@@ -447,31 +418,10 @@ useEffect(() => {
         <div className="container">
           <div className="row mt-5">
             <div className="section-title-wrap">
-              <h4 className="section-title">Bình luận của bạn</h4>
             </div>
-
-            {userId ? (
-              <div className="col-lg-7 col-7 mt-5">
-                <CommentForm
-                  customers_id={userId}
-                  postId={id}
-                  onSubmit={handleCommentSubmit}
-                />
-              </div>
-            ) : (
-              <div className=" mt-5 text-center">
-                <p>Đăng nhập để bình luận</p>
-              </div>
-            )}
-
-            <CommentList
-              comments={comments}
-              onEdit={fetchComments}
-              onDelete={handleDelete}
-              onReply={handleReply}
-              onLike={handleLike}
-              userId={userId}
-            />
+           <div className="mb-3">
+           </div>
+            <CommentList postId={category.id} customer={customer}  onUpdateTotalComments={updateTotalComments} totalComments={category.total_comments}/>
           </div>
         </div>
       </section>

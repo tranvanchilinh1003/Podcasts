@@ -7,8 +7,8 @@ var bodyParser = require("body-parser");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const http = require('http');
-const { initSocketIO } = require('./middlewares/socket');
-const sessionMiddleware = require('./middlewares/session');
+const { Server } = require("socket.io");
+const commentsWebSocket = require("./controllers/api/comment");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -39,8 +39,13 @@ app.use('/api', api);
 // Tạo HTTP server
 const server = http.createServer(app);
 
-// Khởi tạo Socket.io
-initSocketIO(server, sessionMiddleware);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+commentsWebSocket(io);
 
 // Khởi động server
 server.listen(port, () => {

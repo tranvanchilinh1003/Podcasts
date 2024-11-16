@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import { Progress, Dropdown, Space } from "antd";
@@ -23,6 +23,7 @@ import UserFollowList from "../followed/followed";
 import MyEditor from "../tinymce/tinymce";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
+import CommentList from "../comments/CommentList";
 
 function Account() {
   const { id } = useParams();
@@ -70,6 +71,43 @@ function Account() {
   const [editPost, setEditPost] = useState(null);
   const [Delete, onDelete] = useState(null);
   const [editorContent, setEditorContent] = useState("");
+  const [commentBoxVisibility, setCommentBoxVisibility] = useState({});
+  const [customer, setCustomer] = useState(null);
+
+  console.log(data);
+  
+
+  useEffect(() => {
+    const customers = localStorage.getItem("customer");
+    if (customers) {
+      try {
+        const parsedCustomer = JSON.parse(customers);
+        setCustomer(parsedCustomer[0]);
+      } catch (err) {
+        console.error("Lỗi phân tích dữ liệu khách hàng:", err);
+      }
+    }
+  }, []);
+
+  const handleCommentClick = useCallback((postId) => {
+    setCommentBoxVisibility((prevState) => {
+      const newState = { ...prevState, [postId]: !prevState[postId] };
+      return newState;
+    });
+  }, []);
+
+  const updateTotalComments = useCallback((postId, newTotal) => {
+    setData((prevData) =>
+      prevData.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              total_comments: newTotal,
+            }
+          : post
+      )
+    );
+  }, []);
 
   const fetchUserInfo = async () => {
     try {
@@ -270,10 +308,6 @@ function Account() {
   }, []);
 
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
-
-  const handleCommentClick = (postId) => {
-    setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
-  };
 
   function formatDate(dateString) {
     const options = {
@@ -604,7 +638,11 @@ function Account() {
                     <img
                       // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}}
                       src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
-                      style={{ width:'100%', height: '100%', objectFit: "cover" }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
                     />
                   </div>
                   <div className="profile-header-content py-5">
@@ -1083,7 +1121,6 @@ function Account() {
                                                 src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
                                                 alt="Your image description"
                                                 className="border rounded"
-                                          
                                               />
 
                                               <span
@@ -1156,38 +1193,17 @@ function Account() {
                                             </a>
                                           </div>
                                           {/* Comment Box */}
-                                          {visibleCommentBox === post.id && (
-                                            <div className="timeline-comment-box">
-                                              <div className="user mt-1">
-                                                <img
-                                                  src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                                  alt="Hồ sơ"
-                                                  style={{
-                                                    maxWidth: "auto",
-                                                    height: "100%",
-                                                    width: "100%",
-                                                    borderRadius: "50%",
-                                                  }}
-                                                />
-                                              </div>
-                                              <div className="input row">
-                                                <form action="">
-                                                  <div className="input-group-user input-group-post">
-                                                    <input
-                                                      type="text"
-                                                      className="input-post rounded-corner col-md-12 col-12 col-lg-10"
-                                                      placeholder="Bình luận bài viết..."
-                                                    />
-                                                    <button
-                                                      className="button--submit col-md-12 col-12 col-lg-2"
-                                                      type="button"
-                                                    >
-                                                      Bình luận
-                                                    </button>
-                                                  </div>
-                                                </form>
-                                              </div>
-                                            </div>
+                                          {commentBoxVisibility[post.id] && (
+                                            <CommentList
+                                              postId={post.id}
+                                              customer={customer}
+                                              onUpdateTotalComments={
+                                                updateTotalComments
+                                              }
+                                              totalComments={
+                                                post.total_comments
+                                              }
+                                            />
                                           )}
                                         </div>
                                       </li>

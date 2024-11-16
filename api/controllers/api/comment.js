@@ -1,166 +1,215 @@
 const Comment = require("../../models/comment");
-const { getIO } = require("../../middlewares/socket");
 
-exports.listcomment = async (req, res, next) => {
-  const page = req.query.page || 1;
-  const row = 5; // Số lượng sản phẩm trên mỗi trang
-  const from = (page - 1) * row;
-  const totalProducts = await Comment.countComment();
-  if (totalProducts > 0) {
-    const totalPages = Math.ceil(totalProducts / row);
-    var comment = await Comment.getList(from, row);
-    res.status(200).json({
-      data: comment,
-      meta: {
-        current_page: page,
-        last_page: totalPages,
-        from: from,
-        count: totalProducts,
-      },
+module.exports = (io) => {
+  io.on("connection", async (socket) => {
+    console.log(`User connected ${socket.id}`);
+    socket.on("disconnect", () => {
+      console.log(`User disconnected ${socket.id}`);
     });
-  } else {
-    res.status(200).json({
-      data: comment,
-      meta: {
-        current_page: page,
-        last_page: 1,
-        from: from,
-      },
+    socket.on("error", (err) => {
+      socket.emit("Error", { message: "Connection failed", error: err });
     });
-  }
-};
-// Lấy danh sách bình luận cho một bài viết cụ thể
-exports.list = async (req, res, next) => {
-  const postId = req.query.postId;
-  const page = req.query.page || 1;
-  const row = 5; // Số lượng bình luận trên mỗi trang
-  const from = (page - 1) * row;
 
-  try {
-    const totalComments = await Comment.countComment(); // Tổng số bình luận
-    const totalPages = Math.ceil(totalComments / row); // Tổng số trang
-    const comments = await Comment.getByPostId(postId); // Lấy bình luận theo postId
+    try {
+      socket.page = 1;
+      socket.limit = 10;
+      socket.currentPostId = null;
 
-    res.status(200).json({
-      data: comments,
-      meta: {
-        current_page: page,
-        last_page: totalPages,
-        from: from,
-        count: totalComments,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching comments:", error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
-  }
-};
+      socket.on(
+        "Get_comments",
+        async ({ postId, page: clientPage, limit: clientLimit }) => {
+          try {
+            if (!postId) {
+              socket.emit("Error", {
+                message: "postId is required",
+                status: 400,
+              });
+              return;
+            }
 
-// Thêm mới bình luận
-exports.create = async (req, res, next) => {
-  const { postId, customers_id, contents, rating } = req.body;
+            socket.page = clientPage || socket.page;
+            socket.limit = clientLimit || socket.limit;
+            socket.currentPostId = postId;
 
-  if (!postId || !customers_id || !contents) {
-    return res.status(400).json({
-      error: "Post ID, User ID và Content là bắt buộc",
-    });
-  }
+            const offset = (socket.page - 1) * socket.limit;
+            const comments = await Comment.getPaginatedCommentsByPostId(
+              postId,
+              offset,
+              socket.limit
+            );
 
-  const newComment = {
-    post_id: postId,
-    customers_id: customers_id,
-    contents: contents,
-    rating: rating || 0,
-    date: new Date(),
-  };
+            for (const comment of comments) {
+              const totalReplies = await Comment.countCommentsByParentId(
+                comment.id
+              );
+              comment.totalReplies = totalReplies;
+            }
 
-  try {
-    const result = await Comment.createComment(newComment);
-    const savedComment = { id: result.insertId, ...newComment };
+            const totalComments = await Comment.countParentCommentsByPostId(
+              postId
+            );
 
-    // Phát sự kiện bình luận mới qua Socket.io
-    const io = getIO();
-    io.emit("newComment", savedComment);
+            socket.emit("Parent_comments", {
+              comments,
+              totalComments,
+              page: socket.page,
+              totalPages: Math.ceil(totalComments / socket.limit),
+            });
+          } catch (error) {
+            console.error("Lỗi khi lấy bình luận:", error);
+            socket.emit("Error", {
+              message: "Failed to fetch comments",
+              status: 500,
+            });
+          }
+        }
+      );
 
-    res.status(201).json({
-      message: "Comment created successfully",
-      data: savedComment,
-    });
-  } catch (error) {
-    console.error("Error creating comment:", error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
-  }
-};
+      socket.on(
+        "Get_child_comments",
+        async ({ parentId, replyPage, replyLimit }) => {
+          try {
+            if (!parentId || !replyPage || !replyLimit) {
+              socket.emit("Error", {
+                message: "Missing required parameters",
+                status: 400,
+              });
+              return;
+            }
 
-// Xem chi tiết bình luận theo id
-exports.getEdit = async (req, res, next) => {
-  const commentId = req.params.id;
-  try {
-    const comment = await Comment.getByPostId(commentId);
-    res.status(200).json({
-      data: comment,
-    });
-  } catch (error) {
-    console.error("Error fetching comment details:", error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
-  }
-};
+            const totalReplies = await Comment.countCommentsByParentId(
+              parentId
+            );
+            const childOffset = (replyPage - 1) * replyLimit;
+            const childComments = await Comment.getChildComments(
+              parentId,
+              childOffset,
+              replyLimit
+            );
 
-// Cập nhật bình luận theo id
-exports.update = async (req, res, next) => {
-  const commentId = req.params.id;
-  const { contents, rating } = req.body;
+            // Tính toán `totalReplies` cho mỗi phản hồi con
+            for (const childComment of childComments) {
+              const totalChildReplies = await Comment.countCommentsByParentId(
+                childComment.id
+              );
+              childComment.totalReplies = totalChildReplies;
+            }
 
-  if (!contents) {
-    return res.status(400).json({
-      error: "Content is required",
-    });
-  }
+            socket.emit("Child_comments", {
+              parentId,
+              childComments,
+              replyPage,
+              totalReplies,
+              totalPages: Math.ceil(totalReplies / replyLimit),
+            });
+          } catch (error) {
+            console.error("Lỗi khi lấy bình luận con:", error);
+            socket.emit("Error", {
+              message: "Failed to fetch child comments",
+              status: 500,
+            });
+          }
+        }
+      );
 
-  try {
-    const data = { contents, rating };
-    const result = await Comment.updateComment(commentId, data);
-    if (result.affectedRows > 0) {
-      res.status(200).json({
-        message: "Comment updated successfully",
+      socket.on("Send_message", async (data) => {
+        try {
+          const comment = await Comment.createComment(data);
+
+          console.log(comment);
+
+          if (comment.parent_id) {
+            io.emit("New_child_comment", comment);
+          } else {
+            io.emit("New_parent_comment", comment);
+          }
+        } catch (error) {
+          console.error("Lỗi khi thêm bình luận:", error);
+          socket.emit("Error", {
+            message: "Failed to add comment",
+            status: 500,
+          });
+        }
       });
-    } else {
-      res.status(404).json({
-        error: "Comment not found",
+
+      socket.on("Edit_comment", async (data) => {
+        try {
+          if (!data.id) {
+            socket.emit("Error", {
+              message: "Comment ID is required",
+              status: 400,
+            });
+            return;
+          }
+          const editedComment = await Comment.updateComment(data.id, data);
+          io.emit("Updated_comment", editedComment); // Phát sự kiện khi chỉnh sửa bình luận
+        } catch (error) {
+          console.error("Lỗi khi chỉnh sửa bình luận:", error);
+          socket.emit("Error", {
+            message: "Failed to edit comment",
+            status: 500,
+          });
+        }
       });
+      socket.on("Delete_comment", async (data) => {
+        try {
+          if (!data.id) {
+            socket.emit("Error", {
+              message: "Comment ID is required",
+              status: 400,
+            });
+            return;
+          }
+      
+          // Kiểm tra xem bình luận có tồn tại trước khi thực hiện xóa không
+          const existingComment = await Comment.getById(data.id);
+          if (!existingComment) {
+            console.log(
+              "Comment already deleted or not found with ID:",
+              data.id
+            );
+            socket.emit("Error", {
+              message: "Comment already deleted or not found",
+              status: 404,
+            });
+            return;
+          }
+      
+          // Thực hiện xóa bình luận và các bình luận con nếu có
+          const deletedComments = await Comment.deleteComment(data.id);
+      
+          if (deletedComments && deletedComments.length > 0) {
+            deletedComments.forEach((deletedComment) => {
+              console.log("Emitting Deleted_comment for:", {
+                id: deletedComment.id,
+                parentId: deletedComment.parent_id || null,
+              });
+              io.emit("Deleted_comment", {
+                id: deletedComment.id,
+                parentId: deletedComment.parent_id || null,
+              });
+            });
+          } else {
+            console.error(
+              "Comment not found, cannot emit Deleted_comment for ID:",
+              data.id
+            );
+            socket.emit("Error", {
+              message: "Comment not found",
+              status: 404,
+            });
+          }
+        } catch (error) {
+          console.error("Lỗi khi xóa bình luận:", error);
+          socket.emit("Error", {
+            message: "Failed to delete comment",
+            status: 500,
+          });
+        }
+      });
+      
+    } catch (error) {
+      console.error("Lỗi khi kết nối socket:", error);
     }
-  } catch (error) {
-    console.error("Error updating comment:", error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
-  }
-};
-
-// Xóa bình luận theo id
-exports.delete = async (req, res, next) => {
-  const commentId = req.params.id;
-  try {
-    const result = await Comment.deleteComment(commentId);
-    if (result.affectedRows > 0) {
-      res.status(200).json({
-        message: "Comment deleted successfully",
-      });
-    } else {
-      res.status(404).json({
-        error: "Comment not found",
-      });
-    }
-  } catch (error) {
-    console.error("Error deleting comment:", error);
-    res.status(500).json({
-      error: "Internal Server Error",
-    });
-  }
+  });
 };

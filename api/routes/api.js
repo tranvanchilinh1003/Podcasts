@@ -4,8 +4,6 @@ const customers = require('../controllers/api/customers');
 const auth = require('../controllers/api/auth');
 const authToken = require('../middlewares/authToken');
 const post = require('../controllers/api/post');
-const comment = require('../controllers/api/comment');
-const repcommentController = require('../controllers/api/repComment');
 const cate = require('../controllers/api/categories');
 const shares = require('../controllers/api/shares');
 const favourite = require('../controllers/api/favourite');
@@ -21,42 +19,6 @@ router.post('/shares', shares.updateShareCount);
 router.get('/shares/:id', shares.list);
 router.delete('/shares/:id', shares.delete);
 router.post('/favourite', favourite.updateFavouriteCount);
-// Route để lấy bình luận dựa trên postId
-router.get('/listcomments', comment.listcomment)
-router.get('/comments', comment.list);
-
-// Route để thêm bình luận
-router.post('/comments', comment.create);
-
-// Route để xem chi tiết bình luận theo id
-router.get('/comments/:id', comment.getEdit);
-
-// Route để sửa bình luận theo id
-router.patch('/comments/:id', comment.update);
-
-// Route để xóa bình luận theo id
-router.delete('/comments/:id', comment.delete);
-
-// Route để xóa bình luận theo id
-router.delete('/comments/:id', comment.delete);
-
-// Tạo một phản hồi mới cho bình luận
-router.post('/repcomments', repcommentController.createRepComment);
-
-// Lấy các phản hồi của một bình luận gốc
-router.get('/repcomments/:commentId', repcommentController.getRepCommentsByCommentId);
-
-// Lấy tất cả các phản hồi và các phản hồi con
-router.get('/repcomments', repcommentController.getAllReplies);
-
-// Xóa phản hồi theo ID
-router.delete('/repcomments/:id', repcommentController.deleteRepComment);
-
-// Chỉnh sửa phản hồi theo ID
-router.patch('/repcomments/:id', repcommentController.editRepComment);
-
-
-
 
 
 router.post('/login', auth.login )
