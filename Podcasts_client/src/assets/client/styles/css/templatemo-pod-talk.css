@@ -268,7 +268,9 @@ main {
 .navbar {
   background-color: transparent;
   position: absolute;
-  background-image: linear-gradient(to right, #00b4db, #0083b0);
+  /* background-image: linear-gradient(to right, #00b4db, #0083b0); */
+  /* background: linear-gradient(135deg, #FF8C00, #FFD700); */
+  background:   #ff920df6;
   top: 0;
   right: 0;
   left: 0;
@@ -471,9 +473,10 @@ main {
   CAROUSEL        
 -----------------------------------------*/
 .hero-section {
-  background-image: url('../images/templatemo-wave-banner.jpg'), linear-gradient(#348CD2, #FFFFFF);
+  background-image: url('../images/images/background-cam1.jpg'), linear-gradient(#000000, #FFFFFF);
+  
   background-repeat: no-repeat;
-  background-size: 108% 76%;
+  background-size: 100% 77%;
   background-position: top;
   padding-top: 200px;
 }
@@ -1019,7 +1022,7 @@ main {
   SITE FOOTER              
 -----------------------------------------*/
 .site-footer {
-  background-image: url('../images/templatemo-wave-footer.jpg'), linear-gradient(#FFFFFF, #348CD2);
+  background-image: url('../images/images/background-cam1.jpg'), linear-gradient(#FFFFFF, #348CD2);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

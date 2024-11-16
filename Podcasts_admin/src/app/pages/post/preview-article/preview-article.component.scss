@@ -35,5 +35,26 @@
   
   
   .hover-pointer {
-    cursor: pointer; /* Hiển thị con trỏ bàn tay cho tất cả các thẻ <td> */
+    cursor: pointer; 
+}
+.liked {
+  color: rgb(246, 8, 8); /* Màu khi được thích */
+  transition: color 0.3s ease; /* Hiệu ứng chuyển màu */
+
+}
+.liked:hover {
+  color: rgba(220, 47, 47, 0.964); /* Màu khi hover (tuỳ chọn) */
+}
+
+
+.liked:active {
+  transform: scale(1.5); 
+  transition: transform 0.2s ease; 
+}
+.heart-icon{
+  cursor: pointer;
+}
+.fs-6 {
+  font-size: 1.5rem;
+  cursor: pointer;
 }

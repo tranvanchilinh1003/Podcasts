@@ -95,7 +95,7 @@ function Login() {
             </div>
             <p className="text-end " style={{ fontSize: 12 }}>
               {" "}
-              <Link to="/forgotPassword" className="forgot-password fw-bold">
+              <Link to="/forgotPassword" className="forgot-password fw-bold" style={{color: '#FF8C00'}}>
                 Quên mật khẩu?
               </Link>
             </p>
@@ -107,7 +107,7 @@ function Login() {
             />
           </form>
           <div className="social-account-container">
-            <span className="title">Hoặc đăng nhập bằng</span>
+            <span className="title" >Hoặc đăng nhập bằng</span>
             <div className="social-accounts">
               <button className="social-button google ">
                 <GoogleAuth onLogin={handleGoogleLogin} />
@@ -115,7 +115,7 @@ function Login() {
             </div>
           </div>
           <span className="agreement">
-            <Link to="/register">Đăng ký tài khoản tại đây!</Link>
+            <Link to="/register" className="forgot-password fw-bold" style={{color: '#FF8C00'}}>Đăng ký tài khoản tại đây!</Link>
           </span>
         </div>
       </section>

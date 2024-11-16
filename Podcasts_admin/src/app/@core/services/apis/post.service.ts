@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
     providedIn: 'root',
 })
 export class PostService extends ApiService {
+  [x: string]: any;
 
 
     constructor(
@@ -94,5 +95,49 @@ export class PostService extends ApiService {
             headers
         });
     }
+
+    addLike(postId: string, customerId: string): Observable<any> {
+        return this._http.post(`${API_BASE_URL}${API_ENDPOINT.post.like}`, {
+          post_id: postId,
+          customers_id: customerId,
+        });
+      }
+    
+      // Remove like from post
+      removeLike(postId: string, customerId: string): Observable<any> {
+        return this._http.delete(`${API_BASE_URL}${API_ENDPOINT.post.like}`, {
+          body: {
+            post_id: postId,
+            customers_id: customerId,
+          },
+        });
+      }
+    
+      // Add notification for like (if needed)
+      addNotification(postId: string, userId: string, senderId: string): Observable<any> {
+        return this._http.post(`${API_BASE_URL}/api/notification`, {
+          user_id: userId,
+          sender_id: senderId,
+          action: 'like',
+          post_id: postId,
+        });
+      }
+    
+      // Delete notification for like (if needed)
+      removeNotification(notificationId: string): Observable<any> {
+        return this._http.delete(`${API_BASE_URL}/api/notification/${notificationId}`);
+      }
+      
+     checkLikes(userId: string, postId: string): Observable<any> {
+        return this._http.get(`${API_BASE_URL}${API_ENDPOINT.post.check_likes}`, {
+          params: { userId, postId },
+        });
+      }
+      updateView(postId: string): Observable<any> {
+        const headers = this.interceptorFilter({ headers: new HttpHeaders() }) 
+          ? new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
+          : new HttpHeaders();
+        return this._http.post<any>(`${API_BASE_URL}${API_ENDPOINT.post.view}/${postId}`, {}, { headers });
+      }
 
 }

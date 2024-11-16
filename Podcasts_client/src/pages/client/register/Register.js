@@ -166,7 +166,7 @@ function Register() {
             />
           </form>
           <span className="agreement">
-            <Link to="/login">Đăng Nhập tài khoản!</Link>
+            <Link to="/login" className="forgot-password fw-bold" style={{color: '#FF8C00'}} >Đăng Nhập tài khoản!</Link>
           </span>
         </div>
       </section>

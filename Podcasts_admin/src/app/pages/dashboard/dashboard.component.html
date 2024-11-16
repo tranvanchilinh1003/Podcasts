@@ -20,20 +20,23 @@
     <div>
       <div class="d-flex justify-content-between">
       
-        <div class="d-flex">
-        
+        <div class="d-flex m-auto">
+          <div class="text-center me-1">
+          <label for="startDate">Ngày bắt đầu</label>
           <input type="datetime-local" class="form-control" name="startDate" id="startDate" 
             [(ngModel)]="startDate" 
             [min]="minDate ? formatDate(minDate) : ''"
             (ngModelChange)="onDateChange()">
-          <span class="mx-2">đến</span>
-
-        
+        </div>
+        <div class="text-center ms-1">
+          <label for="endDate">Ngày kết thúc</label>
           <input type="datetime-local" class="form-control" name="endDate" id="endDate" 
             [(ngModel)]="endDate" 
             [min]="minDate ? formatDate(minDate) : ''"
             (ngModelChange)="onDateChange()">
         </div>
+        </div>
+          
 
         
         <button nbButton status="primary" class="btn btn-primary" (click)="filterData()">Lọc</button>

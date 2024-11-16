@@ -1,4 +1,5 @@
 export class IPost {
+  [x: string]: any;
   id: string;
   title: string;
   description: string;
@@ -11,7 +12,7 @@ export class IPost {
   images_customers?:string;
   view?: string;
   total_comments?:string;
-  total_likes?:string;
+  total_likes?:  number;
   isticket?:string;
 }
   export class MonthlyView {

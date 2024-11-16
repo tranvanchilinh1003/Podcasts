@@ -19,7 +19,11 @@ export const API_ENDPOINT: IAPIEndpoint = {
     search: '/api/post_search',
     suggest_keywords: '/api/suggest_keywords',
     data: '/api/data',
-    chart: '/api/data_post'
+    chart: '/api/data_post',
+    like: '/api/like',
+    notification: '/api/notification',
+    check_likes: '/api/check-likes',
+    view: '/api/update_view',
   },
   comment: {
     base: API_BASE_URL + '/' + 'api',

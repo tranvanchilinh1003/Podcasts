@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPost } from 'app/@core/interfaces/post.interface';
-import { ICategories } from 'app/@core/interfaces/categories.interface';
 import { PostService } from 'app/@core/services/apis/post.service';
-import { CategoriesService } from 'app/@core/services/apis/categories.service';
-import { DialogService } from 'app/@core/services/common/dialog.service';
-import { SpinnerService } from "../../../@theme/components/spinner/spinner.service";
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { LocalStorageService } from "../../../@core/services/common/local-storage.service";
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SpinnerService } from "../../../@theme/components/spinner/spinner.service";
 
 @Component({
   selector: 'app-preview-article',
@@ -16,10 +11,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./preview-article.component.scss']
 })
 export class PreviewComponent implements OnInit {
-
-  isExpanded = false;
-  truncatedDescription: string;
-  postForm!: FormGroup;
   postnew: IPost = {
     id: '',
     title: '',
@@ -27,64 +18,36 @@ export class PreviewComponent implements OnInit {
     audio: '',
     images: '',
     categories_id: '',
-    customers_id: ''
+    customers_id: '',
+    isLiked: false, // Added 'isLiked' property
+    total_likes: 0
   };
-  rating: number = 0;
-  stars: number[] = [1, 2, 3, 4, 5]; // Array to iterate over stars
-  categories: ICategories[] = [];
-  editingCategory: ICategories = { id: '', name: '' };
+  isExpanded: boolean = false;
+  truncatedDescription: string = '';
 
   constructor(
     private localStorageService: LocalStorageService,
-    private dialog: DialogService,
-    private spinner: SpinnerService,
-    private storage: AngularFireStorage,
-    private route: ActivatedRoute,
-    private router: Router,
     private postService: PostService,
-    private categoriesService: CategoriesService,
+    private spinner: SpinnerService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.getCate();
-    this.getIdCate();
-    this.initializeForm();
-  }
-  setRating(value: number): void {
-    this.rating = value;
-  }
-  private initializeForm() {
-    this.postForm = new FormGroup({
-      title: new FormControl('', [Validators.required, Validators.minLength(8)]),
-      description: new FormControl(''),
-      categories_id: new FormControl('', [Validators.required]),
-      images: new FormControl(''),
-      audio: new FormControl(''),
-      customers_id: new FormControl(''),
-    });
+    this.getPostById();
   }
 
-  // Fetch categories
-  getCate() {
-    this.spinner.show();
-    this.categoriesService.getCategories().subscribe(res => {
-      this.categories = res.data;
-      this.spinner.hide();
-    }, error => {
-      console.error(error);
-      this.spinner.hide();
-    });
-  }
-
-  // Fetch post and category
-  getIdCate() {
+  // Fetch post by ID
+  getPostById() {
     const id = this.route.snapshot.params['id'];
     this.spinner.show();
     this.postService.getPostById(id).subscribe({
       next: (response: { data: IPost[] }) => {
-        this.postnew = response.data[0];
-        this.truncatedDescription = this.truncateTextWithHtml(this.postnew.description, 100);
-        this.getEditingCategory(this.postnew.categories_id);
+        if (response.data && response.data.length > 0) {
+          this.postnew = response.data[0];
+          this.truncatedDescription = this.truncateTextWithHtml(this.postnew.description, 100);
+          this.checkIfLiked(); // Check if the current user has liked this post
+        }
         this.spinner.hide();
       },
       error: error => {
@@ -94,36 +57,98 @@ export class PreviewComponent implements OnInit {
     });
   }
 
-  private getEditingCategory(categoryId: string) {
-    this.categoriesService.edit(categoryId).subscribe({
-      next: (category: { data: ICategories[] }) => {
-        this.editingCategory = category.data[0];
-      },
-      error: error => {
-        console.error('Error fetching editing category', error);
-      }
-    });
-  }
-
-  private truncateTextWithHtml(html: string, maxLength: number): string {
-    const tempElement = document.createElement('div');
-    tempElement.innerHTML = html;
-
-    const text = tempElement.innerText || tempElement.textContent;
-    if (text.length <= maxLength) return html;
-
-    let truncatedText = text.substr(0, maxLength);
-    const lastSpaceIndex = truncatedText.lastIndexOf(' ');
-
-    if (lastSpaceIndex > 0) {
-      truncatedText = truncatedText.substr(0, lastSpaceIndex);
+  checkIfLiked() {
+    const customer = this.localStorageService.getItem('userInfo');
+    if (customer) {
+      const userId = customer[0].id;  
+      const id = this.route.snapshot.params['id']; 
+  
+      this.postService.checkLikes(userId, id).subscribe({
+        next: (response: Array<{ post_id: number }>) => {  
+        
+          const likedPost = response.find(post => post.post_id === +id);
+          this.postnew.isLiked = likedPost ? true : false;  
+        },
+        error: (error) => {
+          console.error('Error checking like status', error);
+        }
+      });
     }
+  }
+  
+  
 
-    const truncatedHtml = tempElement.innerHTML.substr(0, truncatedText.length);
-    return truncatedHtml + '...';
+  // Toggle like status (like/unlike)
+  handleLikeClick(postId: string): void {
+    const customer = this.localStorageService.getItem('userInfo');
+
+  
+    const userId = customer[0].id;
+    const isLiked = this.postnew.isLiked;
+    this.postnew.isLiked = !isLiked;
+    this.postnew.total_likes = isLiked ? this.postnew.total_likes - 1 : this.postnew.total_likes + 1;
+    if (this.postnew.isLiked) {
+      this.postService.addLike(postId, userId).subscribe({
+        next: () => {
+          this.getPostById()
+        },
+        error: (error) => {
+          console.error('Error liking post', error);
+          this.postnew.isLiked = isLiked; 
+          this.postnew.total_likes = isLiked ? this.postnew.total_likes + 1 : this.postnew.total_likes - 1; 
+        }
+      });
+    } else {
+      this.postService.removeLike(postId, userId).subscribe({
+        next: () => {
+          console.log('Post unliked successfully');
+        },
+        error: (error) => {
+          console.error('Error unliking post', error);
+          this.postnew.isLiked = isLiked; 
+          this.postnew.total_likes = isLiked ? this.postnew.total_likes + 1 : this.postnew.total_likes - 1; 
+        }
+      });
+    }
   }
 
+  // Toggle expanded description
   toggleExpand() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  // Truncate text to a specified length and add ellipsis
+  truncateTextWithHtml(text: string, length: number): string {
+    if (!text) return '';
+    const truncated = text.length > length ? text.substring(0, length) + '...' : text;
+    return truncated;
+  }
+
+  // Placeholder for comment submit handler
+  handleCommentSubmit() {
+    console.log('Bình luận đã được gửi!');
+    // Implement comment submission logic here
+  }
+
+  onTimeUpdate(audioPlayer: HTMLAudioElement): void {
+    const duration = audioPlayer.duration;  // Total duration of the audio
+    const currentTime = audioPlayer.currentTime;  // Current time the user has listened to
+
+    // Check if the user has listened to 80% of the audio
+    if (currentTime / duration >= 0.8) {
+      this.updateViewCount();
+    }
+  }
+
+
+  updateViewCount() {
+    this.postService.updateView(this.postnew.id).subscribe({
+      next: () => {
+        this.getPostById();
+      },
+      error: (error) => {
+        console.error('Error updating view count', error);
+      }
+    });
   }
 }

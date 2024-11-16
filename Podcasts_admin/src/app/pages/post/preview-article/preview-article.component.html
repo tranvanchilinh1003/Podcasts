@@ -14,7 +14,7 @@
                                                 <div class="custom-block-image-wrap custom-block-image-detail-page d-flex justify-content-center">
                                                     <img [src]="postnew.images ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F' + postnew.images + '?alt=media' : ''"
                                                         class="custom-block-image img-fluid rounded  w-auto "
-                                                        style="width: auto ; height: 150px; object-fit: cover;"
+                                                        style="width: auto ; height: 150px; object-fit: cover; "
                                                         alt="" />
                                                 </div>
                                                 <div class="custom-block-bottom justify-content-around d-flex mt-3">
@@ -25,17 +25,24 @@
                                                     </p>
 
                                                     <p>
-                                                        <nb-icon icon="heart-outline" pack="eva" class="fs-6"></nb-icon>
-                                                        <span>{{postnew.total_likes}}</span>
-                                                    </p>
+                                                        <nb-icon 
+                                                          [icon]="postnew.isLiked ? 'heart' : 'heart-outline'" 
+                                                          pack="eva" 
+                                                          class="fs-5 heart-icon" 
+                                                          [ngClass]="{'liked': postnew.isLiked}" 
+                                                          (click)="handleLikeClick(postnew.id)">
+                                                        </nb-icon>
+                                                        <span>{{ postnew.total_likes }}</span>
+                                                      </p>
+                                                      
+                                                      
 
                                                     <p>
                                                         <nb-icon icon="message-circle-outline" pack="eva"
                                                             class="fs-6"></nb-icon>
-                                                        <span class="me-1">{{postnew.total_comments}}</span>
+                                                        <span class="me-1">{{ postnew.total_comments }}</span>
                                                     </p>
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="col-lg-9 col-12">
@@ -49,14 +56,14 @@
                                                         </i>
                                                     </small>
                                                 </div>
-                                                <h2 class="mb-2">{{ postnew.title}}</h2>
+                                                <h2 class="mb-2">{{ postnew.title }}</h2>
                                                 <div class="profile-block profile-detail-block align-items-center">
                                                     <div class="d-flex mb-3 mb-lg-0 mb-md-0 align-items-center">
                                                         <img [src]="postnew.images_customers ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F' + postnew.images_customers + '?alt=media' : ''"
                                                             class="profile-block-image img-fluid rounded-circle" alt=""
                                                             style="max-width: 50px; height: 50px;" />
                                                         <div class="ml-2 mx-2">
-                                                            <p class="mb-0 d-flex">{{postnew.username}}
+                                                            <p class="mb-0 d-flex">{{ postnew.username }}
                                                                 <img *ngIf="postnew.isticket === 'active'"
                                                                     src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
                                                                     class="verified-image img-fluid" alt="Verified"
@@ -71,14 +78,16 @@
                                                     class="mt-2">
                                                 </div>
                                                 <a *ngIf="postnew.description.length > 100" (click)="toggleExpand()"
-                                                    class=" hover-pointer">
+                                                    class="hover-pointer">
                                                     {{ isExpanded ? 'Ẩn bớt' : 'Xem thêm' }}
                                                 </a>
                                                 <div class="mt-2">
-                                                    <audio class="w-100" controls loop
-                                                        [src]="postnew.audio ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F' + postnew.audio + '?alt=media' : ''">
+                                                    <audio #audioPlayer class="w-100" controls loop
+                                                      [src]="postnew.audio ? 'https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/audio%2F' + postnew.audio + '?alt=media' : ''"
+                                                      (timeupdate)="onTimeUpdate(audioPlayer)">
                                                     </audio>
-                                                </div>
+                                                  </div>
+                                                  
                                             </div>
                                         </div>
                                     </div>
@@ -90,7 +99,6 @@
                                                     <h4 class="section-title">Bình luận bài viết</h4>
                                                 </div>
                                                 <div class="col-lg-7 col-7 mt-1">
-                                                    <!-- <CommentForm customers_id={userId} postId={id} onSubmit={handleCommentSubmit} /> -->
                                                     <form onSubmit={handleSubmit} class="comment-form">
                                                         <!-- <div class="rating d-flex justify-content-center mb-3">
                                                             <div *ngFor="let star of stars; let i = index">
@@ -134,9 +142,6 @@
                                                                 class="fs-6 ms-1"></nb-icon></button>
                                                     </form>
                                                 </div>
-                                                <!-- <div class="section-title-wrap mt-3">
-                                                    <h4 class="section-title">Danh sách bình luận</h4>
-                                                </div> -->
                                             </div>
                                         </div>
                                     </section>

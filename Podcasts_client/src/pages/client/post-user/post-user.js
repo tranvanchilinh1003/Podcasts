@@ -170,10 +170,6 @@ function PostUser({ fetchPost }) {
         setShowModal(false);
         
         const postId = response.data.data.insertId; 
-        console.log(response.data.data.insertId);
-        
-
-      
         if (fileAudio) {
             const transcription = await transcribeAudio(fileAudio);
 
@@ -185,7 +181,7 @@ function PostUser({ fetchPost }) {
 
             const containsForbiddenWords = forbiddenWords.some(word => transcription.includes(word));
             if (containsForbiddenWords) {
-              console.log('xóa bài này');
+          
               
                 const a =  await axios.delete(`http://localhost:8080/api/post/${postId}`);            
                 await sendEmailNotification(getUserFromLocalStorage()?.email, 'Bài đăng của bạn đã bị xóa vì chứa từ cấm.');
@@ -322,7 +318,7 @@ function PostUser({ fetchPost }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-end">
+              <div className="col text-end d-flex justify-content-end align-items-baseline">
                 <Button
                   variant="secondary"
                   className="mt-5 mx-1"

@@ -277,10 +277,29 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
     try {
         const id = req.params.id;
+        const { reason } = req.body; // Lý do xóa tài khoản từ admin
+
+        // 1. Lấy thông tin khách hàng theo ID
+        const customer = await Customers.getUpdateCustomers(id); // Hàm lấy thông tin khách hàng
+        
+
+        if (!customer) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+
+        const email = customer[0].email;  // Giả sử email của khách hàng được lưu trong trường "email"
+        
+        if (!email) {
+            return res.status(400).json({ error: 'Email of the customer is not available' });
+        }
+
+        // 2. Gửi email thông báo về lý do xóa tài khoản
+        const mailResponse = await mailer(email, reason); // Gửi email với lý do xóa tài khoản
+
         const result = await Customers.deleteCustomers(id);
 
         res.status(200).json({
-            result: result
+            result: result,
         });
     } catch (error) {
         if (error.code === 'ER_ROW_IS_REFERENCED_2') {
@@ -295,6 +314,7 @@ exports.delete = async (req, res, next) => {
         }
     }
 };
+
 
 exports.search = async (req, res, next) => {    
     const key = req.query.messages; 
@@ -373,7 +393,7 @@ exports.chart = async (req, res, next) => {
                 html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
                     <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Ficon.png?alt=media&token=05c67363-d524-4341-bd3e-82e9c35b62aa" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
                         <h1 style="margin: 10px 0;">Chào mừng đến với Cuisine Podcasts!</h1>
                     </div>
                     <div style="padding: 20px; background-color: #f9f9f9;">
@@ -401,7 +421,52 @@ exports.chart = async (req, res, next) => {
     
         main().catch(console.error);
     }
-
+    function mailer(to, message) {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'foodcast440@gmail.com',
+                pass: 'clnj hmwa zwfh gfcl',
+            },
+        });
+    
+        async function main() {
+            const mailOptions = {
+                from: '"Cuisine Podcasts" <foodcast440@gmail.com>', // Địa chỉ người gửi
+                to: to,
+                subject: `CuisinePodcast thân gửi đến ${to}`, // Chủ đề email
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                        <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Ficon.png?alt=media&token=05c67363-d524-4341-bd3e-82e9c35b62aa" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
+                            <h1 style="margin: 10px 0;">Cuisine Podcasts!</h1>
+                        </div>
+                        <div style="padding: 20px; background-color: #f9f9f9;">
+                            <h2 style="color: #333; margin-top: 0;">Thông báo từ Cuisine Podcasts</h2>
+                            <p style="color: #666;">${message}</p>
+                        
+                        </div>
+                        <div style="background-color: #333; color: #fff; padding: 10px; text-align: center;">
+                            <p style="margin: 0;">Đây là email tự động, vui lòng không phản hồi.</p>
+                            <p style="margin: 0;">© 2024 Cuisine Podcasts. All rights reserved.</p>
+                        </div>
+                    </div>
+                `, // Sử dụng HTML cho nội dung
+            };
+    
+            try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log("Message sent: %s", info.messageId);
+                return { success: true, messageId: info.messageId };
+            } catch (error) {
+                console.error("Error sending email: %s", error);
+                return { success: false, error: error };
+            }
+        }
+    
+        main().catch(console.error);
+    }
+    
 
 
 

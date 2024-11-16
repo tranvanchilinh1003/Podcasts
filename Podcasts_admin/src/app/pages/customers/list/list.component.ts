@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, NgZone } from '@angular/core';
 import { CustomerService } from 'app/@core/services/apis/customers.service';
 import { ICustomer } from 'app/@core/interfaces/customers.interface';
 import { DialogService } from 'app/@core/services/common/dialog.service';
 import { API_BASE_URL, API_ENDPOINT } from 'app/@core/config/api-endpoint.config';
 import { SpinnerService } from 'app/@theme/components/spinner/spinner.service';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -20,6 +20,8 @@ export class ListComponent implements OnInit {
   query: string = '';
 
   constructor(
+    private zone: NgZone,
+    private changeDetector: ChangeDetectorRef,
     private spinner: SpinnerService,
     private dialog: DialogService,
     private CustomersService: CustomerService
@@ -41,13 +43,30 @@ export class ListComponent implements OnInit {
     });
   }
 
+  // onDelete(customerId: string): void {
+  //   this.dialog.showConfirmationDialog(API_ENDPOINT.customers.customers, customerId).then((result) => {
+  //     if (result) {
+  //       this.customers = this.customers.filter(customers => customers.id !== customerId);
+  //     }
+  //   });
+  // }
   onDelete(customerId: string): void {
-    this.dialog.showConfirmationDialog(API_ENDPOINT.customers.customers, customerId).then((result) => {
+    this.dialog.delecustomer(customerId).then((result) => {
       if (result) {
-        this.customers = this.customers.filter(customers => customers.id !== customerId);
+        this.zone.run(() => {
+          this.customers = this.customers.filter(customer => customer.id !== customerId);
+          this.changeDetector.detectChanges();
+        });
       }
+    }).catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Có lỗi xảy ra!',
+        text: `Lỗi: ${error.message}`,
+      });
     });
   }
+  
 
   getPage(event: any): void {
     this.customers = event.data;

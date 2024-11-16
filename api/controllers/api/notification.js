@@ -83,7 +83,7 @@ function sendEmail(to, message) {
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
                     <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Ficon.png?alt=media&token=05c67363-d524-4341-bd3e-82e9c35b62aa" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
                         <h1 style="margin: 10px 0;">Cuisine Podcasts!</h1>
                     </div>
                     <div style="padding: 20px; background-color: #f9f9f9;">

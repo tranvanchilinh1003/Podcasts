@@ -15,10 +15,10 @@
             "username": "admin1234",
             "isticket": "active",
             "total_comments": 3,
-            "total_shares": 2,
+            "total_shares": 1,
             "total_likes": 3,
             "average_comment_rating": 3.6667,
-            "score": 2.83334
+            "score": 2.53334
         },
         {
             "id": 85,
@@ -28,7 +28,7 @@
             "description": "Hủ tiếu là một món ăn truyền thống nổi tiếng của ẩm thực Việt Nam, đặc biệt phổ biến ở miền Nam. Với sợi hủ tiếu mềm mịn, nước dùng trong và thanh, cùng với các thành phần tươi ngon như thịt, tôm, và rau củ, món ăn này chắc chắn sẽ làm hài lòng cả gia đình bạn. Dưới đây là cách làm hủ tiếu đơn giản tại nhà, giúp bạn thưởng thức món ăn đậm đà hương vị ngay tại căn bếp của mình.",
             "categories_id": 78,
             "customers_id": 7,
-            "view": 1,
+            "view": 2,
             "create_date": "2024-08-04T17:00:00.000Z",
             "update_date": "2024-10-18T05:26:44.000Z",
             "images_customers": "2024-08-05T15-33-10-432Z.png",
@@ -156,7 +156,7 @@
             "isticket": "active",
             "total_comments": 0,
             "total_shares": 0,
-            "total_likes": 0,
+            "total_likes": 1,
             "average_comment_rating": 0.0,
             "score": 0.0
         },
@@ -168,10 +168,10 @@
             "description": "<div class=\"flex-shrink-0 flex flex-col relative items-end\">\n<div>\n<div class=\"pt-0\">\n<div class=\"gizmo-bot-avatar flex h-8 w-8 items-center justify-center overflow-hidden rounded-full\">&nbsp;</div>\n</div>\n</div>\n</div>\n<div class=\"group/conversation-turn relative flex w-full min-w-0 flex-col agent-turn\">\n<div class=\"flex-col gap-1 md:gap-3\">\n<div class=\"flex max-w-full flex-col flex-grow\">\n<div class=\"min-h-8 text-message flex w-full flex-col items-end gap-2 whitespace-normal break-words [.text-message+&amp;]:mt-5\" dir=\"auto\" data-message-author-role=\"assistant\" data-message-id=\"c286d055-a68f-4fd5-a502-d81327d52e0b\" data-message-model-slug=\"gpt-4o-mini\">\n<div class=\"flex w-full flex-col gap-1 empty:hidden first:pt-[3px]\">\n<div class=\"markdown prose w-full break-words dark:prose-invert dark\">\n<p>G&agrave; r&aacute;n gi&ograve;n rụm, thơm phức, được tẩm ướp với gia vị đặc trưng, mang đến hương vị đậm đ&agrave; kh&oacute; qu&ecirc;n. Mỗi miếng g&agrave; đều v&agrave;ng ươm, lớp vỏ ngo&agrave;i gi&ograve;n tan, trong vẫn giữ được độ ẩm v&agrave; mềm mại. Thưởng thức c&ugrave;ng sốt chấm hoặc rau sống, đ&acirc;y chắc chắn l&agrave; m&oacute;n ăn khiến bạn m&ecirc; mẩn ngay từ miếng đầu ti&ecirc;n!</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>",
             "categories_id": 76,
             "customers_id": 94,
-            "view": 1,
+            "view": 3,
             "create_date": "2024-11-06T02:51:36.000Z",
             "update_date": null,
-            "images_customers": "2024-11-04T06-06-05-600Z.jpg",
+            "images_customers": "2024-11-08T04-25-44-034Z.jpg",
             "username": "tranvanchilinh",
             "isticket": "active",
             "total_comments": 0,

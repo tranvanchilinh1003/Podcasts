@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 
 import { API_BASE_URL } from '../../config/api-endpoint.config';
 
@@ -74,6 +74,57 @@ export class DialogService {
       }
     });
   }
+  
+  async delecustomer(id: string): Promise<boolean> {
+    const { value: reason } = await Swal.fire({
+      title: 'Vui lòng nhập lý do xóa tài khoản',
+      input: 'textarea',
+      inputPlaceholder: 'Nhập lý do...',
+      showCancelButton: true,
+      confirmButtonText: 'Gửi lý do',
+      inputAttributes: {
+        'aria-label': 'Nhập lý do xóa tài khoản',
+      },
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        const reason = Swal.getInput().value;
+        if (!reason || reason.trim() === '') {
+          Swal.showValidationMessage('Lý do xóa tài khoản là bắt buộc');
+          return false;
+        }
+  
+        try {
+          // Gửi lý do trong phần thân yêu cầu
+          const deleteResponse: any = await firstValueFrom(
+            this.httpService.delete(`http://localhost:8080/api/customers/${id}`, {
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reason }) // Truyền lý do qua body dưới dạng JSON
+            })
+          );
+  
+          Swal.fire({
+            icon: 'success',
+            title: 'Tài khoản đã được xóa!',
+            text: `Lý do xóa tài khoản: ${reason}`,
+          });
+          return true; 
+        } catch (error) {
+          console.error("Lỗi khi gọi API:", error);
+          Swal.showValidationMessage(`Lỗi: ${error.message}`);
+          return false;
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+  
+    return false; 
+  }
+  
+  
+  
+  
+  
+  
   
   
   deleteItem(item: string, id: string): Observable<any> {
