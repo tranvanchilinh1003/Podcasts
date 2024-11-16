@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   alertMessages: IAlertMessage[] = [];
   loading = false;
   errorMessage: string = '';
+  passwordFieldType: string = 'password';
   constructor(
     private router: Router,
     private spinner: SpinnerService,
@@ -79,5 +80,10 @@ export class LoginComponent implements OnInit {
   protected handleLoginFailed() {
     this.spinner.hide();
     this.alertMessages = [{ status: 'danger', message: 'Tài khoản hoặc mật khẩu không chính xác' }];
+  }
+
+  togglePasswordVisibility(): void {
+    // Chuyển giữa password và text
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 }

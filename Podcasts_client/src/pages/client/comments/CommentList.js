@@ -340,18 +340,18 @@ const CommentList = React.memo(
       <div className="comment-list">
         {displayedComments.map((comment) => (
           <CommentItem
-            key={comment.id}
+            key={comment?.id}
             comment={comment}
-            replies={displayedReplies[comment.id] || []}
+            replies={displayedReplies[comment?.id] || []}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            userId={customer.id}
-            customer={customer}
-            totalReplies={comment.totalReplies}
+            userId={customer?.id}
+            customer={customer || [ ]}
+            totalReplies={comment?.totalReplies}
             onLoadMoreReplies={loadMoreReplies}
             onHideReplies={onHideReplies}
             repliesLimit={repliesLimit}
-            visibleReplies={visibleRepliesMap[comment.id] || 0}
+            visibleReplies={visibleRepliesMap[comment?.id] || 0}
           />
         ))}
         {isLoading && <div>Đang tải...</div>}
@@ -375,10 +375,10 @@ const CommentList = React.memo(
           </div>
         )}
 
-        {customer.id && (
+        {customer?.id && (
           <CommentBox
             postId={postId}
-            customer={customer}
+            customer={customer || []}
             commentToEdit={editingComment}
             setCommentToEdit={setEditingComment}
             onSubmit={handleCommentSubmit}

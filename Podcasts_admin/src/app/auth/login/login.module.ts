@@ -6,13 +6,16 @@ import {
   NbCheckboxModule,
   NbInputModule,
   NbLayoutModule,
-  NbThemeModule
+  NbThemeModule,
+  NbIconModule,
+  NbSelectModule
 } from "@nebular/theme";
 import {NbAuthModule} from "@nebular/auth";
 import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterLink} from "@angular/router";
 import {ThemeModule} from "../../@theme/theme.module";
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
   imports: [
@@ -30,6 +33,9 @@ import {ThemeModule} from "../../@theme/theme.module";
     NbButtonModule,
     ReactiveFormsModule,
     ThemeModule,
+    NbEvaIconsModule,
+    NbIconModule,
+    NbSelectModule
 
   ],
   declarations: [

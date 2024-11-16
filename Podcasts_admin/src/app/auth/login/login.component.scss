@@ -39,3 +39,18 @@ nb-card-body {
   justify-content: center;
   align-items: center;
 }
+.input-container {
+  position: relative;
+}
+
+.input-container .form-control {
+  padding-right: 35px; /* Để tạo không gian cho icon */
+}
+
+.input-container .input-icon {
+  position: absolute;
+  right: 10px;
+  top: 65%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
