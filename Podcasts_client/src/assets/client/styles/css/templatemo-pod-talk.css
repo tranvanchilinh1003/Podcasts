@@ -249,11 +249,11 @@ main {
   SITE HEADER              
 -----------------------------------------*/
 .site-header {
-  background-image: url('../images/templatemo-wave-header.jpg'), linear-gradient(#348CD2, #FFFFFF);;
+  background-image: url('../images/images/background-cam1.jpg'), linear-gradient(#348CD2, #FFFFFF);;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  min-height: 480px;
+  min-height: 400px;
   position: relative;
 }
 

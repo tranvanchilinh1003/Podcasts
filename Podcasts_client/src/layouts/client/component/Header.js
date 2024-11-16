@@ -6,6 +6,7 @@ import { DialogService } from "../../../services/common/DialogService";
 import { gapi } from "gapi-script";
 import Spinner from "../../../pages/client/Spinner/Spinner";
 import "./header.css";
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 const CLIENT_ID =
   "973247984258-riadtumd7jcati9d9g9ip47tuqfqdkhc.apps.googleusercontent.com";
 const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
@@ -46,7 +47,7 @@ function Header() {
       const customer = getUserFromLocalStorage();
       const userId = customer ? customer.id : null;
       const response = await axios.get(
-        `http://localhost:8080/api/notification_userId/${userId}`
+        `${API_ENDPOINT.auth.base}/notification_userId/${userId}`
       );
 
       const readNotifications =
@@ -70,7 +71,7 @@ function Header() {
       const customer = getUserFromLocalStorage();
       const userId = customer ? customer.id : null;
       const response = await axios.get(
-        `http://localhost:8080/api/customers/${userId}`
+        `${API_ENDPOINT.auth.base}/customers/${userId}`
       );
       setUserInfo(response.data.data[0]);
       setOldImage(response.data.data[0].images);
@@ -82,7 +83,7 @@ function Header() {
   };
   useEffect(() => {
     fetchUserInfo();
-  });
+  }, [isLoggedIn]);
   useEffect(() => {
     setNotificationCount(5);
     fetNotification();
@@ -165,7 +166,7 @@ function Header() {
 
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/suggest_keywords?keyword=${value}`
+        `${API_ENDPOINT.auth.base}/suggest_keywords?keyword=${value}`
       );
       setSuggestions(response.data.data);
       setShowAll(false);
@@ -261,7 +262,7 @@ function Header() {
     try {
       // Make the API call to update the notification
       const response = await axios.patch(
-        `http://localhost:8080/api/notification/${id}`
+        `${API_ENDPOINT.auth.base}/notification/${id}`
       );
       fetNotification();
     } catch (error) {
@@ -271,7 +272,7 @@ function Header() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/notification/${id}`);
+      await axios.delete(`${API_ENDPOINT.auth.base}/notification/${id}`);
 
       setNotifications((prevNotifications) =>
         prevNotifications.filter((notification) => notification.id !== id)

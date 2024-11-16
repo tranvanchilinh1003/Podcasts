@@ -24,7 +24,7 @@ import MyEditor from "../tinymce/tinymce";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import CommentList from "../comments/CommentList";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config"; 
 function Account() {
   const { id } = useParams();
   const {
@@ -112,7 +112,7 @@ function Account() {
   const fetchUserInfo = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/customers/${id}`
+        `${API_ENDPOINT.auth.base}/customers/${id}`
       );
       const user = response.data.data[0];
       setUserInfo(user);
@@ -297,7 +297,7 @@ function Account() {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/categories_All"
+          `${API_ENDPOINT.auth.base}/categories_All`
         );
         setCategories(response.data.data);
       } catch (error) {
@@ -353,11 +353,11 @@ function Account() {
       const customer = getUserFromLocalStorage();
       const userId = customer ? customer.id : null;
       const response = await axios.get(
-        `http://localhost:8080/api/post-customer/${id}`
+        `${API_ENDPOINT.auth.base}/post-customer/${id}`
       );
       if (userId) {
         const likeResponse = await axios.get(
-          "http://localhost:8080/api/check-likes",
+          `${API_ENDPOINT.auth.base}/check-likes`,
           {
             params: { userId },
           }
@@ -438,7 +438,7 @@ function Account() {
   };
   const updateViewCount = async (postId) => {
     try {
-      await axios.post(`http://localhost:8080/api/update_view/${postId}`);
+      await axios.post(`${API_ENDPOINT.auth.base}/update_view/${postId}`);
     } catch (error) {
       console.error("Error updating view count:", error);
     }
@@ -567,14 +567,14 @@ function Account() {
 
     try {
       if (isLiked) {
-        await axios.delete("http://localhost:8080/api/like", {
+        await axios.delete("${API_ENDPOINT.auth.base}/like", {
           data: {
             post_id: postId,
             customers_id: customer.id,
           },
         });
       } else {
-        await axios.post("http://localhost:8080/api/like", {
+        await axios.post("${API_ENDPOINT.auth.base}/like", {
           post_id: postId,
           customers_id: customer.id,
         });
@@ -593,7 +593,7 @@ function Account() {
         navigate("/login");
         return;
       }
-      const response = await axios.post("http://localhost:8080/api/shares", {
+      const response = await axios.post("${API_ENDPOINT.auth.base}/shares", {
         post_id: postId,
         customers_id: customer.id,
       });

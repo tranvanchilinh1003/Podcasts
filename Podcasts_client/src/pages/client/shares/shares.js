@@ -6,7 +6,7 @@ import { DialogService } from "../../../services/common/DialogService";
 import { storage } from '../firebase/firebase';
 import { ref, uploadBytes } from 'firebase/storage';
 import { useForm } from 'react-hook-form';
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 function Shares() {
     const { id } = useParams();
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm();
@@ -140,7 +140,7 @@ function Shares() {
     };
     const updateViewCount = async (postId) => {
         try {
-            await axios.post(`http://localhost:8080/api/update_view/${postId}`);
+            await axios.post(`${API_ENDPOINT.auth.base}/update_view/${postId}`);
         } catch (error) {
             console.error("Error updating view count:", error);
         }
@@ -148,7 +148,7 @@ function Shares() {
 
     const fetchShare = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/shares/${id}`);
+            const response = await axios.get(`${API_ENDPOINT.auth.base}/shares/${id}`);
             setData(response.data.data);
         } catch (error) {
             console.error("Error fetching posts:", error);
@@ -186,7 +186,7 @@ function Shares() {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
+                const response = await axios.get(`${API_ENDPOINT.auth.base}/customers/${id}`);
                 const user = response.data.data[0];
                 setUserInfo(user);
                 setOldImage(user.images);

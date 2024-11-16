@@ -11,7 +11,7 @@ import axios from "axios";
 import Spinner from "../Spinner/Spinner";
 import MyEditor from "../tinymce/tinymce";
 import "./post-user.css";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 function PostUser({ fetchPost }) {
   const { id } = useParams();
   const {
@@ -47,7 +47,7 @@ function PostUser({ fetchPost }) {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/categories_All"
+          `${API_ENDPOINT.auth.base}/categories_All`
         );
         setCategories(response.data.data);
       } catch (error) {
@@ -66,7 +66,7 @@ function PostUser({ fetchPost }) {
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/customers/${id}`
+          `${API_ENDPOINT.auth.base}/customers/${id}`
         );
         const user = response.data.data[0];
         setUserInfo(user);
@@ -183,7 +183,7 @@ function PostUser({ fetchPost }) {
             if (containsForbiddenWords) {
           
               
-                const a =  await axios.delete(`http://localhost:8080/api/post/${postId}`);            
+                const a =  await axios.delete(`${API_ENDPOINT.auth.base}/post/${postId}`);            
                 await sendEmailNotification(getUserFromLocalStorage()?.email, 'Bài đăng của bạn đã bị xóa vì chứa từ cấm.');
                 await fetchPost();
             }

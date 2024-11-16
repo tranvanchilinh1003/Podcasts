@@ -26,8 +26,13 @@
             <div class="form-control-group mb-3 input-container">
               <label class="label" for="password">Mật khẩu:</label>
               <input nbInput formControlName="password" required name="password" fullWidth status="success"
-              id="password" placeholder="Mật khẩu..." [type]="passwordFieldType" class="form-control">
-       <nb-icon icon="eye-outline" pack="eva" class="fs-3 input-icon" (click)="togglePasswordVisibility()"></nb-icon>
+                     id="password" placeholder="Mật khẩu..." [type]="passwordFieldType" class="form-control">
+              
+              <!-- Icon hiển thị mật khẩu -->
+              <nb-icon *ngIf="isPasswordVisible" icon="eye-outline" pack="eva" class="fs-3 input-icon" (click)="togglePasswordVisibility()"></nb-icon>
+              
+              <!-- Icon ẩn mật khẩu -->
+              <nb-icon *ngIf="!isPasswordVisible" icon="eye-off-outline" pack="eva" class="fs-3 input-icon" (click)="togglePasswordVisibility()"></nb-icon>
               <div
                 *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
                 <small *ngIf="loginForm.get('password').hasError('required')">

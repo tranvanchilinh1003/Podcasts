@@ -6,14 +6,14 @@ import CategoriesHome from "../categories/CategoriesHome";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel';
 import { Link, useNavigate } from "react-router-dom";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 function Home() {
   const [data, setData] = useState([]);
   const carouselRef = useRef(null);
 
   const fetchTopFollow = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/follow");
+      const response = await axios.get(`${API_ENDPOINT.auth.base}/follow`);
       setData(response.data.data);
     } catch (error) {
       console.error('Error fetching follow data:', error);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import elsa from '../../../assets/client/styles/images/profile/woman-posing-black-dress-medium-shot.jpg';
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 function Categories() {
     const { id } = useParams();
     const [data, setData] = useState([]);
@@ -11,7 +11,7 @@ function Categories() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/product/${id}`);
+                const response = await axios.get(`${API_ENDPOINT.auth.base}/product/${id}`);
                 setData(response.data.data);
             } catch (error) {
                 console.error("Error fetching posts:", error);

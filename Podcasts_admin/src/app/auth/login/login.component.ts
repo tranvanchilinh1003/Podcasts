@@ -14,7 +14,7 @@ import { DialogService } from '../../@core/services/common/dialog.service'
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
-
+  isPasswordVisible: boolean = false;
   loginForm: FormGroup;
   alertMessages: IAlertMessage[] = [];
   loading = false;
@@ -53,16 +53,16 @@ export class LoginComponent implements OnInit {
           if (response.data[0].role === 'admin') {
             this.handleLoginSuccess(response);
           } else {
-            this.handleLoginFailed();
+            this.handleLoginFailed('Bạn không có quyền đăng nhập admin');
           }
         },
         error: (error) => {
           if (error.status === 401) {
             // Xử lý lỗi Unauthorized (401)
-            this.handleLoginFailed();
+            this.handleLoginFailed('Tài khoản hoặc mật khẩu không đúng');
           } else {
             // Xử lý các lỗi khác
-            this.handleLoginFailed();
+            this.handleLoginFailed('Tài khoản hoặc mật khẩu không đúng');
           }
         }
       });
@@ -77,13 +77,13 @@ export class LoginComponent implements OnInit {
     this.spinner.hide();
   }
 
-  protected handleLoginFailed() {
+  protected handleLoginFailed(message) {
     this.spinner.hide();
-    this.alertMessages = [{ status: 'danger', message: 'Tài khoản hoặc mật khẩu không chính xác' }];
+    this.alertMessages = [{ status: 'danger', message: message }];
   }
 
   togglePasswordVisibility(): void {
-    // Chuyển giữa password và text
+    this.isPasswordVisible = !this.isPasswordVisible;
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 }

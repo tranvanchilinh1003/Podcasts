@@ -5,7 +5,7 @@ import CommentForm from "../comments/CommentForm";
 import CommentList from "../comments/CommentList";
 import { Link, useNavigate } from "react-router-dom";
 import "./details.css";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
   return (
@@ -103,7 +103,7 @@ function CategoriesDetail() {
   const fetchCategoryData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/getId_post/${id}`
+        `${API_ENDPOINT.auth.base}/getId_post/${id}`
       );
       const categoryData = response.data.data[0];
       const customer = getUserFromLocalStorage();
@@ -111,7 +111,7 @@ function CategoriesDetail() {
 
       if (userId) {
         const likeResponse = await axios.get(
-          "http://localhost:8080/api/check-likes",
+          `${API_ENDPOINT.auth.base}/check-likes`,
           {
             params: { userId, postId: categoryData.id }, // Add the postId if needed
           }
@@ -160,7 +160,7 @@ function CategoriesDetail() {
 
   const updateViewCount = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/update_view/${category.id}`);
+      await axios.post(`${API_ENDPOINT.auth.base}/update_view/${category.id}`);
       fetchCategoryData();
     } catch (error) {
       console.error("Error updating view count:", error);
@@ -221,11 +221,11 @@ function CategoriesDetail() {
       if (isLiked) {
         if (category.notificationId) {
           await axios.delete(
-            `http://localhost:8080/api/notification/${category.notificationId}`
+            `${API_ENDPOINT.auth.base}/notification/${category.notificationId}`
           );
         }
 
-        await axios.delete("http://localhost:8080/api/like", {
+        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
           data: {
             post_id: category.id,
             customers_id: customer.id,
@@ -237,7 +237,7 @@ function CategoriesDetail() {
       } else {
         if (customer.id !== category.customers_id) {
           const response = await axios.post(
-            "http://localhost:8080/api/notification",
+            `${API_ENDPOINT.auth.base}/notification`,
             {
               user_id: category.customers_id,
               sender_id: customer.id,
@@ -252,7 +252,7 @@ function CategoriesDetail() {
           setCategory(updatedCategory);
         }
 
-        await axios.post("http://localhost:8080/api/like", {
+        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
           post_id: category.id,
           customers_id: customer.id,
         });
@@ -280,7 +280,7 @@ function CategoriesDetail() {
       </header>
 
       <section
-        className="latest-podcast-section section-padding pb-0 p-0"
+        className="latest-podcast-section section-padding pb-0 p-0 mt-3"
         id="section_2"
       >
         <div className="container">

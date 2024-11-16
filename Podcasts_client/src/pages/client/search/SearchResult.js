@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import './SearchStyle.css'
+import { API_ENDPOINT } from '../../../config/api-endpoint.config';
 function SearchResults() {
     const [results, setResults] = useState([]);
     const [isAudioVisible, setIsAudioVisible] = useState(false);
@@ -21,7 +22,7 @@ function SearchResults() {
 
     const fetchPost = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/api/get_All");
+          const response = await axios.get(`${API_ENDPOINT.auth.base}/get_All`);
           setData(response.data.data);
         } catch (error) {
           console.error("Error fetching posts:", error);
@@ -31,7 +32,7 @@ function SearchResults() {
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/post_search?messages=${query}`);
+                const response = await axios.get(`${API_ENDPOINT.auth.base}/post_search?messages=${query}`);
                 setResults(response.data.data);
             } catch (error) {
                 console.error('Lỗi khi lấy kết quả tìm kiếm:', error);
@@ -101,7 +102,7 @@ function SearchResults() {
     };
     const updateViewCount = async (postId) => {
         try {
-          await axios.post(`http://localhost:8080/api/update_view/${postId}`);
+          await axios.post(`${API_ENDPOINT.auth.base}/update_view/${postId}`);
         } catch (error) {
           console.error("Error updating view count:", error);
         }

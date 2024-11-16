@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import './followed.css';
-
+import { API_ENDPOINT  } from "../../../config/api-endpoint.config";
 function UserFollowList({ type }) {
   const { id } = useParams();
   const [notificationId, setNotificationId] = useState('');
@@ -20,7 +20,7 @@ function UserFollowList({ type }) {
   const fetchFollowing = async () => {
     try {
       const endpoint = type === "follower" ? `list_follower/${id}` : `list_followed/${id}`;
-      const response = await axios.get(`http://localhost:8080/api/${endpoint}`);
+      const response = await axios.get(`${API_ENDPOINT.auth.base}/${endpoint}`);
       const fetchedFollowing = response.data.data;
 
       const currentUser = getUserFromLocalStorage();
@@ -28,7 +28,7 @@ function UserFollowList({ type }) {
         const followResponse = await Promise.all(
           fetchedFollowing.map(async (user) => {
             const checkFollowResponse = await axios.get(
-              `http://localhost:8080/api/check-follow/${currentUser.id}?followed_id=${user.id}`
+              `${API_ENDPOINT.auth.base}/check-follow/${currentUser.id}?followed_id=${user.id}`
             );
             return {
               ...user,
@@ -60,11 +60,11 @@ function UserFollowList({ type }) {
     }
 
     try {
-      await axios.post(`http://localhost:8080/api/follow/${userIdToFollow}`, {
+      await axios.post(`${API_ENDPOINT.auth.base}/follow/${userIdToFollow}`, {
         follower_id: user.id,
       });
 
-      const notificationResponse = await axios.post(`http://localhost:8080/api/notification`, {
+      const notificationResponse = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
         user_id: userIdToFollow,
         sender_id: user.id,
         action: "follow",
@@ -94,12 +94,12 @@ function UserFollowList({ type }) {
     }
 
     try {
-      await axios.post(`http://localhost:8080/api/unfollow/${userIdToUnfollow}`, {
+      await axios.post(`${API_ENDPOINT.auth.base}/unfollow/${userIdToUnfollow}`, {
         follower_id: user.id,
       });
 
       if (notificationId) {
-        await axios.delete(`http://localhost:8080/api/notification/${notificationId}`);
+        await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
         setNotificationId('');
       }
       setFollowing((prevFollowing) =>

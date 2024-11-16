@@ -5,7 +5,7 @@ import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Spinner from "../Spinner/Spinner";
 import CommentList from "../comments/CommentList";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
   return (
@@ -110,7 +110,7 @@ function Post() {
       if (userId) {
     
         const likeResponse = await axios.get(
-          "http://localhost:8080/api/check-likes",
+          `${API_ENDPOINT.auth.base}/check-likes`,
           {
             params: { userId },
           }
@@ -258,7 +258,7 @@ function Post() {
 
   const updateViewCount = async (postId) => {
     try {
-      await axios.post(`http://localhost:8080/api/update_view/${postId}`);
+      await axios.post(`${API_ENDPOINT.auth.base}/update_view/${postId}`);
     } catch (error) {
       console.error("Error updating view count:", error);
     }
@@ -290,7 +290,7 @@ function Post() {
         navigate("/login");
         return;
       }
-      const response = await axios.post("http://localhost:8080/api/shares", {
+      const response = await axios.post(`${API_ENDPOINT.auth.base}/shares`, {
         post_id: postId,
         customers_id: customer.id,
       });
@@ -350,10 +350,10 @@ function Post() {
         if (isLiked) {
             const notificationId = post.data.notificationId;
             if(notificationId){
-              await axios.delete(`http://localhost:8080/api/notification/${notificationId}`);
+              await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
             }
         
-            await axios.delete("http://localhost:8080/api/like", {
+            await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
               data: {
                   post_id: postId,
                   customers_id: customer.id,
@@ -374,7 +374,7 @@ function Post() {
             setData(updatedDataWithoutNotification);
         } else {
             if (customer.id !== post.data.customers_id) {
-                const response = await axios.post("http://localhost:8080/api/notification", {
+                const response = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
                     user_id: post.data.customers_id,
                     sender_id: customer.id,
                     action: "like",
@@ -396,7 +396,7 @@ function Post() {
                 });
                 setData(updatedDataWithNotification);
             }
-            await axios.post("http://localhost:8080/api/like", {
+            await axios.post(`${API_ENDPOINT.auth.base}/like`, {
                 post_id: postId,
                 customers_id: customer.id,
             });

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel';
+import { API_ENDPOINT } from '../../../config/api-endpoint.config';
 function CategoriesHome() {
   const [categories, setCategories] = useState([]);
   const [showAll, setShowAll] = useState(false);
@@ -12,7 +13,7 @@ function CategoriesHome() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/categories_All');
+        const response = await axios.get(`${API_ENDPOINT.auth.base}/categories_All`);
         if (Array.isArray(response.data.data)) {
           setCategories(response.data.data);
           setDisplayedCategories(response.data.data.slice(0, 3));

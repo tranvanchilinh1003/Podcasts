@@ -9,6 +9,7 @@ import { DialogService } from "../../../services/common/DialogService";
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { gapi } from 'gapi-script';
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 const CLIENT_ID = "973247984258-riadtumd7jcati9d9g9ip47tuqfqdkhc.apps.googleusercontent.com";
 const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
 
@@ -102,7 +103,7 @@ function EditPassword() {
         // console.log("Fetching user info...");
         const fetchUserInfo = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
+                const response = await axios.get(`${API_ENDPOINT.auth.base}/customers/${id}`);
                 // console.log("User info received:", response.data.data);
                 const user = response.data.data[0];
                 setUserInfo(user);

@@ -8,7 +8,7 @@ import axios from "axios";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import UserFollowList from "../followed/followed";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 function Follow() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -100,11 +100,11 @@ function Follow() {
       const customer = getUserFromLocalStorage();
       const userId = customer ? customer.id : null;
       const response = await axios.get(
-        `http://localhost:8080/api/post-customer/${id}`
+        `${API_ENDPOINT.auth.base}/post-customer/${id}`
       );
       if (userId) {
         const likeResponse = await axios.get(
-          "http://localhost:8080/api/check-likes",
+          `${API_ENDPOINT.auth.base}/check-likes`,
           {
             params: { userId },
           }
@@ -184,7 +184,7 @@ function Follow() {
 
   const updateViewCount = async (postId) => {
     try {
-      await axios.post(`http://localhost:8080/api/update_view/${postId}`);
+      await axios.post(`${API_ENDPOINT.auth.base}/update_view/${postId}`);
     } catch (error) {}
   };
 
@@ -225,7 +225,7 @@ function Follow() {
   const fetchUserInfo = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/customers/${id}`
+        `${API_ENDPOINT.auth.base}/customers/${id}`
       );
       const user = response.data.data[0];
       setUserInfo(user);
@@ -239,7 +239,7 @@ function Follow() {
       const currentUser = getUserFromLocalStorage();
       if (currentUser) {
         const followResponse = await axios.get(
-          `http://localhost:8080/api/check-follow/${currentUser.id}?followed_id=${id}`
+          `${API_ENDPOINT.auth.base}/check-follow/${currentUser.id}?followed_id=${id}`
         );
         setIsFollowing(followResponse.data.isFollowing);
       } else {
@@ -271,14 +271,14 @@ function Follow() {
     try {
     
       await axios.post(
-        `http://localhost:8080/api/follow/${userIdToFollow}`,
+        `${API_ENDPOINT.auth.base}/follow/${userIdToFollow}`,
         {
           follower_id: user.id,
         }
       );
   
     
-      const notificationResponse = await axios.post(`http://localhost:8080/api/notification`, {
+      const notificationResponse = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
         user_id: userIdToFollow,
         sender_id: user.id,
         action: "follow",
@@ -306,14 +306,14 @@ function Follow() {
   
     try {
       await axios.post(
-        `http://localhost:8080/api/unfollow/${userIdToUnfollow}`,
+        `${API_ENDPOINT.auth.base}/unfollow/${userIdToUnfollow}`,
         {
           follower_id: user.id,
         }
       );
   
       if (notificationId) {
-        await axios.delete(`http://localhost:8080/api/notification/${notificationId}`);
+        await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
         setNotificationId(' ')
       } 
       setIsFollowing(false);
@@ -353,13 +353,13 @@ function Follow() {
             const notificationId = post.notificationId;
 
             if (notificationId) {
-                await axios.delete(`http://localhost:8080/api/notification/${notificationId}`);
+                await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
             } else {
                 console.error("No notification ID found to delete.");
             }
 
             // Xóa like
-            await axios.delete("http://localhost:8080/api/like", {
+            await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
                 data: {
                     post_id: postId,
                     customers_id: customer.id,
@@ -380,7 +380,7 @@ function Follow() {
         } else {
           
             if (customer.id !== post.customers_id) {
-                const response = await axios.post("http://localhost:8080/api/notification", {
+                const response = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
                     user_id: post.customers_id,
                     sender_id: customer.id,
                     action: "like",
@@ -403,7 +403,7 @@ function Follow() {
             }
 
           
-            await axios.post("http://localhost:8080/api/like", {
+            await axios.post(`${API_ENDPOINT.auth.base}/like`, {
                 post_id: postId,
                 customers_id: customer.id,
             });
@@ -424,7 +424,7 @@ function Follow() {
         navigate("/login");
         return;
       }
-      const response = await axios.post("http://localhost:8080/api/shares", {
+      const response = await axios.post(`${API_ENDPOINT.auth.base}/shares`, {
         post_id: postId,
         customers_id: customer.id,
       });

@@ -9,7 +9,7 @@ import axios from 'axios';
 import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebase/firebase';
 import Spinner from '../Spinner/Spinner';
-
+import { API_ENDPOINT } from '../../../config/api-endpoint.config';
 function InfoUser() {
     const { id } = useParams();
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
@@ -37,7 +37,7 @@ function InfoUser() {
     };
     const fetchUserInfo = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/customers/${id}`);
+            const response = await axios.get(`${API_ENDPOINT.auth.base}/customers/${id}`);
             const user = response.data.data[0];
             setUserInfo(user);
             setOldImage(user.images);

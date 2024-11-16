@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { API_ENDPOINT } from '../../../config/api-endpoint.config';
 function Search() {
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
@@ -11,7 +11,7 @@ function Search() {
         if (query.length > 0) {
             const fetchSuggestions = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8080/api/suggest_keywords?keyword=${query}`);
+                    const response = await axios.get(`${API_ENDPOINT.auth.base}/suggest_keywords?keyword=${query}`);
                     setSuggestions(response.data.data);
                 } catch (error) {
                     console.error('Error fetching suggestions:', error);
