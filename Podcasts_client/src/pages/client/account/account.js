@@ -24,7 +24,9 @@ import MyEditor from "../tinymce/tinymce";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import CommentList from "../comments/CommentList";
-import { API_ENDPOINT } from "../../../config/api-endpoint.config"; 
+import { database } from "../firebase/firebase";
+import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
+
 function Account() {
   const { id } = useParams();
   const {
@@ -73,7 +75,6 @@ function Account() {
   const [editorContent, setEditorContent] = useState("");
   const [commentBoxVisibility, setCommentBoxVisibility] = useState({});
   const [customer, setCustomer] = useState(null);
-
 
   useEffect(() => {
     const customers = localStorage.getItem("customer");
@@ -547,42 +548,79 @@ function Account() {
       return;
     }
 
-    const post = data.find((post) => post.id === postId);
+    // Tìm bài viết trong dữ liệu
+    const post = data.find((p) => p.id === postId);
+    if (!post) {
+      console.error(`Post with ID ${postId} not found.`);
+      return;
+    }
+
     const isLiked = post?.isLiked;
 
-    // Update state immediately
-    const updatedData = data.map((p) =>
-      p.id === postId
-        ? {
-            ...p,
-            isLiked: !isLiked,
-            total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
-          }
-        : p
-    );
+    // Cập nhật dữ liệu tạm thời trong giao diện
+    const updatedData = data.map((p) => {
+      if (p.id === postId) {
+        return {
+          ...p,
+          isLiked: !isLiked,
+          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+        };
+      }
+      return p;
+    });
 
     setData(updatedData);
 
     try {
       if (isLiked) {
-        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
+        // Nếu bài viết đã được thích, xóa thông báo và trạng thái thích
+        const notificationId = await findNotificationIdByPostId(postId); // Tìm notificationId bằng postId
+
+        if (notificationId) {
+          console.log(`Deleting notification with ID: ${notificationId}`);
+          await deleteNotification(notificationId, database, null); // Xóa thông báo
+        } else {
+          console.warn("No notification ID found for this post.");
+        }
+
+        // Gửi yêu cầu xóa like
+        await axios.delete("http://localhost:8080/api/like", {
           data: {
             post_id: postId,
             customers_id: customer.id,
           },
         });
       } else {
-        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
+        // Nếu bài viết chưa được thích, thêm thông báo và trạng thái thích
+        if (customer.id !== post.customers_id) {
+          const notification = await addNotification(
+            post.customers_id, // Người nhận thông báo
+            customer.id, // Người gửi thông báo
+            postId, // ID bài viết
+            "like", // Hành động
+            database // Tham chiếu Firebase
+          );
+
+          if (notification) {
+            console.log(`Added notification with ID: ${notification.key}`);
+          }
+        }
+
+        // Gửi yêu cầu thêm like
+        await axios.post("http://localhost:8080/api/like", {
           post_id: postId,
           customers_id: customer.id,
         });
       }
+
+      // Làm mới dữ liệu bài viết sau khi cập nhật
+      fetchPost();
     } catch (error) {
       console.error("Error updating like status:", error);
-
-      setData(data);
+      setData(data); // Phục hồi dữ liệu cũ trong trường hợp lỗi
     }
   };
+
 
   const handleShareClick = async (postId) => {
     try {

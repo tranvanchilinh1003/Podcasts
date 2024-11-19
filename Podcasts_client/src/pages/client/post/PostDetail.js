@@ -5,7 +5,9 @@ import CommentForm from "../comments/CommentForm";
 import CommentList from "../comments/CommentList";
 import { Link, useNavigate } from "react-router-dom";
 import "./details.css";
-import { API_ENDPOINT } from "../../../config/api-endpoint.config";
+import { database } from "../firebase/firebase";
+import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
+
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
   return (
@@ -195,7 +197,7 @@ function CategoriesDetail() {
     return Math.round(num * factor) / factor;
   };
 
-  const handleLikeClick = async (event) => {
+  const handleLikeClick = async (event, postId) => {
     event.preventDefault();
 
     const customer = getUserFromLocalStorage();
@@ -204,62 +206,76 @@ function CategoriesDetail() {
       return;
     }
 
-    const isLiked = category.isLiked;
+    // Tìm bài viết trong dữ liệu
+    const post = data.find((p) => p.id === postId);
+    if (!post) {
+      console.error(`Post with ID ${postId} not found.`);
+      return;
+    }
 
-    const updatedCategory = {
-      ...category,
-      isLiked: !isLiked,
-      data: {
-        ...category.data,
-        total_likes: isLiked
-          ? category.total_likes - 1
-          : category.total_likes + 1,
-      },
-    };
-    setCategory(updatedCategory);
+    const isLiked = post?.isLiked;
+
+    // Cập nhật dữ liệu tạm thời trong giao diện
+    const updatedData = data.map((p) => {
+      if (p.id === postId) {
+        return {
+          ...p,
+          isLiked: !isLiked,
+          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+        };
+      }
+      return p;
+    });
+
+    setData(updatedData);
+
     try {
       if (isLiked) {
-        if (category.notificationId) {
-          await axios.delete(
-            `${API_ENDPOINT.auth.base}/notification/${category.notificationId}`
-          );
+        // Nếu bài viết đã được thích, xóa thông báo và trạng thái thích
+        const notificationId = await findNotificationIdByPostId(postId); // Tìm notificationId bằng postId
+
+        if (notificationId) {
+          console.log(`Deleting notification with ID: ${notificationId}`);
+          await deleteNotification(notificationId, database, null); // Xóa thông báo
+        } else {
+          console.warn("No notification ID found for this post.");
         }
 
-        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
+        // Gửi yêu cầu xóa like
+        await axios.delete("http://localhost:8080/api/like", {
           data: {
-            post_id: category.id,
+            post_id: postId,
             customers_id: customer.id,
           },
         });
-
-        updatedCategory.data.notificationId = null;
-        setCategory(updatedCategory);
       } else {
-        if (customer.id !== category.customers_id) {
-          const response = await axios.post(
-            `${API_ENDPOINT.auth.base}/notification`,
-            {
-              user_id: category.customers_id,
-              sender_id: customer.id,
-              action: "like",
-              post_id: category.id,
-            }
+        // Nếu bài viết chưa được thích, thêm thông báo và trạng thái thích
+        if (customer.id !== post.customers_id) {
+          const notification = await addNotification(
+            post.customers_id, // Người nhận thông báo
+            customer.id, // Người gửi thông báo
+            postId, // ID bài viết
+            "like", // Hành động
+            database // Tham chiếu Firebase
           );
 
-          const notificationId = response.data.notification_id;
-
-          updatedCategory.notificationId = notificationId;
-          setCategory(updatedCategory);
+          if (notification) {
+            console.log(`Added notification with ID: ${notification.key}`);
+          }
         }
 
-        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
-          post_id: category.id,
+        // Gửi yêu cầu thêm like
+        await axios.post("http://localhost:8080/api/like", {
+          post_id: postId,
           customers_id: customer.id,
         });
       }
-      fetchCategoryData();
+
+      // Làm mới dữ liệu bài viết sau khi cập nhật
+      fetchPost();
     } catch (error) {
       console.error("Error updating like status:", error);
+      setData(data); // Phục hồi dữ liệu cũ trong trường hợp lỗi
     }
   };
 

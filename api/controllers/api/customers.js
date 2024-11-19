@@ -467,7 +467,26 @@ exports.chart = async (req, res, next) => {
         main().catch(console.error);
     }
     
+    exports.getUserInfo = async (req, res) => {
+        try {
+        const id = req.params.id;
 
+          if (!id) {
+            return res.status(400).json({ error: "User ID is required" });
+          }
+      
+          const userInfo = await Customers.getUserInfo(id);
+      
+          if (!userInfo) {
+            return res.status(404).json({ error: "User not found" });
+          }
+      
+          res.status(200).json({ data: userInfo });
+        } catch (error) {
+          console.error("Error fetching user info:", error);
+          res.status(500).json({ error: "Internal server error" });
+        }
+      };
 
 
     

@@ -7,9 +7,16 @@ import { gapi } from "gapi-script";
 import Spinner from "../../../pages/client/Spinner/Spinner";
 import "./header.css";
 import { API_ENDPOINT } from "../../../config/api-endpoint.config";
+import NotificationComponent from "./NotificationComponent";
+import fetchNotification, {
+  deleteNotification,
+} from "../../../pages/client/firebase/NotificationHandler";
+import { getDatabase, ref, update } from "firebase/database";
+
 const CLIENT_ID =
   "973247984258-riadtumd7jcati9d9g9ip47tuqfqdkhc.apps.googleusercontent.com";
 const API_KEY = "AIzaSyAp8wzduKw5P30-B0hUnGD1qiuuj73L8qs";
+
 
 function Header() {
   const [userInfo, setUserInfo] = useState(null);
@@ -43,33 +50,15 @@ function Header() {
   }
 
   const fetNotification = async () => {
-    try {
-      const customer = getUserFromLocalStorage();
-      const userId = customer ? customer.id : null;
-      const response = await axios.get(
-        `${API_ENDPOINT.auth.base}/notification_userId/${userId}`
-      );
-
-      const readNotifications =
-        JSON.parse(localStorage.getItem("readNotifications")) || [];
-
-      const notificationsWithReadStatus = response.data.data.map(
-        (notification) => ({
-          ...notification,
-          read: readNotifications.includes(notification.id),
-        })
-      );
-      setNotifications(notificationsWithReadStatus);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    } finally {
-      setLoading(false);
-    }
+    fetchNotification(setNotifications, setLoading);
   };
+  
   const fetchUserInfo = async () => {
     try {
+      
       const customer = getUserFromLocalStorage();
       const userId = customer ? customer.id : null;
+      
       const response = await axios.get(
         `${API_ENDPOINT.auth.base}/customers/${userId}`
       );
@@ -125,7 +114,7 @@ function Header() {
         fetchUserInfo();
       }
     };
-
+    
     window.addEventListener("storage", handleStorageChange);
 
     // Cleanup event listener on unmount
@@ -187,7 +176,6 @@ function Header() {
     handleSearchSubmit(new Event("submit"));
   };
   const startVoiceSearch = () => {
-    
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -197,13 +185,13 @@ function Header() {
     }
 
     const recognition = new SpeechRecognition();
-    recognition.lang = "vi-VN"; 
-    recognition.continuous = false; 
+    recognition.lang = "vi-VN";
+    recognition.continuous = false;
 
-    recognition.start(); 
+    recognition.start();
 
     recognition.onstart = () => {
-      setIsListening(true); 
+      setIsListening(true);
     };
 
     recognition.onresult = (event) => {
@@ -260,25 +248,50 @@ function Header() {
 
   const markAsRead = async (id) => {
     try {
-      // Make the API call to update the notification
-      const response = await axios.patch(
-        `${API_ENDPOINT.auth.base}/notification/${id}`
-      );
-      fetNotification();
+      const database = getDatabase();
+
+      console.log('database', database);
+      
+
+      const notificationRef = ref(database, `notifications/${id}`);
+      // Cập nhật trường isread thành "active"
+      await update(notificationRef, {
+        isread: "inactive",
+      });
+
+      fetNotification(); // Gọi lại để cập nhật danh sách thông báo
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
     }
   };
 
-  const handleDelete = async (id) => {
+  const markAllAsRead = async () => {
     try {
-      await axios.delete(`${API_ENDPOINT.auth.base}/notification/${id}`);
+      const database = getDatabase();
+      const updates = {};
 
-      setNotifications((prevNotifications) =>
-        prevNotifications.filter((notification) => notification.id !== id)
-      );
+      notifications.forEach((notification) => {
+        updates[`notifications/${notification.id}/isread`] = "inactive";
+      });
+
+      await update(ref(database), updates);
+      // Cập nhật giao diện bằng cách gọi lại `fetchNotification` hoặc cập nhật state trực tiếp
+      fetNotification(); // Gọi lại để cập nhật danh sách thông báo
     } catch (error) {
-      console.error("Error deleting notification:", error);
+      console.error("Failed to mark all notifications as read:", error);
+    }
+  };
+
+ 
+
+  const handleDelete = async (notificationId) => {
+    try {
+      // Khởi tạo Firebase Database
+      const database = getDatabase();
+      // Gọi hàm deleteNotification
+      await deleteNotification(notificationId, database, setNotifications);
+    } catch (error) {
+      console.error("Error deleting notification:", error.message);
       DialogService.error("Gỡ thông báo không thành công!");
     }
   };
@@ -387,7 +400,6 @@ function Header() {
 
                   <div className="searchbar-right">
                     <svg
-                    
                       role="button"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -472,172 +484,41 @@ function Header() {
                     onClick={toggleNotifications}
                   >
                     <i className="bi bi-bell text-white position-relative fs-5">
-                      {notifications.length > 0 && (
-                        <span
-                          className="position-absolute top-0 start-100 translate-middle badge bg-danger text-center"
-                          style={{
-                            borderRadius: "50%",
-                            width: "16px",
-                            height: "16px",
-                            fontSize: "10px",
-                            textAlign: "center",
-                            marginTop: "15px",
-                          }}
-                        >
-                          {
-                            notifications.filter(
-                              (notification) => !notification.read
-                            ).length
-                          }
-                        </span>
-                      )}
+                      {notifications.length > 0 &&
+                        notifications.filter(
+                          (notification) => notification.isread === "active"
+                        ).length > 0 && (
+                          <span
+                            className="position-absolute top-0 start-100 translate-middle badge bg-danger text-center"
+                            style={{
+                              borderRadius: "50%",
+                              width: "16px",
+                              height: "16px",
+                              fontSize: "10px",
+                              textAlign: "center",
+                              marginTop: "15px",
+                            }}
+                          >
+                            {
+                              notifications.filter(
+                                (notification) =>
+                                  notification.isread === "active"
+                              ).length
+                            }
+                          </span>
+                        )}
                     </i>
                   </div>
+                 
                   {showNotifications && (
-                    <ul
-                      className="dropdown-menu"
-                      style={{ flexDirection: "column" }}
-                    >
-                      {notifications.length > 0 ? (
-                        notifications
-                          .slice(0, notificationCount)
-                          .map((notification, index) => (
-                            <li
-                              key={index}
-                              className={`dropdown-item d-flex align-items-center justify-content-between px-3 notification `}
-                            >
-                              <div
-                                className={`d-flex align-items-center item ${
-                                  notification.isread === "inactive"
-                                    ? "notification-inactive"
-                                    : ""
-                                }`}
-                              >
-                                <Link
-                                  to={`/follow/${notification.sender_id}`}
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                  }}
-                                >
-                                  <img
-                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${notification.images}?alt=media`}
-                                    alt={notification.username}
-                                    className="img-thumbnail me-2"
-                                    style={{
-                                      width: "30px",
-                                      height: "30px",
-                                      borderRadius: "50%",
-                                    }}
-                                  />
-                                </Link>
-                                <div className="ms-2">
-                                  <div className="d-flex align-items-center">
-                                    <Link
-                                      className="fw-bold"
-                                      to={`/follow/${notification.sender_id}`}
-                                    >
-                                      {notification.username}
-                                    </Link>
-                                    <span
-                                      style={{
-                                        fontSize: "7px",
-                                        marginLeft: "5px",
-                                      }}
-                                    >
-                                      {formatDate(notification.created_at)}
-                                    </span>
-                                  </div>
-                                  <div
-                                    style={{
-                                      fontSize: "12px",
-                                      textTransform: "none",
-                                    }}
-                                  >
-                                    {notification.type === "like"
-                                      ? "Đã thích bài viết của bạn."
-                                      : "Đã theo dõi bạn."}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="dropdown">
-                                <i
-                                  className="bi bi-three-dots"
-                                  onClick={() =>
-                                    toggleDropdown(notification.id)
-                                  }
-                                  style={{
-                                    cursor: "pointer",
-                                    fontSize: "16px",
-                                    marginLeft: "0px",
-                                    color: "black", // Always visible
-                                  }}
-                                ></i>
-                                {dropdownOpen[notification.id] && (
-                                  <ul
-                                    className="dropdown-menu text-center show p-2 "
-                                    style={{ padding: "0", opacity: 1 }}
-                                  >
-                                    {notification.isread === "active" ? (
-                                      <li
-                                        className="button-read"
-                                        style={{
-                                          listStyle: "none",
-                                          marginBottom: "5px",
-                                          opacity: 1,
-                                        }}
-                                      >
-                                        <a
-                                          className="dropdown-item button-read"
-                                          style={{ cursor: "pointer" }}
-                                          onClick={() =>
-                                            markAsRead(notification.id)
-                                          }
-                                        >
-                                          Đánh dấu đã đọc
-                                        </a>
-                                      </li>
-                                    ) : null}
-                                    <li
-                                      className="button-read"
-                                      style={{ listStyle: "none", opacity: 1 }}
-                                    >
-                                      <a
-                                        style={{ cursor: "pointer" }}
-                                        className="dropdown-item button-read "
-                                        onClick={() =>
-                                          handleDelete(notification.id)
-                                        }
-                                      >
-                                        Gỡ thông báo này
-                                      </a>
-                                    </li>
-                                  </ul>
-                                )}
-                              </div>
-                            </li>
-                          ))
-                      ) : (
-                        <li className="dropdown-item">
-                          Không có thông báo mới.
-                        </li>
-                      )}
-                      {notifications.length > notificationCount && (
-                        <li
-                          className="dropdown-item text-center btn"
-                          style={{
-                            cursor: "pointer",
-                            color: "black",
-                            backgroundColor: "#d1d4d7",
-                            fontSize: "12px",
-                          }}
-                          onClick={handleSeeMore}
-                        >
-                          Xem thông báo trước đó
-                        </li>
-                      )}
-                    </ul>
+                    <NotificationComponent
+                      notifications={notifications}
+                      notificationCount={notificationCount}
+                      markAsRead={markAsRead}
+                      handleDelete={handleDelete}
+                      handleSeeMore={handleSeeMore}
+                      markAllAsRead={markAllAsRead}
+                    />
                   )}
 
                   <div
@@ -699,7 +580,10 @@ function Header() {
               >
                 Đăng ký
               </Link>
-              <Link to="/login" className="btn btn-danger ms-2 button-home text-white fw-bold">
+              <Link
+                to="/login"
+                className="btn btn-danger ms-2 button-home text-white fw-bold"
+              >
                 Đăng nhập
               </Link>
             </>

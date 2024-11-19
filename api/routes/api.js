@@ -68,7 +68,7 @@ router.patch('/customers/:id', customers.update);
 router.get('/customer_search', customers.search);
 router.get('/customer_keywords', customers.suggestKeywords);
 router.get('/data_customers', customers.chart)
-
+router.get('/customers/noti/:id', customers.getUserInfo);
 
 router.patch('/background/:id',background.update )
 

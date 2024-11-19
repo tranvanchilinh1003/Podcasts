@@ -5,7 +5,9 @@ import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import Spinner from "../Spinner/Spinner";
 import CommentList from "../comments/CommentList";
-import { API_ENDPOINT } from "../../../config/api-endpoint.config";
+import { database } from "../firebase/firebase";
+import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
+
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
   return (
@@ -84,19 +86,19 @@ function Post() {
 
   const updateTotalComments = useCallback((postId, newTotal) => {
     setData((prevData) =>
-        prevData.map((post) =>
-            post.data.id === postId
-                ? {
-                      ...post,
-                      data: {
-                          ...post.data,
-                          total_comments: newTotal,
-                      },
-                  }
-                : post
-        )
+      prevData.map((post) =>
+        post.data.id === postId
+          ? {
+              ...post,
+              data: {
+                ...post.data,
+                total_comments: newTotal,
+              },
+            }
+          : post
+      )
     );
-}, []);
+  }, []);
 
   const fetchPost = async () => {
     try {
@@ -108,7 +110,6 @@ function Post() {
       const data = response.data.data || [];
 
       if (userId) {
-    
         const likeResponse = await axios.get(
           `${API_ENDPOINT.auth.base}/check-likes`,
           {
@@ -178,27 +179,28 @@ function Post() {
       setLoadingMore(true);
       const newVisibleCount = visibleCount + 6;
       setVisibleCount(newVisibleCount);
-    if(newVisibleCount >= data.length){
-      setLoadingMore(false);
-      return;
-    }
+      if (newVisibleCount >= data.length) {
+        setLoadingMore(false);
+        return;
+      }
     };
     const handleScroll = () => {
-      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50; // Tải khi gần đến footer
+      const bottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 50; // Tải khi gần đến footer
       if (bottom) {
         loadMoreProducts();
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
-      window.removeEventListener('scroll', handleScroll); 
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [visibleCount, loadingMore]);
 
   const postsToDisplay = data.slice(0, visibleCount);
-
 
   const handlePlayAudio = (url, title, artist, coverImage, postId) => {
     setAudioUrl(url);
@@ -323,98 +325,105 @@ function Post() {
 
     const customer = getUserFromLocalStorage();
     if (!customer) {
-        navigate("/login");
-        return;
+      navigate("/login");
+      return;
     }
 
     const post = data.find((post) => post.data.id === postId);
     const isLiked = post?.isLiked;
 
     const updatedData = data.map((p) => {
-        if (p.data.id === postId) {
-            return {
-                ...p,
-                isLiked: !isLiked,
-                data: {
-                    ...p.data,
-                    total_likes: isLiked ? p.data.total_likes - 1 : p.data.total_likes + 1,
-                },
-            };
-        }
-        return p;
+      if (p.data.id === postId) {
+        return {
+          ...p,
+          isLiked: !isLiked,
+          data: {
+            ...p.data,
+            total_likes: isLiked
+              ? p.data.total_likes - 1
+              : p.data.total_likes + 1,
+          },
+        };
+      }
+      return p;
     });
 
     setData(updatedData);
 
     try {
-        if (isLiked) {
-            const notificationId = post.data.notificationId;
-            if(notificationId){
-              await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
-            }
-        
-            await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
-              data: {
-                  post_id: postId,
-                  customers_id: customer.id,
-              },
-          });
-            const updatedDataWithoutNotification = updatedData.map((p) => {
-                if (p.data.id === postId) {
-                    return {
-                        ...p,
-                        data: {
-                            ...p.data,
-                            notificationId: null,
-                        },
-                    };
-                }
-                return p;
-            });
-            setData(updatedDataWithoutNotification);
+      if (isLiked) {
+        console.log(`Checking notification ID for post ID: ${postId}`);
+        const notificationId = await findNotificationIdByPostId(postId); // Tìm notificationId bằng postId
+    
+        if (notificationId) {
+          console.log(`Found notification ID: ${notificationId}`); // Log notificationId nếu tìm thấy
+          await deleteNotification(notificationId, database, null);
         } else {
-            if (customer.id !== post.data.customers_id) {
-                const response = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
-                    user_id: post.data.customers_id,
-                    sender_id: customer.id,
-                    action: "like",
-                    post_id: postId,
-                });
+          console.log(`Notification ID not found for post ID: ${postId}`); // Log nếu không tìm thấy
+        }
+    
+        await axios.delete("http://localhost:8080/api/like", {
+          data: {
+            post_id: postId,
+            customers_id: customer.id,
+          },
+        });
+    
+        const updatedDataWithoutNotification = updatedData.map((p) => {
+          if (p.data.id === postId) {
+            return {
+              ...p,
+              data: {
+                ...p.data,
+              },
+            };
+          }
+          return p;
+        });
+        setData(updatedDataWithoutNotification);
+      }
+    
+    else {
+        // Nếu chưa thích, thêm thông báo vào Firebase và thêm lượt thích
+        if (customer.id !== post.data.customers_id) {
+          await addNotification(
+            post.data.customers_id,
+            customer.id,
+            postId,
+            "like",
+            database
+          );
 
-                const notificationId = response.data.notification_id;
-                const updatedDataWithNotification = updatedData.map((p) => {
-                    if (p.data.id === postId) {
-                        return {
-                            ...p,
-                            data: {
-                                ...p.data,
-                                notificationId: notificationId,
-                            },
-                        };
-                    }
-                    return p;
-                });
-                setData(updatedDataWithNotification);
+          const updatedDataWithNotification = updatedData.map((p) => {
+            if (p.data.id === postId) {
+              return {
+                ...p,
+                data: {
+                  ...p.data,
+                },
+              };
             }
-            await axios.post(`${API_ENDPOINT.auth.base}/like`, {
-                post_id: postId,
-                customers_id: customer.id,
-            });
+            return p;
+          });
+          setData(updatedDataWithNotification);
         }
 
-        fetchPost();
+        await axios.post("http://localhost:8080/api/like", {
+          post_id: postId,
+          customers_id: customer.id,
+        });
+      }
+
+      fetchPost(); // Làm mới bài viết sau khi cập nhật
     } catch (error) {
-        console.error("Lỗi khi cập nhật trạng thái thích:", error);
+      console.error("Lỗi khi cập nhật trạng thái thích:", error);
     }
-};
+  };
 
-
-const roundTo = (num, places) => {
-  const factor = Math.pow(10, places);
-  return Math.round(num * factor) / factor;
-};
-
-
+  const roundTo = (num, places) => {
+    const factor = Math.pow(10, places);
+    return Math.round(num * factor) / factor;
+  };
 
   const getUserFromLocalStorage = () => {
     const userArray = JSON.parse(localStorage.getItem("customer"));
@@ -432,10 +441,7 @@ const roundTo = (num, places) => {
     return <Spinner />;
   }
   return (
-    <section
-      className="latest-podcast-section pb-0"
-      id="section_2"
-    >
+    <section className="latest-podcast-section pb-0" id="section_2">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-12 col-12">
@@ -455,143 +461,148 @@ const roundTo = (num, places) => {
                   style={{ display: "flex", flexWrap: "wrap" }}
                 >
                   <div className=" d-flex flex-column flex-md-row">
-                  <div className="col-lg-3 col-md-12 ">
-                    <div className="custom-block-icon-wrap">
-                      <div className="section-overlay"></div>
-                      <a className="custom-block-image-wrap">
-                        <img
-                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.data.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                          className="custom-block-image img-fluid"
-                          alt=""
-                        />
-                        <span
-                          className="custom-block-icon"
-                          onClick={() =>
-                            handlePlayAudio(
-                              post.data.audio,
-                              post.data.title,
-                              post.data.username,
-                              post.data.images,
-                              post.data.id
-                            )
+                    <div className="col-lg-3 col-md-12 ">
+                      <div className="custom-block-icon-wrap">
+                        <div className="section-overlay"></div>
+                        <a className="custom-block-image-wrap">
+                          <img
+                            src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.data.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                            className="custom-block-image img-fluid"
+                            alt=""
+                          />
+                          <span
+                            className="custom-block-icon"
+                            onClick={() =>
+                              handlePlayAudio(
+                                post.data.audio,
+                                post.data.title,
+                                post.data.username,
+                                post.data.images,
+                                post.data.id
+                              )
+                            }
+                          >
+                            <i className="bi-play-fill fs-2"></i>
+                          </span>
+                        </a>
+                      </div>
+                      <div className="custom-block-bottom justify-content-around d-flex mt-3 ">
+                        <p className="bi-headphones me-1">
+                          <span>{post.data.view}</span>
+                        </p>
+
+                        <a
+                          href="#"
+                          id="like-icon"
+                          className={
+                            post.isLiked
+                              ? "bi-heart-fill fs-6"
+                              : "bi-heart me-1 fs-6"
                           }
+                          onClick={(e) => handleLikeClick(e, post.data.id)}
                         >
-                          <i className="bi-play-fill fs-2"></i>
-                        </span>
-                      </a>
-                    </div>
-                    <div className="custom-block-bottom justify-content-around d-flex mt-3 ">
-                      <p className="bi-headphones me-1">
-                        <span>{post.data.view}</span>
-                      </p>
+                          <span>{post.data.total_likes}</span>
+                        </a>
 
-                      <a
-                        href="#"
-                        id="like-icon"
-                        className={
-                          post.isLiked
-                            ? "bi-heart-fill fs-6"
-                            : "bi-heart me-1 fs-6"
-                        }
-                        onClick={(e) => handleLikeClick(e, post.data.id)}
-                      >
-                        <span>{post.data.total_likes}</span>
-                      </a>
-
-                      <span
+                        <span
                           className="bi-chat me-1"
                           style={{ cursor: "pointer" }}
                           onClick={() => handleCommentClick(post.data.id)}
                         >
                           <span className="me-1 ms-1">
-                          {post.data.total_comments}
+                            {post.data.total_comments}
                           </span>
                         </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="custom-block-info col-lg-8 col-md-12">
-                    <h4 className="mb-2">
-                      <Link to={`/getId_post/${post.data.id}`}>
-                        {post.data.title}
-                      </Link>
-                    </h4>
-                    <div className="profile-block d-flex">
-                      <Link to={profileLink(post.data.customers_id)}>
-                        <img
-                          src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.data.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                          className="profile-block-image"
-                          style={{ borderRadius: "50%" }}
-                          alt=""
-                        />
-                      </Link>
-                      <p>
-                        <Link to={profileLink(post.data.customers_id)}>
-                          {post.data.username}
+                    <div className="custom-block-info col-lg-8 col-md-12">
+                      <h4 className="mb-2">
+                        <Link to={`/getId_post/${post.data.id}`}>
+                          {post.data.title}
                         </Link>
-                        {post.data.isticket === "active" && (
+                      </h4>
+                      <div className="profile-block d-flex">
+                        <Link to={profileLink(post.data.customers_id)}>
                           <img
-                            src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
-                            className="verified-image img-fluid"
-                            alt="Verified"
+                            src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.data.images_customers}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                            className="profile-block-image"
+                            style={{ borderRadius: "50%" }}
+                            alt=""
                           />
+                        </Link>
+                        <p>
+                          <Link to={profileLink(post.data.customers_id)}>
+                            {post.data.username}
+                          </Link>
+                          {post.data.isticket === "active" && (
+                            <img
+                              src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2Fverified.png?alt=media&token=d2b88560-6930-47ad-90b1-7e29876d4d91"
+                              className="verified-image img-fluid"
+                              alt="Verified"
+                            />
+                          )}
+                          <strong>Người đăng</strong>
+                        </p>
+                      </div>
+                      <p className="description-text">
+                        {expandedPostId === post.data.id ? (
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: post.data.description,
+                            }}
+                          />
+                        ) : (
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: truncateTextWithHtml(
+                                post.data.description,
+                                100
+                              ),
+                            }}
+                          />
+                        )}{" "}
+                        {post.data.description.length > 100 && (
+                          <span
+                            className="read-more-toggle"
+                            onClick={() =>
+                              setExpandedPostId(
+                                expandedPostId === post.data.id
+                                  ? null
+                                  : post.data.id
+                              )
+                            }
+                          >
+                            {expandedPostId === post.data.id
+                              ? "Ẩn bớt"
+                              : "Xem thêm"}
+                          </span>
                         )}
-                        <strong>Người đăng</strong>
                       </p>
                     </div>
-                    <p className="description-text">
-                      {expandedPostId === post.data.id ? (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: post.data.description,
-                          }}
-                        />
-                      ) : (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: truncateTextWithHtml(
-                              post.data.description,
-                              100
-                            ),
-                          }}
-                        />
-                      )}{" "}
-                      {post.data.description.length > 100 && (
-                        <span
-                          className="read-more-toggle"
-                          onClick={() =>
-                            setExpandedPostId(
-                              expandedPostId === post.data.id
-                                ? null
-                                : post.data.id
-                            )
-                          }
-                        >
-                          {expandedPostId === post.data.id
-                            ? "Ẩn bớt"
-                            : "Xem thêm"}
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                  <div className="d-flex flex-column ms-auto">
-                    <label href="#" className=" ms-auto">
-                      {roundTo(post.data.average_comment_rating, 1)}/5{" "}
-                      <StarRating rating={post.data.average_comment_rating} />
-                    </label>
-                    <a
-                      href="#"
-                      className="badge ms-auto"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleShareClick(post.data.id);
-                      }}
-                    >
-                      <i className="bi bi-share-fill"></i>
-                    </a>
-                  </div>
+                    <div className="d-flex flex-column ms-auto">
+                      <label href="#" className=" ms-auto">
+                        {roundTo(post.data.average_comment_rating, 1)}/5{" "}
+                        <StarRating rating={post.data.average_comment_rating} />
+                      </label>
+                      <a
+                        href="#"
+                        className="badge ms-auto"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleShareClick(post.data.id);
+                        }}
+                      >
+                        <i className="bi bi-share-fill"></i>
+                      </a>
+                    </div>
                   </div>
                   {commentBoxVisibility[post.data.id] && (
-                    <CommentList postId={post.data.id} customer={customer}  onUpdateTotalComments={updateTotalComments} totalComments={post.data.total_comments} />
+                    <CommentList
+                      postId={post.data.id}
+                      customer={customer}
+                      onUpdateTotalComments={updateTotalComments}
+                      totalComments={post.data.total_comments}
+                    />
                   )}
                 </div>
               </div>
@@ -600,11 +611,7 @@ const roundTo = (num, places) => {
         </div>
       </div>
       <div className="d-flex justify-content-center mt-4">
-      {loadingMore && (
-        <p>
-           Đang tải thêm sản phẩm...
-        </p>
-      )}
+        {loadingMore && <p>Đang tải thêm sản phẩm...</p>}
       </div>
 
       {isAudioVisible && (

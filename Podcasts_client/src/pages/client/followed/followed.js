@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import './followed.css';
-import { API_ENDPOINT  } from "../../../config/api-endpoint.config";
+import { database } from "../firebase/firebase";
+import {
+  addNotification,
+  deleteNotification,
+  findNotificationIdByType
+} from "../firebase/NotificationHandler";
+
 function UserFollowList({ type }) {
   const { id } = useParams();
   const [notificationId, setNotificationId] = useState('');
@@ -58,21 +64,22 @@ function UserFollowList({ type }) {
       navigate("/login");
       return;
     }
-
+  
     try {
-      await axios.post(`${API_ENDPOINT.auth.base}/follow/${userIdToFollow}`, {
+      // Gửi yêu cầu theo dõi
+      await axios.post(`http://localhost:8080/api/follow/${userIdToFollow}`, {
         follower_id: user.id,
       });
-
-      const notificationResponse = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
-        user_id: userIdToFollow,
-        sender_id: user.id,
-        action: "follow",
-        post_id: null,
-      });
-
-      const notificationId = notificationResponse.data.notification_id;
-      setNotificationId(notificationId);
+  
+      await addNotification(
+        parseInt(userIdToFollow), 
+        user.id,
+        null, 
+        "follow",
+        database 
+      );
+  
+      // Cập nhật trạng thái theo dõi trong UI
       setFollowing((prevFollowing) =>
         prevFollowing.map((follower) =>
           follower.id === userIdToFollow
@@ -80,28 +87,37 @@ function UserFollowList({ type }) {
             : follower
         )
       );
-
     } catch (error) {
       console.error("Error following user:", error);
     }
   };
-
+  
   const handleUnfollow = async (userIdToUnfollow) => {
     const user = getUserFromLocalStorage();
     if (!user) {
       console.error("No user information found in localStorage.");
       return;
     }
-
+  
     try {
-      await axios.post(`${API_ENDPOINT.auth.base}/unfollow/${userIdToUnfollow}`, {
+      // Gửi yêu cầu bỏ theo dõi
+      await axios.post(`http://localhost:8080/api/unfollow/${userIdToUnfollow}`, {
         follower_id: user.id,
       });
-
+  
+      const notificationId = await findNotificationIdByType(
+        "follow", 
+        userIdToUnfollow,
+        user.id 
+      );
+  
       if (notificationId) {
-        await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
-        setNotificationId('');
+        await deleteNotification(notificationId, database, null);
+      } else {
+        console.error("Notification ID not found for unfollow action.");
       }
+  
+      // Cập nhật trạng thái UI
       setFollowing((prevFollowing) =>
         prevFollowing.map((follower) =>
           follower.id === userIdToUnfollow
@@ -109,11 +125,11 @@ function UserFollowList({ type }) {
             : follower
         )
       );
-
     } catch (error) {
       console.error("Error unfollowing user:", error);
     }
   };
+  
 
   const loadMore = () => {
     setVisibleCount((prevCount) => prevCount + 10);

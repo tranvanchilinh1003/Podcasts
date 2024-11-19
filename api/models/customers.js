@@ -260,4 +260,20 @@ module.exports = class Customers {
       });
     });
   }
+  static async getUserInfo(userId) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT username, images FROM customers WHERE id = ?`;
+      connect.query(query, [userId], (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          if (results.length > 0) {
+            resolve(results[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
+  }  
 };

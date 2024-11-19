@@ -8,7 +8,14 @@ import axios from "axios";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import UserFollowList from "../followed/followed";
-import { API_ENDPOINT } from "../../../config/api-endpoint.config";
+import { database } from "../firebase/firebase";
+import {
+  addNotification,
+  deleteNotification,
+  findNotificationIdByPostId,
+  findNotificationIdByType
+} from "../firebase/NotificationHandler";
+
 function Follow() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -20,8 +27,8 @@ function Follow() {
     reset,
     watch,
   } = useForm();
-  const [userInfo, setUserInfo] = useState({notifications: {},});
-  const [notificationId, setNotificationId] = useState('')
+  const [userInfo, setUserInfo] = useState({ notifications: {} });
+  const [notificationId, setNotificationId] = useState("");
   const [data, setData] = useState([]);
   const [isAudioVisible, setIsAudioVisible] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -49,7 +56,6 @@ function Follow() {
   const currentUserId = localStorage.getItem("userId");
   const [visibleCommentBox, setVisibleCommentBox] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
-
 
   const handleCommentClick = (postId) => {
     setVisibleCommentBox(visibleCommentBox === postId ? null : postId);
@@ -267,57 +273,61 @@ function Follow() {
       navigate("/login");
       return;
     }
-  
+
     try {
-    
-      await axios.post(
-        `${API_ENDPOINT.auth.base}/follow/${userIdToFollow}`,
-        {
-          follower_id: user.id,
-        }
-      );
-  
-    
-      const notificationResponse = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
-        user_id: userIdToFollow,
-        sender_id: user.id,
-        action: "follow",
-        post_id: null, 
+      // Gửi yêu cầu theo dõi
+      await axios.post(`http://localhost:8080/api/follow/${userIdToFollow}`, {
+        follower_id: user.id,
       });
-  
-      const notificationId = notificationResponse.data.notification_id;
-      setNotificationId(notificationId)
-      
-      
-  
-      setIsFollowing(true);
-      fetchUserInfo();
+
+      // Thêm thông báo bằng `addNotification`
+      const notification = await addNotification(
+        Number(userIdToFollow), // ID người nhận thông báo (user được theo dõi) phải là kiểu số(NHỚ ÉP KIỂU)
+        user.id, // ID người gửi thông báo (người đang theo dõi)
+        null, // Không liên quan tới bài viết, nên để null
+        "follow", // Loại hành động: "follow"
+        database // Firebase database
+      );
+
+      setIsFollowing(true); // Cập nhật trạng thái theo dõi
+      fetchUserInfo(); // Làm mới thông tin người dùng
     } catch (error) {
       console.error("Error following user:", error);
     }
   };
-  
+
   const handleUnfollow = async (userIdToUnfollow) => {
     const user = getUserFromLocalStorage();
     if (!user) {
       console.error("No user information found in localStorage.");
       return;
     }
-  
+
     try {
+      // Gửi yêu cầu unfollow
       await axios.post(
         `${API_ENDPOINT.auth.base}/unfollow/${userIdToUnfollow}`,
         {
           follower_id: user.id,
         }
       );
-  
+
+      // Tìm `notificationId` với `type: follow`
+      const notificationId = await findNotificationIdByType(
+        "follow",
+        Number(userIdToUnfollow),
+        user.id
+      );
+
       if (notificationId) {
-        await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
-        setNotificationId(' ')
-      } 
+        await deleteNotification(notificationId, database, null);
+        console.log("Notification deleted successfully.");
+      } else {
+        console.error("No notification ID found for unfollow.");
+      }
+
       setIsFollowing(false);
-      fetchUserInfo();
+      fetchUserInfo(); // Làm mới thông tin người dùng
     } catch (error) {
       console.error("Error unfollowing user:", error);
     }
@@ -328,94 +338,82 @@ function Follow() {
 
     const customer = getUserFromLocalStorage();
     if (!customer) {
-        navigate("/login");
-        return;
+      navigate("/login");
+      return;
     }
 
+    // Tìm bài viết trong dữ liệu
     const post = data.find((p) => p.id === postId);
+    if (!post) {
+      console.error(`Post with ID ${postId} not found.`);
+      return;
+    }
+
     const isLiked = post?.isLiked;
 
+    // Cập nhật dữ liệu tạm thời trong giao diện
     const updatedData = data.map((p) => {
-        if (p.id === postId) {
-            return {
-                ...p,
-                isLiked: !isLiked,
-                total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
-            };
-        }
-        return p;
+      if (p.id === postId) {
+        return {
+          ...p,
+          isLiked: !isLiked,
+          total_likes: isLiked ? p.total_likes - 1 : p.total_likes + 1,
+        };
+      }
+      return p;
     });
 
     setData(updatedData);
 
     try {
-        if (isLiked) {
-            const notificationId = post.notificationId;
+      if (isLiked) {
+        // Nếu bài viết đã được thích, xóa thông báo và trạng thái thích
+        const notificationId = await findNotificationIdByPostId(postId); // Tìm notificationId bằng postId
 
-            if (notificationId) {
-                await axios.delete(`${API_ENDPOINT.auth.base}/notification/${notificationId}`);
-            } else {
-                console.error("No notification ID found to delete.");
-            }
-
-            // Xóa like
-            await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
-                data: {
-                    post_id: postId,
-                    customers_id: customer.id,
-                },
-            });
-
-            
-            const updatedDataWithoutNotification = updatedData.map((p) => {
-                if (p.id === postId) {
-                    return {
-                        ...p,
-                        notificationId: null,
-                    };
-                }
-                return p;
-            });
-            setData(updatedDataWithoutNotification);
+        if (notificationId) {
+          console.log(`Deleting notification with ID: ${notificationId}`);
+          await deleteNotification(notificationId, database, null); // Xóa thông báo
         } else {
-          
-            if (customer.id !== post.customers_id) {
-                const response = await axios.post(`${API_ENDPOINT.auth.base}/notification`, {
-                    user_id: post.customers_id,
-                    sender_id: customer.id,
-                    action: "like",
-                    post_id: postId,
-                });
-
-                const notificationId = response.data.notification_id;
-
-                
-                const updatedDataWithNotification = updatedData.map((p) => {
-                    if (p.id === postId) {
-                        return {
-                            ...p,
-                            notificationId: notificationId,
-                        };
-                    }
-                    return p;
-                });
-                setData(updatedDataWithNotification);
-            }
-
-          
-            await axios.post(`${API_ENDPOINT.auth.base}/like`, {
-                post_id: postId,
-                customers_id: customer.id,
-            });
+          console.warn("No notification ID found for this post.");
         }
 
-        fetchPost(); 
-    } catch (error) {
-        console.error("Error updating like status:", error);
-        setData(data);
-    }
-};
+        // Gửi yêu cầu xóa like
+        await axios.delete("http://localhost:8080/api/like", {
+          data: {
+            post_id: postId,
+            customers_id: customer.id,
+          },
+        });
+      } else {
+        // Nếu bài viết chưa được thích, thêm thông báo và trạng thái thích
+        if (customer.id !== post.customers_id) {
+          const notification = await addNotification(
+            post.customers_id, // Người nhận thông báo
+            customer.id, // Người gửi thông báo
+            postId, // ID bài viết
+            "like", // Hành động
+            database // Tham chiếu Firebase
+          );
 
+          if (notification) {
+            console.log(`Added notification with ID: ${notification.key}`);
+          }
+        }
+
+        // Gửi yêu cầu thêm like
+        await axios.post("http://localhost:8080/api/like", {
+          post_id: postId,
+          customers_id: customer.id,
+        });
+      }
+
+      // Làm mới dữ liệu bài viết sau khi cập nhật
+      fetchPost();
+    } catch (error) {
+      console.error("Error updating like status:", error);
+      setData(data); // Phục hồi dữ liệu cũ trong trường hợp lỗi
+    }
+  };
 
   const handleShareClick = async (postId) => {
     try {
@@ -466,10 +464,14 @@ function Follow() {
               <div className="profile">
                 <div className="profile-header">
                   <div className="profile-header-cover">
-                  <img
+                    <img
                       // src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F1727245594731.jpg?alt=media&token=12c3fb5e-7d27-4db5-a23c-4ccf57815f6c" style={{width: '100%', height: 'auto'}}
                       src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${backGround}?alt=media `}
-                      style={{ width: "100%", height: "100%", objectFit: 'cover' }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
                     />
                   </div>
                   <div className="profile-header-content">
@@ -555,7 +557,7 @@ function Follow() {
                         aria-selected="false"
                         className="nav-link"
                       >
-                      ĐÃ THEO DÕI
+                        ĐÃ THEO DÕI
                       </a>
                     </li>
                     <li className="nav-item">
@@ -568,7 +570,7 @@ function Follow() {
                         aria-selected="false"
                         className="nav-link"
                       >
-                      NGƯỜI THEO DÕI
+                        NGƯỜI THEO DÕI
                       </a>
                     </li>
                   </ul>
@@ -603,14 +605,14 @@ function Follow() {
                               <div className="timeline-header">
                                 <span className="userimage">
                                   <img
-                                      src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
-                                      alt="Hồ sơ"
-                                      style={{
-                                          maxWidth: "auto",
-                                          height: "100%",
-                                          width: "100%",
-                                          borderRadius: "50%",
-                                      }}
+                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${oldImage}?alt=media`}
+                                    alt="Hồ sơ"
+                                    style={{
+                                      maxWidth: "auto",
+                                      height: "100%",
+                                      width: "100%",
+                                      borderRadius: "50%",
+                                    }}
                                   />
                                 </span>
                                 <span className="username mx-1">
@@ -803,7 +805,7 @@ function Follow() {
                     role="tabpanel"
                     aria-labelledby="follower-tab"
                   >
-                  <UserFollowList id={id} type="follower" />
+                    <UserFollowList id={id} type="follower" />
                   </div>
                   <div
                     className="tab-pane fade"
@@ -811,7 +813,7 @@ function Follow() {
                     role="tabpanel"
                     aria-labelledby="follow-tab"
                   >
-                  <UserFollowList id={id}  type="followed" />
+                    <UserFollowList id={id} type="followed" />
                   </div>
                 </div>
               </div>
@@ -857,8 +859,9 @@ function Follow() {
               </div>
               <div className="volume-controls">
                 <i
-                  className={`bi ${isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
-                    }`}
+                  className={`bi ${
+                    isMuted ? "bi-volume-mute volume" : "bi-volume-up volume"
+                  }`}
                   onClick={handleMuteClick}
                 ></i>
                 <input
