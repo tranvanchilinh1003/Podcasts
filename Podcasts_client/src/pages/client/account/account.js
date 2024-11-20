@@ -26,7 +26,7 @@ import "toastify-js/src/toastify.css";
 import CommentList from "../comments/CommentList";
 import { database } from "../firebase/firebase";
 import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
-
+import { API_ENDPOINT  } from "../../../config/api-endpoint.config";
 function Account() {
   const { id } = useParams();
   const {

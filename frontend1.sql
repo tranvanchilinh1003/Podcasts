@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 08, 2024 lúc 06:03 AM
+-- Thời gian đã tạo: Th10 20, 2024 lúc 05:07 AM
 -- Phiên bản máy phục vụ: 8.0.31
 -- Phiên bản PHP: 7.4.33
 
@@ -33,19 +33,20 @@ CREATE TABLE `categories` (
   `images` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
-  `update_date` datetime DEFAULT NULL
+  `update_date` datetime DEFAULT NULL,
+  `order` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `images`, `description`, `create_date`, `update_date`) VALUES
-(72, 'Món ăn vặt', '2024-10-18T03:27:47.591Z.jpg', 'Đồ ăn vặt tuy nhỏ nhưng lại là niềm vui cho những lúc thèm thuồng!', '2024-08-05 23:32:20', '2024-10-18 10:47:32'),
-(75, 'Món rán', '2024-10-18T03:27:54.154Z.jpg', 'Những món rán mang đến hương vị giòn rụm, đậm đà!', '2024-07-01 23:32:28', '2024-10-18 10:45:18'),
-(76, 'Món nướng', '2024-10-18T03:18:31.369Z.jpg', 'Món nướng thơm phức, vàng ươm, mang đến hương vị khó cưỡng!', '2024-08-21 23:32:38', '2024-10-18 10:49:33'),
-(77, 'Món xào', '2024-10-18T03:29:58.954Z.jpg', 'Món xào đậm đà, kết hợp hoàn hảo giữa hương vị và màu sắc!', '2024-08-05 23:32:40', '2024-10-18 10:48:39'),
-(78, 'Món nước', '2024-10-18T03:42:52.218Z.jpg', 'Món nước mát lành, mang lại sự sảng khoái cho mọi giác quan!', '2024-08-05 23:32:43', '2024-10-18 10:47:46');
+INSERT INTO `categories` (`id`, `name`, `images`, `description`, `create_date`, `update_date`, `order`) VALUES
+(72, 'Món ăn vặt', '2024-10-18T03:27:47.591Z.jpg', 'Đồ ăn vặt tuy nhỏ nhưng lại là niềm vui cho những lúc thèm thuồng!', '2024-08-05 23:32:20', '2024-10-18 10:47:32', 1),
+(75, 'Món rán', '2024-10-18T03:27:54.154Z.jpg', 'Những món rán mang đến hương vị giòn rụm, đậm đà!', '2024-07-01 23:32:28', '2024-10-18 10:45:18', 2),
+(76, 'Món nướng', '2024-10-18T03:18:31.369Z.jpg', 'Món nướng thơm phức, vàng ươm, mang đến hương vị khó cưỡng!', '2024-08-21 23:32:38', '2024-10-18 10:49:33', 3),
+(77, 'Món xào', '2024-10-18T03:29:58.954Z.jpg', 'Món xào đậm đà, kết hợp hoàn hảo giữa hương vị và màu sắc!', '2024-08-05 23:32:40', '2024-10-18 10:48:39', 4),
+(78, 'Món nước', '2024-10-18T03:42:52.218Z.jpg', 'Món nước mát lành, mang lại sự sảng khoái cho mọi giác quan!', '2024-08-05 23:32:43', '2024-10-18 10:47:46', 0);
 
 -- --------------------------------------------------------
 
@@ -57,20 +58,21 @@ CREATE TABLE `comments` (
   `id` int NOT NULL,
   `rating` int DEFAULT NULL,
   `contents` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `date` date NOT NULL,
+  `date` datetime NOT NULL,
   `customers_id` int NOT NULL,
-  `post_id` int NOT NULL
+  `post_id` int NOT NULL,
+  `parent_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `comments`
 --
 
-INSERT INTO `comments` (`id`, `rating`, `contents`, `date`, `customers_id`, `post_id`) VALUES
-(26, 5, 'hayyyy', '2024-09-10', 94, 87),
-(31, 1, 'hmmmmmmmmmmmmm', '2024-09-24', 94, 87),
-(33, 4, '55', '2024-09-25', 7, 85),
-(34, 5, 'hayyyy', '2024-10-17', 94, 87);
+INSERT INTO `comments` (`id`, `rating`, `contents`, `date`, `customers_id`, `post_id`, `parent_id`) VALUES
+(26, 5, 'hayyyy', '2024-09-10 00:00:00', 94, 87, NULL),
+(31, 1, 'hmmmmmmmmmmmmm', '2024-09-24 00:00:00', 94, 87, NULL),
+(33, 4, '55', '2024-09-25 00:00:00', 7, 85, NULL),
+(34, 5, 'hayyyy', '2024-10-17 00:00:00', 94, 87, NULL);
 
 -- --------------------------------------------------------
 
@@ -100,19 +102,18 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `username`, `full_name`, `password`, `email`, `role`, `gender`, `images`, `isticket`, `otp`, `create_date`, `update_date`, `otp_expires_at`, `background`) VALUES
-(7, 'admin1234', 'Admin Nè', '$2b$10$YSQwNFv/yRKBF4XetQaOMO.OHdPr1A.SikV7e2J8DOlkAMSn2JrBu', 'linhtvcpc06747@fpt.edu.vn', 'admin', 0, '2024-08-05T15-33-10-432Z.png', 'active', 54877, '2024-08-06 21:25:24', NULL, '2024-09-24 13:46:56', '2024-11-08T05:23:24.258Z.jpg'),
+(7, 'admin1234', 'Admin CuisinePodcast', '$2b$10$YSQwNFv/yRKBF4XetQaOMO.OHdPr1A.SikV7e2J8DOlkAMSn2JrBu', 'linhtvcpc06747@fpt.edu.vn', 'admin', 0, '2024-08-05T15-33-10-432Z.png', 'active', 54877, '2024-08-06 21:25:24', NULL, '2024-09-24 13:46:56', '2024-11-19T06-11-49-754Z.jpg'),
 (66, 'minhminh', 'Nguyễn Phước Minh', '$2b$10$xLlxQhler5kAVWQAyeFznuLEU2Zs1qn/S9.UN7vTaBtahcRORu0Cm', 'minhrip9@gmail.com', 'user', 0, '2024-08-11T13-20-31-959Z.jpg', 'inactive', 0, '2024-08-11 20:20:33', NULL, NULL, NULL),
 (78, 'dedede123', 'Nguyễn hoàng đệ', '$2b$10$v4v8IvqvP4ouHGo/9QyYqOiPD8ngndMAJlv2qVLumpztFfqTaE/l2', 'nguyenhoangde470@gmail.com', 'user', 0, '2024-08-13T15-17-09-332Z.jpg', 'inactive', 0, '2024-08-13 22:17:11', NULL, NULL, NULL),
 (79, 'nguyenhoangde', 'nguyễn hoàng đệ', '$2b$10$1kGV6kB1yr64XD05X8frvuk8zq/AZy9Hw4vGLwOlO9gPGa1P.KTQq', 'nguyenhoangdexyz@gmail.com', 'user', 0, '2024-08-13T15-18-19-954Z.jpg', 'inactive', 0, '2024-08-13 22:18:21', NULL, NULL, NULL),
-(94, 'tranvanchilinh', 'Linhhhhh', '$2b$10$zZVybG08ZkAbQEr1Hreckeef1o4/b59qj5DI/eZ1TQp8C6keYxKli', 'chilinh140220@gmail.com', 'user', 0, '2024-11-08T04-25-44-034Z.jpg', 'active', 92337, '2024-09-10 20:20:47', NULL, '2024-09-24 13:40:24', '2024-11-05T05-07-37-505Z.jpg'),
+(94, 'tranvanchilinh', 'LinhDark', '$2b$10$zZVybG08ZkAbQEr1Hreckeef1o4/b59qj5DI/eZ1TQp8C6keYxKli', 'chilinh140220@gmail.com', 'user', 0, '2024-11-08T04-25-44-034Z.jpg', 'active', 29250, '2024-09-10 20:20:47', NULL, '2024-11-19 10:31:49', '2024-11-15T05-53-15-021Z.jpg'),
 (95, 'linhzl', 'Trần Văn Chí Linh1', '$2b$10$H83LJsmeoz91TFmyarjXnO2Yes0aBvCh/QFBNnUoU7.4zwCrvGr/m', 'linh123@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-09-24 10:01:15', NULL, NULL, NULL),
 (96, 'linhk4', 'linhtran', '$2b$10$kbcVbIzdLnHWg5RJrmtDvO75lRNCZKlLE53JtE6Aog1c6.QRpa2R6', 'linh1234@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-09-24 10:03:20', NULL, NULL, NULL),
 (97, 'foodcast', NULL, '$2b$10$7GM9R6r90bUzuR2vOVaOIut5hJR9v0.EsEJGiyDkCBe9gajqVks1e', 'foodcast440@gmail.com', 'user', 0, 'foodcast', 'inactive', 0, '2024-09-30 14:02:38', NULL, NULL, NULL),
-(98, '卍ろ玄師', 'hihi', '$2b$10$vaj7N5Th3f5HWY/eByCQLelPv4NsSyBlDxaZ9QWbIZtkIHGS8j9py', 'concubietnoi98@gmail.com', 'user', 0, '2024-10-18T05-31-52-555Z.jpg', 'inactive', 0, '2024-10-18 12:28:18', NULL, NULL, NULL),
 (99, 'quyhoathanlong', 'Natsu', '$2b$10$rmeEfrxk/DdA9o7/CfDOLuOQf9DLzKi0u.nQLE9IZfgs9z6NiCl6S', 'manjirokenshi2004@gmail.com', 'user', 0, '2024-10-18T05-31-07-434Z.jpg', 'inactive', 0, '2024-10-18 12:28:45', NULL, NULL, NULL),
 (100, 'madragess123', 'Ngô Bảo Hiếu', '$2b$10$8LDdokmWC2Qp2wKoSZheqO7SfzcXZI7JoQXU4KQbLQltdtW6jD9Fu', 'madragess123@gmail.com', 'user', 0, '2024-10-19T02-42-27-669Z.jpg', 'inactive', 0, '2024-10-18 12:33:15', NULL, NULL, NULL),
-(101, 'baohieu', 'Ngô Bảo Hiếu', '$2b$10$tHH2P13HkoZdAzaIRVu4QeyDijHB.2PZtfE6eqcf5NQRYhigqJOfS', 'dragoncandyx004@gmail.com', 'user', 0, '18-10-2024.jpg', 'inactive', 0, '2024-10-18 12:35:33', NULL, NULL, '2024-11-08T05:16:36.877Z.jpg'),
-(104, 'eastticket', 'EastTicket', '$2b$10$I6uzicleZzAvrr9eihaAIeedpCebSRivN8F74mdBlbefXrpqHYpbO', 'easyticket113@gmail.com', 'user', 0, '05-11-2024_10-00-44.jpg', 'inactive', 0, '2024-11-05 10:00:45', NULL, NULL, 'bg1.jpg');
+(125, 'eastticket', 'EastTicket', '$2b$10$1BaOfvPE5CW8bFXgkac8A.fwpMxJQNlGRU/04uPV8FIKz1uFjSFHG', 'easyticket113@gmail.com', 'user', 0, '19-11-2024_12-25-02.jpg', 'inactive', 0, '2024-11-19 12:25:04', NULL, NULL, 'bg1.jpg'),
+(126, 'linhdark', 'Trần Văn Chí Linh', '$2b$10$OIDuzXuwaglEKtdwKcESMuTNIidsYAjnBSBekrtmJYVBpZoETtCxS', 'concubietnoi98@gmail.com', 'user', 0, 'anh_dai_dien.jpg', 'inactive', 0, '2024-11-19 12:56:17', NULL, NULL, '2024-11-19T05-57-08-675Z.jpg');
 
 -- --------------------------------------------------------
 
@@ -152,9 +153,9 @@ INSERT INTO `follow` (`id`, `follower_id`, `followed_id`, `follow_date`) VALUES
 (146, 78, 79, '2024-10-18 13:21:33'),
 (147, 78, 66, '2024-10-18 13:22:02'),
 (148, 78, 100, '2024-10-18 13:22:18'),
-(149, 94, 7, '2024-10-19 11:47:26'),
 (150, 94, 97, '2024-10-19 11:47:42'),
-(151, 94, 96, '2024-10-19 11:48:14');
+(151, 94, 96, '2024-10-19 11:48:14'),
+(153, 94, 7, '2024-11-19 12:58:17');
 
 -- --------------------------------------------------------
 
@@ -194,10 +195,22 @@ INSERT INTO `like` (`id`, `customers_id`, `post_id`) VALUES
 (307, 94, 88),
 (308, 97, 97),
 (326, 94, 209),
-(335, 94, 85),
 (336, 94, 210),
 (337, 94, 99),
-(339, 94, 87);
+(339, 94, 87),
+(340, 94, 85),
+(342, 7, 218),
+(348, 7, 207),
+(371, 94, 86),
+(372, 94, 207),
+(373, 94, 208),
+(374, 94, 207),
+(375, 94, 86),
+(377, 94, 207),
+(378, 94, 207),
+(379, 94, 207),
+(380, 94, 205),
+(381, 94, 202);
 
 -- --------------------------------------------------------
 
@@ -234,11 +247,8 @@ INSERT INTO `notifications` (`id`, `user_id`, `sender_id`, `type`, `created_at`,
 (274, 7, 94, 'like', '2024-10-20 23:05:50', 85, 'active'),
 (275, 7, 94, 'like', '2024-10-20 23:06:52', 85, 'active'),
 (276, 7, 94, 'like', '2024-10-20 23:07:36', 85, 'active'),
-(277, 7, 94, 'like', '2024-10-20 23:09:21', 85, 'active'),
-(278, 7, 94, 'like', '2024-10-20 23:10:35', 85, 'active'),
-(279, 7, 94, 'like', '2024-10-20 23:13:04', 85, 'active'),
-(280, 7, 94, 'like', '2024-11-04 19:34:32', 99, 'active'),
-(281, 7, 94, 'like', '2024-11-04 22:07:15', 87, 'active');
+(277, 7, 94, 'like', '2024-10-20 23:09:21', 85, 'inactive'),
+(285, 7, 94, 'follow', '2024-11-18 22:58:17', NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -268,7 +278,7 @@ INSERT INTO `post` (`id`, `title`, `images`, `audio`, `description`, `categories
 (78, 'Gà xiên que', '2024-08-05T15:45:30.645Z.jpg', '2024-08-05T15:47:38.076Z.mp3', 'Gà xiên que là một món ăn dễ chế biến, phù hợp cho bữa ăn gia đình hoặc các buổi tiệc ngoài trời. Với những miếng gà thơm lừng, được ướp gia vị đậm đà và nướng trên lửa, gà xiên que mang lại hương vị hấp dẫn và bắt mắt. Hãy cùng khám phá cách làm món gà xiên que đơn giản tại nhà để thưởng thức!', 76, 7, 7, '2024-08-05 23:33:13', NULL),
 (79, 'Hamburger ', '2024-08-05T15:49:29.364Z.png', '2024-08-05T15:49:31.519Z.mp3', 'Hamburger là một món ăn phổ biến và dễ làm tại nhà. Với phần thịt bò mềm mại, bánh mì thơm ngon cùng với các loại rau củ tươi mát và sốt đặc biệt, bạn có thể tạo ra những chiếc hamburger hấp dẫn và đúng khẩu vị. Dưới đây là hướng dẫn chi tiết để bạn có thể tự tay chế biến món hamburger ngon miệng ngay tại nhà.', 72, 7, 2, '2024-08-04 23:33:16', NULL),
 (80, 'Bún riêu cua', '2024-08-05T15:56:19.884Z.jpg', '2024-08-05T15:56:21.869Z.mp3', 'Bún riêu cua là một món ăn truyền thống nổi tiếng của Việt Nam, đặc biệt với hương vị thơm ngon từ cua đồng, nước dùng thanh nhẹ và sự kết hợp hoàn hảo của các loại rau củ. Món bún này không chỉ ngon miệng mà còn mang lại cảm giác ấm cúng, phù hợp cho những bữa ăn gia đình hoặc những ngày trời se lạnh. Dưới đây là công thức làm bún riêu cua đơn giản mà vẫn giữ được hương vị đặc trưng của món ăn.', 78, 7, 2, '2024-07-15 23:33:20', NULL),
-(85, 'Hủ tiếu gõ', '2024-10-18T05:26:43.544Z.jpg', '2024-08-05T16:07:21.866Z.mp3', 'Hủ tiếu là một món ăn truyền thống nổi tiếng của ẩm thực Việt Nam, đặc biệt phổ biến ở miền Nam. Với sợi hủ tiếu mềm mịn, nước dùng trong và thanh, cùng với các thành phần tươi ngon như thịt, tôm, và rau củ, món ăn này chắc chắn sẽ làm hài lòng cả gia đình bạn. Dưới đây là cách làm hủ tiếu đơn giản tại nhà, giúp bạn thưởng thức món ăn đậm đà hương vị ngay tại căn bếp của mình.', 78, 7, 1, '2024-08-05 00:00:00', '2024-10-18 12:26:44'),
+(85, 'Hủ tiếu gõ', '2024-10-18T05:26:43.544Z.jpg', '2024-08-05T16:07:21.866Z.mp3', 'Hủ tiếu là một món ăn truyền thống nổi tiếng của ẩm thực Việt Nam, đặc biệt phổ biến ở miền Nam. Với sợi hủ tiếu mềm mịn, nước dùng trong và thanh, cùng với các thành phần tươi ngon như thịt, tôm, và rau củ, món ăn này chắc chắn sẽ làm hài lòng cả gia đình bạn. Dưới đây là cách làm hủ tiếu đơn giản tại nhà, giúp bạn thưởng thức món ăn đậm đà hương vị ngay tại căn bếp của mình.', 78, 7, 2, '2024-08-05 00:00:00', '2024-10-18 12:26:44'),
 (86, 'Mì xào bò', '2024-10-18T04:47:15.179Z.jpg', '2024-10-18T04:47:15.179Z.mp3', 'Mì xào bò là món ăn nhanh gọn và dễ làm, lý tưởng cho những buổi tối bận rộn hoặc khi bạn muốn thưởng thức một bữa ăn ngon miệng mà không mất quá nhiều thời gian. Với hương vị thơm ngon từ thịt bò xào mềm, mì dai và các loại rau củ tươi ngon, món mì xào bò này chắc chắn sẽ làm hài lòng cả gia đình bạn.', 77, 7, 6, '2024-08-05 00:00:00', '2024-10-18 11:47:21'),
 (87, 'Mì xào hải sản', '2024-10-18T04:32:46.222Z.jpg', '2024-10-18T04:32:46.222Z.mp3', 'Mì xào hải sản là một món ăn hấp dẫn, kết hợp hương vị tươi ngon của hải sản với sợi mì mềm dai và các loại rau củ tươi mát. Với cách làm đơn giản và nhanh chóng, món ăn này phù hợp cho những buổi tối bận rộn hoặc những dịp bạn muốn thưởng thức một bữa ăn phong phú và đầy đủ dinh dưỡng. Hãy cùng khám phá cách làm mì xào hải sản thơm ngon ngay tại nhà!', 77, 7, 28, '2024-08-05 00:00:00', '2024-10-18 11:32:52'),
 (88, 'Cách làm cơm tấm siêu đơn giản', '2024-08-05T16:12:58.556Z.jpg', '2024-08-05T16:13:00.927Z.mp3', 'Cơm tấm, món ăn đậm chất miền Nam, có hương vị độc đáo từ hạt gạo tấm thơm mềm. Để làm món này, cơm tấm được nấu chín, ăn kèm sườn nướng vàng ươm, bì giòn, và chả trứng đậm đà. Thêm chút mỡ hành, đồ chua và nước mắm pha chuẩn vị là bạn đã có ngay một dĩa cơm tấm ngon lành!', 76, 7, 1, '2024-08-05 00:00:00', '2024-10-18 12:54:56'),
@@ -284,7 +294,7 @@ INSERT INTO `post` (`id`, `title`, `images`, `audio`, `description`, `categories
 (205, 'Tôm nướng lửa ngọn', '2024-10-18T06:01:53.686Z. ', '2024-10-18T06:01:53.686Z.', '<p>Tôm nướng lửa ngọn là món ăn đơn giản nhưng mang lại hương vị tuyệt vời với tôm tươi ngon, được nướng trên lửa than cho đến khi vỏ ngoài trở nên vàng giòn và thơm phức. Khi nướng, tôm được ướp gia vị vừa miệng, giúp tăng thêm độ đậm đà cho món ăn. Chấm tôm nướng với nước mắm chua ngọt hoặc muối tiêu chanh sẽ khiến bạn không thể cưỡng lại!</p>', 76, 7, 0, '2024-10-18 13:01:53', '2024-10-18 13:11:34'),
 (206, 'Bạch tuột nướng sa tế', '2024-10-18T06:02:44.892Z. ', '2024-10-18T06:02:44.892Z.', '<p>Bạch tuột nướng sa tế là món ăn hấp dẫn, kết hợp giữa độ tươi ngon của bạch tuột và hương vị cay nồng đặc trưng của sa tế. Bạch tuột được ướp gia vị với sa tế và các loại gia vị khác trước khi nướng trên lửa than, tạo nên lớp vỏ bên ngoài giòn thơm và bên trong vẫn giữ được độ mềm mại. Món này thường được thưởng thức kèm với rau sống và nước chấm chua ngọt, mang đến trải nghiệm ẩm thực đầy thú vị!</p>', 76, 7, 0, '2024-10-18 13:02:44', NULL),
 (207, 'Thịt ba chỉ nướng', '2024-10-18T06:10:26.200Z. ', '2024-10-18T06:10:26.200Z.', '<p>Thịt ba chỉ nướng là món ăn hấp dẫn với lớp mỡ và thịt xen kẽ, mang lại hương vị thơm ngon, béo ngậy. Thịt được ướp gia vị vừa miệng, nướng trên lửa than cho đến khi lớp da bên ngoài giòn rụm và thịt bên trong mềm mại. Món này thường được ăn kèm với rau sống và nước chấm chua ngọt, tạo nên sự cân bằng hoàn hảo giữa vị béo và vị chua, ngọt, làm hài lòng cả những thực khách khó tính nhất!</p>', 76, 7, 0, '2024-10-18 13:10:26', NULL),
-(208, 'Món ngon dành cho trẻ em', '1729306285434.jpg', '1729306287166.mp3', '<div class=\"flex-shrink-0 flex flex-col relative items-end\">\n<div>\n<div class=\"pt-0\">\n<div class=\"gizmo-bot-avatar flex h-8 w-8 items-center justify-center overflow-hidden rounded-full\">&nbsp;</div>\n</div>\n</div>\n</div>\n<div class=\"group/conversation-turn relative flex w-full min-w-0 flex-col agent-turn\">\n<div class=\"flex-col gap-1 md:gap-3\">\n<div class=\"flex max-w-full flex-col flex-grow\">\n<div class=\"min-h-8 text-message flex w-full flex-col items-end gap-2 whitespace-normal break-words [.text-message+&amp;]:mt-5\" dir=\"auto\" data-message-author-role=\"assistant\" data-message-id=\"c286d055-a68f-4fd5-a502-d81327d52e0b\" data-message-model-slug=\"gpt-4o-mini\">\n<div class=\"flex w-full flex-col gap-1 empty:hidden first:pt-[3px]\">\n<div class=\"markdown prose w-full break-words dark:prose-invert dark\">\n<p>G&agrave; r&aacute;n gi&ograve;n rụm, thơm phức, được tẩm ướp với gia vị đặc trưng, mang đến hương vị đậm đ&agrave; kh&oacute; qu&ecirc;n. Mỗi miếng g&agrave; đều v&agrave;ng ươm, lớp vỏ ngo&agrave;i gi&ograve;n tan, trong vẫn giữ được độ ẩm v&agrave; mềm mại. Thưởng thức c&ugrave;ng sốt chấm hoặc rau sống, đ&acirc;y chắc chắn l&agrave; m&oacute;n ăn khiến bạn m&ecirc; mẩn ngay từ miếng đầu ti&ecirc;n!</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>', 76, 94, 1, '2024-11-06 09:51:36', NULL);
+(208, 'Món ngon dành cho trẻ em', '1729306285434.jpg', '1729306287166.mp3', '<div class=\"flex-shrink-0 flex flex-col relative items-end\">\n<div>\n<div class=\"pt-0\">\n<div class=\"gizmo-bot-avatar flex h-8 w-8 items-center justify-center overflow-hidden rounded-full\">&nbsp;</div>\n</div>\n</div>\n</div>\n<div class=\"group/conversation-turn relative flex w-full min-w-0 flex-col agent-turn\">\n<div class=\"flex-col gap-1 md:gap-3\">\n<div class=\"flex max-w-full flex-col flex-grow\">\n<div class=\"min-h-8 text-message flex w-full flex-col items-end gap-2 whitespace-normal break-words [.text-message+&amp;]:mt-5\" dir=\"auto\" data-message-author-role=\"assistant\" data-message-id=\"c286d055-a68f-4fd5-a502-d81327d52e0b\" data-message-model-slug=\"gpt-4o-mini\">\n<div class=\"flex w-full flex-col gap-1 empty:hidden first:pt-[3px]\">\n<div class=\"markdown prose w-full break-words dark:prose-invert dark\">\n<p>G&agrave; r&aacute;n gi&ograve;n rụm, thơm phức, được tẩm ướp với gia vị đặc trưng, mang đến hương vị đậm đ&agrave; kh&oacute; qu&ecirc;n. Mỗi miếng g&agrave; đều v&agrave;ng ươm, lớp vỏ ngo&agrave;i gi&ograve;n tan, trong vẫn giữ được độ ẩm v&agrave; mềm mại. Thưởng thức c&ugrave;ng sốt chấm hoặc rau sống, đ&acirc;y chắc chắn l&agrave; m&oacute;n ăn khiến bạn m&ecirc; mẩn ngay từ miếng đầu ti&ecirc;n!</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>', 76, 94, 3, '2024-11-06 09:51:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -312,23 +322,21 @@ CREATE TABLE `share` (
   `id` int NOT NULL,
   `date` date NOT NULL,
   `customers_id` int NOT NULL,
-  `post_id` int NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `post_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `share`
 --
 
-INSERT INTO `share` (`id`, `date`, `customers_id`, `post_id`, `title`) VALUES
-(28, '2024-09-27', 94, 87, ''),
-(29, '2024-09-30', 94, 97, ''),
-(31, '2024-09-30', 94, 99, ''),
-(34, '2024-09-30', 7, 97, ''),
-(35, '2024-09-30', 7, 97, ''),
-(36, '2024-10-12', 94, 86, ''),
-(37, '2024-10-19', 94, 87, ''),
-(38, '2024-11-13', 78, 204, '');
+INSERT INTO `share` (`id`, `date`, `customers_id`, `post_id`) VALUES
+(28, '2024-09-27', 94, 87),
+(29, '2024-09-30', 94, 97),
+(31, '2024-09-30', 94, 99),
+(34, '2024-09-30', 7, 97),
+(35, '2024-09-30', 7, 97),
+(36, '2024-10-12', 94, 86),
+(38, '2024-11-13', 78, 204);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -418,7 +426,7 @@ ALTER TABLE `share`
 -- AUTO_INCREMENT cho bảng `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT cho bảng `comments`
@@ -430,7 +438,7 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT cho bảng `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT cho bảng `favourite`
@@ -442,25 +450,25 @@ ALTER TABLE `favourite`
 -- AUTO_INCREMENT cho bảng `follow`
 --
 ALTER TABLE `follow`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT cho bảng `like`
 --
 ALTER TABLE `like`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=340;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
 
 --
 -- AUTO_INCREMENT cho bảng `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=282;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=286;
 
 --
 -- AUTO_INCREMENT cho bảng `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
 
 --
 -- AUTO_INCREMENT cho bảng `repcomments`
@@ -472,7 +480,7 @@ ALTER TABLE `repcomments`
 -- AUTO_INCREMENT cho bảng `share`
 --
 ALTER TABLE `share`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

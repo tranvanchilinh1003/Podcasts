@@ -15,7 +15,7 @@ import {
   findNotificationIdByPostId,
   findNotificationIdByType
 } from "../firebase/NotificationHandler";
-
+import { API_ENDPOINT  } from "../../../config/api-endpoint.config";
 function Follow() {
   const { id } = useParams();
   const navigate = useNavigate();

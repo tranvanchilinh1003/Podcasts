@@ -49,9 +49,43 @@ function Header() {
     return date.toLocaleDateString("vi-VN", options);
   }
 
-  const fetNotification = async () => {
-    fetchNotification(setNotifications, setLoading);
+  const sortNotifications = (notifications) => {
+    return notifications.sort((a, b) => {
+      if (a.isread === "active" && b.isread !== "active") return -1;
+      if (a.isread !== "active" && b.isread === "active") return 1;
+  
+      const dateA = new Date(a.created_at);
+      const dateB = new Date(b.created_at);
+  
+      if (isNaN(dateA) || isNaN(dateB)) {
+        console.error("Invalid date format for sorting:", a, b);
+        return 0; 
+      }
+  
+      return dateB - dateA;
+    });
   };
+  
+    const fetNotification = async () => {
+      setLoading(true);
+      try {
+        // Fetch dữ liệu từ Firebase
+        await fetchNotification((notifications) => {
+          console.log("Fetched notifications:", notifications);
+    
+          // Kiểm tra việc sắp xếp trước khi set lại state
+          const sortedNotifications = sortNotifications(notifications);
+          console.log("Sorted notifications:", sortedNotifications);
+    
+          // Set lại notifications sau khi sắp xếp
+          setNotifications(sortedNotifications);
+        }, setLoading);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
   
   const fetchUserInfo = async () => {
     try {

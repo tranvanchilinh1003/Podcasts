@@ -7,7 +7,7 @@ import Spinner from "../Spinner/Spinner";
 import CommentList from "../comments/CommentList";
 import { database } from "../firebase/firebase";
 import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
   return (

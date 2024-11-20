@@ -8,7 +8,7 @@ import {
   deleteNotification,
   findNotificationIdByType
 } from "../firebase/NotificationHandler";
-
+import { API_ENDPOINT  } from "../../../config/api-endpoint.config";
 function UserFollowList({ type }) {
   const { id } = useParams();
   const [notificationId, setNotificationId] = useState('');
