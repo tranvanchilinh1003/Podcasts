@@ -102,6 +102,7 @@ export class ListComponent implements OnInit {
           this.dialog.success('Đã thêm thành công!');
           this.validateForm.reset();
           this.imgUpload = '';
+          this.getAll();
         },
         error: error => {
           console.error('Error creating category', error);
@@ -114,7 +115,7 @@ export class ListComponent implements OnInit {
 
   getAll() {
     this.spinner.show();
-    this.categoriesService.getCategories().subscribe(res => {
+    this.categoriesService.getAllCategories().subscribe(res => {
       this.spinner.hide();
       this.categories = res.data;
       this.current_page = res.meta.current_page;
@@ -129,28 +130,27 @@ export class ListComponent implements OnInit {
     this.dialog.showConfirmationDialog(API_ENDPOINT.categories.categories, categoryId).then((result) => {
       if (result) {
         this.categories = this.categories.filter(category => category.id !== categoryId);
+        this.getAll();
       }
     });
   }
 
   getPage(event: any): void {
     this.categories = event.data;
+    this.current_page = event.meta.current_page;
+    this.last_page = event.meta.last_page;
   }
 
   onDrop(event: CdkDragDrop<ICategories[]>): void {
     moveItemInArray(this.categories, event.previousIndex, event.currentIndex);
-  
-    // Cập nhật thứ tự cho từng danh mục trong mảng dựa trên thứ tự mới
     this.categories = this.categories.map((category, index) => ({
       ...category,
-      order: index.toString() // Giả sử `order` lưu dưới dạng chuỗi
+      order: index.toString()
     }));
   
-    // Gửi yêu cầu cập nhật thứ tự lên backend
     this.categoriesService.updateCategoryOrder(this.categories).subscribe({
       next: () => console.log('Cập nhật thứ tự thành công'),
       error: (error) => console.error('Cập nhật thứ tự thất bại', error),
     });
   }
-  
-}
+}  

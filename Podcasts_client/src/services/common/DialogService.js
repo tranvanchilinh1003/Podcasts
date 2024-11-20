@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { API_ENDPOINT } from '../../config/api-endpoint.config';
 
 
-const API_BASE_URL = 'http://localhost:8080/api/'
 export const DialogService = {
   success(title) {
     Swal.fire({
@@ -68,6 +68,6 @@ export const DialogService = {
   },
 
   deleteItem(item, id) {
-    return axios.delete(`${API_BASE_URL}${item}/${id}`);
+    return axios.delete(`${API_ENDPOINT.auth.base}${item}/${id}`);
   }
 };

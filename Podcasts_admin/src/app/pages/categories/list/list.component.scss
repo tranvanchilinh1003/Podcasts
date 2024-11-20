@@ -1,0 +1,8 @@
+table tr[cdkDrag] {
+    cursor: move;  /* Hiển thị bàn tay khi người dùng di chuột vào */
+  }
+  
+  
+  table tr[cdkDrag]:active {
+    opacity: 0.8;
+  }

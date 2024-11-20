@@ -84,10 +84,12 @@ function InfoUser() {
         data.isticket = 'active';
         data.date = new Date().toISOString();
         data.password = data.password || oldPassword;
-        console.log('Data to submit:', data);
+        data.role = getUserFromLocalStorage()?.role;        
+        data.background = getUserFromLocalStorage()?.background;
+
 
         try {
-            data.role = 'user';
+
             const response = await axiosInstance.patch(`/api/customers/${id}`, data);
 
             if (response.status === 200) {
@@ -106,7 +108,10 @@ function InfoUser() {
             setImgUploadProgress(0);
         }
     };
-    
+      const getUserFromLocalStorage = () => {
+    const userArray = JSON.parse(localStorage.getItem("customer"));
+    return userArray && userArray.length > 0 ? userArray[0] : null;
+  };
         
 
     if (loading) return <Spinner />;

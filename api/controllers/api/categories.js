@@ -125,3 +125,27 @@ exports.delete = async (req, res, next) => {
         });
     }
 };
+
+
+exports.order = async (req, res, next) => {
+    const categories = req.body; // Nhận mảng danh mục từ request body
+  
+    try {
+      for (let i = 0; i < categories.length; i++) {
+        const category = categories[i];
+        if (!category.id) {
+          return res.status(400).json({ message: 'ID danh mục không hợp lệ' });
+        }
+        const updateResult = await Category.findByIdAndUpdate(category.id, i.toString());
+        if (updateResult === 0) {
+          console.warn(`Danh mục với ID ${category.id} không được cập nhật`);
+        }
+      }
+  
+      // Trả về phản hồi thành công
+      res.status(200).json({ message: 'Cập nhật thứ tự thành công' });
+    } catch (error) {
+      console.error('Cập nhật thứ tự thất bại', error);
+      res.status(500).json({ message: 'Cập nhật thứ tự thất bại', error });
+    }
+  };

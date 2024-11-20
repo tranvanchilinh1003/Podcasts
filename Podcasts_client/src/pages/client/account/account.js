@@ -74,8 +74,6 @@ function Account() {
   const [commentBoxVisibility, setCommentBoxVisibility] = useState({});
   const [customer, setCustomer] = useState(null);
 
-  console.log(data);
-  
 
   useEffect(() => {
     const customers = localStorage.getItem("customer");
@@ -256,14 +254,14 @@ function Account() {
 
   const handleEditorChange = (content) => {
     if (content !== editorContent) {
-      // Kiểm tra nếu nội dung đã thay đổi
+  
       setEditorContent(content);
       setValue("description", content);
-      console.log("Description Set:", content);
+  
     }
   };
   const descriptionValue = watch("description");
-  // Hàm để toggle mở/đóng dropdown
+
   const toggleDropdown = (postId) => {
     setIsDropdownOpen(isDropdownOpen === postId ? null : postId);
   };
@@ -567,14 +565,14 @@ function Account() {
 
     try {
       if (isLiked) {
-        await axios.delete("${API_ENDPOINT.auth.base}/like", {
+        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
           data: {
             post_id: postId,
             customers_id: customer.id,
           },
         });
       } else {
-        await axios.post("${API_ENDPOINT.auth.base}/like", {
+        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
           post_id: postId,
           customers_id: customer.id,
         });
@@ -593,7 +591,7 @@ function Account() {
         navigate("/login");
         return;
       }
-      const response = await axios.post("${API_ENDPOINT.auth.base}/shares", {
+      const response = await axios.post(`${API_ENDPOINT.auth.base}/shares`, {
         post_id: postId,
         customers_id: customer.id,
       });

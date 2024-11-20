@@ -54,6 +54,10 @@ router.delete('/categories/:id', cate.delete);
 router.get('/categories/:id', cate.detail);
 router.get('/product/:id', cate.getId);
 router.patch('/categories/:id', cate.update);
+router.patch('/categoryOrder', cate.order);
+
+
+
 
 router.post('/customers', customers.create);
 router.post('/customers/login', customers.login);

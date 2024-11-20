@@ -51,10 +51,11 @@ export class CategoriesService extends ApiService {
     return this._http.patch<ICategories>(API_BASE_URL + API_ENDPOINT.categories.categories + `/${categoryId}`, updatedCategory);
   }
   updateCategoryOrder(categories: ICategories[]): Observable<any> {
-    return this._http.put(API_BASE_URL + API_ENDPOINT.categories.updateOrder, categories, {
+    return this._http.patch(API_BASE_URL + API_ENDPOINT.categories.updateOrder, categories, {
       headers: new HttpHeaders().set('x-access-token', this.authservice.getToken())
     });
   }
+  
   
   delete(categoryId: string): Observable<any> {
     return this._http.delete<any>(API_BASE_URL + API_ENDPOINT.categories.categories + `/${categoryId}`);

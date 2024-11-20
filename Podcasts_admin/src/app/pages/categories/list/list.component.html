@@ -53,9 +53,9 @@
       <nb-card>
         <nb-card-header>Danh sách</nb-card-header>
         <nb-card-body>
-          <div class="table-responsive pt-3" cdkDropList [cdkDropListData]="categories" (cdkDropListDropped)="onDrop($event)">
-            <table class="table border text-center">
-              <ng-container>
+          <div class="table-responsive pt-3"  style="max-height: 595px; overflow-y: auto; display: block;" cdkDropList [cdkDropListData]="categories" (cdkDropListDropped)="onDrop($event)">
+            <table class="table border text-center" >
+              <ng-container >
                 <tr>
                   <th>#</th>
                   <th>Tên loại</th>
@@ -64,7 +64,8 @@
               </ng-container>
               <ng-container *ngFor="let category of categories; let i = index">
                 <tr cdkDrag>
-                  <td>{{ (current_page - 1) * 5 + i + 1 }}</td>
+                  <!-- <td>{{ (current_page - 1) * 5 + i + 1 }}</td> -->
+                  <td>{{  i + 1 }}</td>
                   <td>{{category.name}}</td>
                   <td class="text-center">
                     <button nbButton routerLink="../edit/{{category.id}}" class="mat-ripple status-success appearance-outline size-medium shape-rectangle nb-transition mt-3 mb-3">
@@ -77,12 +78,12 @@
                 </tr>
               </ng-container>
             </table>
-            <ngx-paginator 
+            <!-- <ngx-paginator 
               [apiUrl]="apiUrl"
               [current_page]="current_page"
               [last_page]="last_page"
               (dataList)="getPage($event)">
-            </ngx-paginator>
+            </ngx-paginator> -->
           </div>
         </nb-card-body>
       </nb-card>

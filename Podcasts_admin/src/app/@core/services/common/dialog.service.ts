@@ -94,11 +94,10 @@ export class DialogService {
         }
   
         try {
-          // Gửi lý do trong phần thân yêu cầu
           const deleteResponse: any = await firstValueFrom(
-            this.httpService.delete(`http://localhost:8080/api/customers/${id}`, {
+            this.httpService.delete(`${API_BASE_URL}/customers/${id}`, {
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ reason }) // Truyền lý do qua body dưới dạng JSON
+              body: JSON.stringify({ reason }) 
             })
           );
   
@@ -119,13 +118,6 @@ export class DialogService {
   
     return false; 
   }
-  
-  
-  
-  
-  
-  
-  
   
   deleteItem(item: string, id: string): Observable<any> {
     return this.httpService.delete<any>(`${API_BASE_URL}${item}/${id}`);

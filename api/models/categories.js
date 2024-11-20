@@ -4,7 +4,7 @@ module.exports = class Categories {
     constructor() {}
     static fetchAll(from, row) {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM categories ORDER By create_date DESC LIMIT ?, ?` ;
+            let sql = `SELECT * FROM categories ORDER By \`order\` ASC LIMIT ?, ?` ;
             connect.query(sql,[from, row],  function (err, data) {
               if (err) {
                 reject(err);
@@ -16,7 +16,7 @@ module.exports = class Categories {
     }
     static fetchAllCate() {
         return new Promise((resolve, reject) => {
-            let sql = `SELECT * FROM categories ` ;
+            let sql = `SELECT * FROM categories ORDER By \`order\`  ASC` ;
             connect.query(sql,  function (err, data) {
               if (err) {
                 reject(err);
@@ -117,16 +117,38 @@ reject("Không thể xóa danh mục vì có bài viết đang sử dụng nó."
         });
     }
     
-      static async countCategories() {
+    static async countCategories() {
         return new Promise((resolve, reject) => {
-          let sql = `SELECT COUNT(*) AS count FROM categories`; 
+          let sql = 'SELECT COUNT(*) AS count FROM categories';
+          
           connect.query(sql, function (err, data) {
             if (err) {
               reject(err);
             } else {
-              resolve(data[0].count);
+              if (data && data[0]) {
+                resolve(data[0].count);  
+              } else {
+                reject('Không có dữ liệu');
+              }
             }
           });
         });
+      
     }
+    static async findByIdAndUpdate(categoryId, newOrder) {
+        return new Promise((resolve, reject) => {
+          // Câu lệnh SQL để cập nhật thứ tự mới cho danh mục dựa trên ID
+          const sql = 'UPDATE categories SET `order` = ? WHERE id = ?';
+    
+          // Thực thi câu lệnh SQL
+          connect.query(sql, [newOrder, categoryId], (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              // Trả về số lượng bản ghi bị ảnh hưởng (không phải data[0].count)
+              resolve(result.affectedRows);  // affectedRows là số bản ghi được cập nhật
+            }
+          });
+        });
+      }
 }

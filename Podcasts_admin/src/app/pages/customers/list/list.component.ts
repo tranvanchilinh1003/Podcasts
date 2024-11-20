@@ -43,19 +43,14 @@ export class ListComponent implements OnInit {
     });
   }
 
-  // onDelete(customerId: string): void {
-  //   this.dialog.showConfirmationDialog(API_ENDPOINT.customers.customers, customerId).then((result) => {
-  //     if (result) {
-  //       this.customers = this.customers.filter(customers => customers.id !== customerId);
-  //     }
-  //   });
-  // }
+
   onDelete(customerId: string): void {
     this.dialog.delecustomer(customerId).then((result) => {
       if (result) {
         this.zone.run(() => {
           this.customers = this.customers.filter(customer => customer.id !== customerId);
           this.changeDetector.detectChanges();
+          this.getAll();
         });
       }
     }).catch((error) => {

@@ -40,7 +40,8 @@ export const API_ENDPOINT: IAPIEndpoint = {
   categories: {
     base: API_BASE_URL + '/' + 'api',
     categories: '/api/categories',
-    getAllCate: '/api/categories_All'
+    getAllCate: '/api/categories_All',
+    updateOrder: '/api/categoryOrder'
   },
   shares: {
     base: API_BASE_URL + '/' + 'api',
