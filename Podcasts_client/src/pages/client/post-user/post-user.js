@@ -186,6 +186,10 @@ function PostUser({ fetchPost }) {
                 const a =  await axios.delete(`${API_ENDPOINT.auth.base}/post/${postId}`);            
                 await sendEmailNotification(getUserFromLocalStorage()?.email, 'Bài đăng của bạn đã bị xóa vì chứa từ cấm.');
                 await fetchPost();
+            }else{
+              await axios.patch(`${API_ENDPOINT.auth.base}/update_action/${postId}`); 
+              await   DialogService.success('Bài viết đã được duyệt');
+              await fetchPost();
             }
         }
         await fetchPost();

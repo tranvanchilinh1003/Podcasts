@@ -43,7 +43,7 @@ router.get('/data_post', post.chart)
 router.get('/post_home_client', post.getHome)
 router.post('/update_view/:id', post.view)
 router.get('/post-customer/:id', post.customerId)
-
+router.patch('/update_action/:id', post.updateAction);
 
 
 

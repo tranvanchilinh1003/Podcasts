@@ -104,9 +104,9 @@ function Home() {
                 ))
                 }
               </div> */}
-              <div className="owl-carousel owl-theme " ref={carouselRef}>
+              <div className="owl-carousel owl-theme "  ref={carouselRef}>
                 {data.map((follow) => (
-                  <div key={follow.followed_id} className="owl-carousel-info-wrap item" >
+                  <div key={follow.followed_id} style={{width: '340px'}} className="owl-carousel-info-wrap item" >
                     <img src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${follow.images}?alt=media`} className="owl-carousel-image img-fluid" alt="Chef 1"
                       style={{
                         maxWidth: "auto",

@@ -71,17 +71,18 @@ from flask_cors import CORS
 import pandas as pd
 import requests
 import json
-
+import torch
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # Giới hạn tối đa là 50MB
 CORS(app)
-
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")
 # Tải mô hình Whisper lớn "small", "medium" hoặc "large" "base"
-model = whisper.load_model("medium")
+model = whisper.load_model("medium", device=device)
 
 def transcribe_audio(file_path):
-    # Chuyển đổi âm thanh thành văn bản bằng tiếng Việt
-    result = model.transcribe(file_path, language='vi')  # Chỉ định ngôn ngữ là tiếng Việt
+    # Chuyển đổi âm thanh thành văn bản
+    result = model.transcribe(file_path, language='vi')  # Đặt ngôn ngữ là tiếng Việt
     return result["text"]
 
 @app.route('/api/transcribe', methods=['POST'])
@@ -90,33 +91,29 @@ def transcribe():
         return jsonify({'error': 'Chưa có file âm thanh được cung cấp'}), 400
 
     audio_file = request.files['audio']
-    print(f'Đã nhận tệp: {audio_file.filename}, kích thước: {audio_file.content_length} bytes')
-    wav_file_path = 'temp_audio.wav'  # Đường dẫn tạm thời để lưu tệp
+    print(f'Nhận file: {audio_file.filename}, kích thước: {audio_file.content_length} bytes')
+    wav_file_path = 'temp_audio.wav'  # Lưu file tạm thời
 
     try:
-        # Lưu tệp âm thanh tạm thời 
+        # Lưu file âm thanh tạm thời
         audio_file.save(wav_file_path)
 
-        # Chuyển đổi âm thanh thành văn bản 
+        # Chuyển đổi âm thanh thành văn bản
         transcription = transcribe_audio(wav_file_path)
-
         print("Transcription:", transcription)
 
-        banned_words = [
-                  'sex', 'kill', 'hate', 'drugs', 'fuck', 'fuckyou',
-                  'chết', 'sát thủ', 'khủng bố',  
-                ]
+        banned_words = ['sex', 'kill', 'hate', 'drugs', 'fuck', 'fuckyou', 'chết', 'sát thủ', 'khủng bố']
         banned_count = sum(1 for word in banned_words if word in transcription)
 
         if banned_count > 1:
-            return jsonify({'error': 'Số lượng từ cấm vượt quá 20 '}), 400
+            return jsonify({'error': 'Số lượng từ cấm vượt quá 20'}), 400
 
         return jsonify({'transcription': transcription})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
     finally:
-        # Xóa tệp tạm thời sau khi xử lý
+        # Xóa file tạm thời
         if os.path.exists(wav_file_path):
             os.remove(wav_file_path)
 
@@ -128,6 +125,9 @@ def fetch_and_save_data():
         data = response.json()['data']
         df = pd.DataFrame(data)
 
+        # Filter posts with action == 1
+        df = df[df['action'] == 1]
+
         def calculate_score(row, comment_weight=0.5, share_weight=0.3, rating_weight=0.2):
             return (row['total_comments'] * comment_weight +
                     row['total_shares'] * share_weight +
@@ -135,18 +135,18 @@ def fetch_and_save_data():
 
         df['score'] = df.apply(calculate_score, axis=1)
         df_sorted = df.sort_values(by='score', ascending=False)
+
         top_10_trend_posts = df_sorted[['id', 'title', 'images', 'audio', 'description', 
-                                          'categories_id', 'customers_id', 'view', 
-                                          'create_date', 'update_date', 'images_customers', 
-                                          'username', 'isticket', 'total_comments', 
-                                          'total_shares', 'total_likes', 'average_comment_rating', 
-                                          'score']]
+                                        'categories_id', 'customers_id', 'view', 
+                                        'create_date', 'update_date', 'images_customers', 
+                                        'username', 'isticket', 'total_comments', 
+                                        'total_shares', 'total_likes', 'average_comment_rating', 
+                                        'score']]
 
         output_data = {'data': top_10_trend_posts.to_dict(orient='records')}
         
         with open('top_podcast.json', 'w', encoding='utf-8') as json_file:
             json.dump(output_data, json_file, ensure_ascii=False, indent=4)
-
     
     else:
         print(f"Lỗi khi lấy dữ liệu: {response.status_code}")

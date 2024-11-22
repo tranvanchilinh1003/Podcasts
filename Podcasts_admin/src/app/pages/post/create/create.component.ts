@@ -36,7 +36,8 @@ export class CreateComponent implements OnInit {
     audio: '',
     description: '',
     categories_id: '',
-    customers_id: ''
+    customers_id: '',
+    action: ''
   };
   constructor(
     private localStorageService: LocalStorageService,
@@ -134,6 +135,7 @@ export class CreateComponent implements OnInit {
       this.postnew.images = `${this.newFileName}.${this.fileExtensionImg}`;
       this.postnew.audio = `${this.newFileName}.${this.fileExtensionAudio}`;
       this.postnew.customers_id = customerId;
+      this.postnew.action = 1;
       this.postnew.description = this.postForm.get('description')!.value;
 
 

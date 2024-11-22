@@ -276,7 +276,7 @@ function Follow() {
 
     try {
       // Gửi yêu cầu theo dõi
-      await axios.post(`http://localhost:8080/api/follow/${userIdToFollow}`, {
+      await axios.post(`${API_ENDPOINT.auth.base}/follow/${userIdToFollow}`, {
         follower_id: user.id,
       });
 
@@ -378,7 +378,7 @@ function Follow() {
         }
 
         // Gửi yêu cầu xóa like
-        await axios.delete("http://localhost:8080/api/like", {
+        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
           data: {
             post_id: postId,
             customers_id: customer.id,
@@ -401,7 +401,7 @@ function Follow() {
         }
 
         // Gửi yêu cầu thêm like
-        await axios.post("http://localhost:8080/api/like", {
+        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
           post_id: postId,
           customers_id: customer.id,
         });

@@ -25,8 +25,12 @@ import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import CommentList from "../comments/CommentList";
 import { database } from "../firebase/firebase";
-import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
-import { API_ENDPOINT  } from "../../../config/api-endpoint.config";
+import {
+  addNotification,
+  deleteNotification,
+  findNotificationIdByPostId,
+} from "../firebase/NotificationHandler";
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 function Account() {
   const { id } = useParams();
   const {
@@ -255,10 +259,8 @@ function Account() {
 
   const handleEditorChange = (content) => {
     if (content !== editorContent) {
-  
       setEditorContent(content);
       setValue("description", content);
-  
     }
   };
   const descriptionValue = watch("description");
@@ -584,7 +586,7 @@ function Account() {
         }
 
         // Gửi yêu cầu xóa like
-        await axios.delete("http://localhost:8080/api/like", {
+        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
           data: {
             post_id: postId,
             customers_id: customer.id,
@@ -607,7 +609,7 @@ function Account() {
         }
 
         // Gửi yêu cầu thêm like
-        await axios.post("http://localhost:8080/api/like", {
+        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
           post_id: postId,
           customers_id: customer.id,
         });
@@ -620,7 +622,6 @@ function Account() {
       setData(data); // Phục hồi dữ liệu cũ trong trường hợp lỗi
     }
   };
-
 
   const handleShareClick = async (postId) => {
     try {
@@ -851,16 +852,6 @@ function Account() {
                                   {data.length > 0 ? (
                                     data.map((post) => (
                                       <li key={post.id}>
-                                        {/* Time on the timeline */}
-                                        {/* <div className="timeline-time">
-                                          <span className="time text-center">{formatTimeDate(post.create_date)}</span>
-                                          <span className="time">{formatDate(post.create_date)}</span>
-                                        </div> */}
-                                        {/* Timeline Icon */}
-                                        {/* <div className="timeline-icon">
-                                          <a href="#">&nbsp;</a>
-                                        </div> */}
-                                        {/* Timeline Content */}
                                         <div className="timeline-body border">
                                           <div className="timeline-header">
                                             <div className=" text-centercol-md-12 d-flex justify-content-between align-items-center">
@@ -1115,7 +1106,10 @@ function Account() {
                                           </div>
 
                                           <div className="timeline-content ">
+                                            <div className="d-flex justify-content-between">
                                             <h4>{post.title}</h4>
+                                            {post.action == 0 ? (<h4 className="text-danger">Bài viết đang đợi kiểm duyệt</h4>):('')}
+                                            </div>
                                             <p className="description-text">
                                               {expandedPostId === post.id ? (
                                                 <span
@@ -1152,27 +1146,36 @@ function Account() {
                                                 </span>
                                               )}
                                             </p>
-                                            <div className="image-container  d-flex justify-content-center">
-                                              <img
-                                                src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
-                                                alt="Your image description"
-                                                className="border rounded"
-                                              />
 
-                                              <span
-                                                className="custom-block-icon"
-                                                onClick={() =>
-                                                  handlePlayAudio(
-                                                    post.audio,
-                                                    post.title,
-                                                    post.username,
-                                                    post.images,
-                                                    post.id
-                                                  )
-                                                }
-                                              >
-                                                <i className="bi-play-fill fs-2"></i>
-                                              </span>
+                                            <div className="image-container d-flex justify-content-center">
+                                              {post.action == 0 ? (
+                                                <i
+                                                  className="bi bi-eye-slash fa-10x"
+                                                  style={{ zIndex: "100px" }}
+                                                ></i>
+                                              ) : (
+                                                <div className="image-wrapper text-center">
+                                                  <img
+                                                    src={`https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2F${post.images}?alt=media&token=c6dc72e8-a1b0-41bb-b1f3-3f7397e9`}
+                                                    alt="Your image description"
+                                                    className="border rounded"
+                                                  />
+                                                  <span
+                                                    className="custom-block-icon"
+                                                    onClick={() =>
+                                                      handlePlayAudio(
+                                                        post.audio,
+                                                        post.title,
+                                                        post.username,
+                                                        post.images,
+                                                        post.id
+                                                      )
+                                                    }
+                                                  >
+                                                    <i className="bi-play-fill fs-2"></i>
+                                                  </span>
+                                                </div>
+                                              )}
                                             </div>
                                           </div>
                                           <div className="timeline-likes">

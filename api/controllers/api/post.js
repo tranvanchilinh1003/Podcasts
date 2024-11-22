@@ -277,6 +277,21 @@ exports.customerId = async (req, res, next) => {
       }
     }
 
-    
+    exports.updateAction = async (req, res, next) => {
+        try {
+            const id = req.params.id;
+            const result = await Post.updateAction(id);
+            
+            res.status(200).json({
+                message: 'Đăng bài viết thành công',
+                data: result
+            });
+        } catch (error) {
+        
+            res.status(500).json({
+                error: 'Internal Server Error'
+            });
+        }
+    }; 
  
     

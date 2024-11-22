@@ -3,7 +3,7 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <a class="logo" href="#" (click)="navigateHome()"><img src="./assets/images/icon.png" class="logo-img" alt="Frontend Framework Angular"></a>
+    <a class="logo" href="#" (click)="navigateHome()"><img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2FlogoCuisine-removebg-preview.png?alt=media&token=7e17d9ca-3639-4b8c-88d7-3ded37f039c5" class="logo-img" alt="Frontend Framework Angular"></a>
   </div>
   <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>

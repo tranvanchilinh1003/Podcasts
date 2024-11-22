@@ -49,7 +49,7 @@ function Footer({ userId, user, categories }) {
             <div className="col-lg-2 col-md-12 d-flex justify-content-center mb-3 mb-md-0">
               <Link className="navbar-brand" to="/">
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e"
+                  src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2FlogoCuisine-removebg-preview.png?alt=media&token=7e17d9ca-3639-4b8c-88d7-3ded37f039c5"
                   className="logo-image img-fluid"
                   alt="templatemo pod talk"
                 />

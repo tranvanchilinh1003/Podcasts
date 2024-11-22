@@ -322,4 +322,18 @@ ORDER BY
       });
     });
   }
+
+
+  static updateAction( postId) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE post SET action = 1 WHERE id = ${postId}`;
+      connect.query(sql, [postId], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
 };

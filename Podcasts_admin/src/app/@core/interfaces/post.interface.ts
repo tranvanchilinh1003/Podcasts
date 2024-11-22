@@ -14,6 +14,7 @@ export class IPost {
   total_comments?:string;
   total_likes?:  number;
   isticket?:string;
+  action?: string | number;
 }
   export class MonthlyView {
     id: string;

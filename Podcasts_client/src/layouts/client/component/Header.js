@@ -360,7 +360,7 @@ function Header() {
             style={{ marginLeft: "0" }}
           >
             <img
-              src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/upload%2Ficon.png?alt=media&token=a5846c3a-f685-4365-a3d7-9a1e8152f14e"
+              src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2FlogoCuisine-removebg-preview.png?alt=media&token=7e17d9ca-3639-4b8c-88d7-3ded37f039c5"
               className="logo-image img-fluid"
               alt="templatemo pod talk"
               style={{ width: "50px", height: "50px" }}

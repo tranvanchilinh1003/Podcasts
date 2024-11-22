@@ -68,6 +68,6 @@ export const DialogService = {
   },
 
   deleteItem(item, id) {
-    return axios.delete(`${API_ENDPOINT.auth.base}${item}/${id}`);
+    return axios.delete(`${API_ENDPOINT.auth.base}/${item}/${id}`);
   }
 };
