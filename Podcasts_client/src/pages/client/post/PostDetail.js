@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./details.css";
 import { database } from "../firebase/firebase";
 import { addNotification, deleteNotification, findNotificationIdByPostId } from "../firebase/NotificationHandler";
-
+import { API_ENDPOINT } from "../../../config/api-endpoint.config";
 const StarRating = ({ rating }) => {
   const percent = (rating / 5) * 100;
   return (

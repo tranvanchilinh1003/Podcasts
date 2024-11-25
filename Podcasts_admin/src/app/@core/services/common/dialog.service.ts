@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { Observable, firstValueFrom } from 'rxjs';
 
-import { API_BASE_URL } from '../../config/api-endpoint.config';
+import { API_BASE_URL, API_ENDPOINT } from '../../config/api-endpoint.config';
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +95,7 @@ export class DialogService {
   
         try {
           const deleteResponse: any = await firstValueFrom(
-            this.httpService.delete(`${API_BASE_URL}/customers/${id}`, {
+            this.httpService.delete(`${API_ENDPOINT.auth.base}/customers/${id}`, {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ reason }) 
             })

@@ -93,9 +93,10 @@ const OTPForm = () => {
               <small className="text-danger">Vui lòng nhập đầy đủ OTP.</small>
             )}
           </div>
-          <button type="submit" className="mb-3 w-100 btn btn-primary" disabled={!isValid}>
+          <button type="submit" style={{background: 'linear-gradient( #FF8C00, #FFD700 )'}} className="mb-3 w-100 btn btn-primary" disabled={!isValid}>
             Gửi OTP
           </button>
+          
         </form>
       </section>
     </>

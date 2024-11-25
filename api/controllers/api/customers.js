@@ -42,6 +42,43 @@ exports.list = async (req, res, next) => {
         });
     }
 };
+exports.listAll = async (req, res, next) => {
+    try {
+    const page = req.query.page || 1;
+    const row = 5; 
+    const from = (page - 1) * row;
+    const totalProducts = await Customers.coutCustomers(); 
+    if(totalProducts > 0) {
+
+    
+    const totalPages = Math.ceil(totalProducts / row);
+    const customers = await Customers.fetchfill();
+        res.status(200).json({
+            data: customers,
+            meta: {
+                current_page: 1,
+                last_page: 1,
+                from: from,
+                count: totalProducts
+            }
+        });
+    }else{
+        res.status(200).json({
+            data: customers,
+            meta: {
+                current_page: page,
+                last_page: 1,
+                from: from
+            }
+        })
+    }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+};
 
 exports.create = async (req, res, next) => {
     let username = req.body.username.trim().toLowerCase();
@@ -144,72 +181,6 @@ exports.detail = async (req, res, next) => {
 
 
 
-// exports.update = async (req, res, next) => {
-//     try {
-//         const id = req.params.id;
-//         const { username, email, full_name, role, gender, images, isticket, password, background } = req.body;
-
-//         console.log('Updating customer:', { id, username, email, full_name, role, gender, images, isticket, password, background }); // Log dữ liệu nhận được
-
-//         // Lấy thông tin khách hàng hiện tại từ cơ sở dữ liệu
-//         const currentCustomer = await Customers.getUpdateCustomers(id);
-//         if (!currentCustomer) {
-//             return res.status(404).json({ error: 'Customer not found' });
-//         }
-
-//         const { username: oldUsername, email: oldEmail, password: oldPassword } = currentCustomer;
-
-//         // Kiểm tra nếu username và email đã thay đổi
-//         if (username !== oldUsername || email !== oldEmail) {
-            
-//             // Kiểm tra xem có tồn tại username hoặc email trùng lặp trong cơ sở dữ liệu, loại trừ khách hàng hiện tại
-//             const existingUser = await Customers.findUser(username, email, id);
-
-          
-//             if (existingUser.length > 0) {
-//                 return res.status(400).json({ error: 'Username hoặc email đã tồn tại.' });
-//             }
-//         }
-
-//         // Xử lý mật khẩu
-//         let hashedPassword = oldPassword; // Mặc định sử dụng mật khẩu cũ
-
-//         if (password) {
-//             // Nếu có mật khẩu mới và mật khẩu mới không phải là mật khẩu đã băm
-//             if (!password.startsWith("$2b$10$")) {
-//                 hashedPassword = await bcrypt.hash(password, 10);
-//             } else {
-//                 hashedPassword = password; // Nếu mật khẩu mới đã được băm, không thay đổi
-//             }
-//         }
-
-//         const customers = {
-//             username,
-//             full_name,
-//             email,
-//             role,
-//             gender,
-//             images,
-//             background,
-//             isticket,
-//             password: hashedPassword // Cập nhật mật khẩu mới hoặc giữ mật khẩu cũ
-//         };
-
-        
-
-//         const result = await Customers.updateCustomers(customers, id);
-
-//         res.status(200).json({
-//             result,
-//             data: customers
-//         });
-//     } catch (error) {
-//         console.error("Error:", error);
-//         res.status(500).json({
-//             error: 'Internal Server Error'
-//         });
-//     }
-// };
 
 exports.update = async (req, res, next) => {
     try {
@@ -392,7 +363,7 @@ exports.chart = async (req, res, next) => {
                 text: "Chào mừng bạn đã đăng ký thành công tài khoản Cuisine Podcasts!", // Nội dung văn bản
                 html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                    <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
+                    <div style="background-color: #ff920df6; color: #fff; padding: 20px; text-align: center;">
                         <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2FlogoCuisine-removebg-preview.png?alt=media&token=7e17d9ca-3639-4b8c-88d7-3ded37f039c5" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
                         <h1 style="margin: 10px 0;">Chào mừng đến với Cuisine Podcasts!</h1>
                     </div>
@@ -437,7 +408,7 @@ exports.chart = async (req, res, next) => {
                 subject: `CuisinePodcast thân gửi đến ${to}`, // Chủ đề email
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-                        <div style="background-color: #007bff; color: #fff; padding: 20px; text-align: center;">
+                        <div style="background-color: #ff920df6; color: #fff; padding: 20px; text-align: center;">
                             <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2FlogoCuisine-removebg-preview.png?alt=media&token=7e17d9ca-3639-4b8c-88d7-3ded37f039c5" alt="Cuisine Podcasts Logo" style="max-width: 120px; border-radius: 50%;">
                             <h1 style="margin: 10px 0;">Cuisine Podcasts!</h1>
                         </div>

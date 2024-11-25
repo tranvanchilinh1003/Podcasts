@@ -14,6 +14,18 @@ module.exports = class Customers {
       });
     });
   }
+  static fetchfill() {
+    return new Promise((resolve, reject) => {
+      let sql = `SELECT * FROM customers ORDER By customers.create_date DESC`;
+      connect.query(sql, function (err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
   static async findUser(username, email, excludeId = 0) {
     return new Promise((resolve, reject) => {
       const query =

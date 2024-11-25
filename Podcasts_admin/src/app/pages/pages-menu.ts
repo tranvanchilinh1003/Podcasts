@@ -60,15 +60,15 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
-  // {
-  //   title: 'Thống Kê',
-  //   group: true,
-  // },
-  // {
-  //   title: 'Bình luận',
-  //   icon: 'message-circle-outline',
-  //   link: '/pages/comment/list',
-  // }
+  {
+    title: 'Thống Kê',
+    group: true,
+  },
+  {
+    title: 'Bình luận',
+    icon: 'message-circle-outline',
+    link: '/pages/comment/list',
+  }
 
   
 ];

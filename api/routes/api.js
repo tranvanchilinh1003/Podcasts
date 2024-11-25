@@ -62,6 +62,7 @@ router.patch('/categoryOrder', cate.order);
 router.post('/customers', customers.create);
 router.post('/customers/login', customers.login);
 router.get('/customers', customers.list);
+router.get('/customers_all', customers.listAll);
 router.delete('/customers/:id', customers.delete);
 router.get('/customers/:id', customers.detail);
 router.patch('/customers/:id', customers.update);

@@ -33,6 +33,7 @@ export const API_ENDPOINT: IAPIEndpoint = {
   customers: {
     base: API_BASE_URL + '/' + 'api',
     customers: '/api/customers',
+    customers_all: '/api/customers_all',
     search: '/api/customer_search',
     suggest_keywords: '/api/customer_keywords',
     data: '/api/data_customers'

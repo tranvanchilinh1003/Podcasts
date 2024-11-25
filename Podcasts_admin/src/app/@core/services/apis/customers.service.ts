@@ -32,6 +32,11 @@ export class CustomerService extends ApiService {
       headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
     });
   }
+  getAll():Observable<any> {
+    return this._http.get<{ data: ICustomer[] }>(API_BASE_URL + API_ENDPOINT.customers.customers_all, {
+      headers: new HttpHeaders().set('x-access-token', this.authservice.getToken()) 
+    });
+  }
   create(post: ICustomer): Observable<ICustomer> {
     return this._http.post<ICustomer>(API_BASE_URL + API_ENDPOINT.customers.customers, post);
   }
