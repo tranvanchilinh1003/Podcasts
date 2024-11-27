@@ -362,7 +362,7 @@ function Post() {
           console.log(`Notification ID not found for post ID: ${postId}`); // Log nếu không tìm thấy
         }
     
-        await axios.delete("http://localhost:8080/api/like", {
+        await axios.delete(`${API_ENDPOINT.auth.base}/like`, {
           data: {
             post_id: postId,
             customers_id: customer.id,
@@ -408,7 +408,7 @@ function Post() {
           setData(updatedDataWithNotification);
         }
 
-        await axios.post("http://localhost:8080/api/like", {
+        await axios.post(`${API_ENDPOINT.auth.base}/like`, {
           post_id: postId,
           customers_id: customer.id,
         });

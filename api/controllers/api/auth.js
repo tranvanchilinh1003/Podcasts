@@ -83,11 +83,11 @@ function sendEmail(email, otp) {
       text: `Mã OTP của bạn là: ${otp}\nHết hạn vào: ${expiresAt}`,
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background-color: #ff920df6; padding: 20px; text-align: center; border-radius: 10px;">
+        <div style="background-color: #f9f9f9; padding: 20px; text-align: center; border-radius: 10px;">
           <img src="https://firebasestorage.googleapis.com/v0/b/podcast-ba34e.appspot.com/o/images%2FlogoCuisine-removebg-preview.png?alt=media&token=7e17d9ca-3639-4b8c-88d7-3ded37f039c5" alt="Cuisine Podcasts Logo" style="max-width: 100px;">
           <h2 style="color: #333;">Xác nhận Email của bạn</h2>
           <p style="color: #666;">Mã OTP của bạn là:</p>
-          <h1 style="background-color: #007bff; color: #fff; padding: 10px; border-radius: 5px; margin: 20px 0;">${otp}</h1>
+          <h1 style="background-color: #ff920df6; color: #fff; padding: 10px; border-radius: 5px; margin: 20px 0;">${otp}</h1>
           <p style="color: #666;">Vui lòng sử dụng mã này để hoàn thành thao tác xác thực.</p>
           <p style="color: #666;">Mã OTP này sẽ hết hạn vào: <strong>${expiresAt.toLocaleString()}</strong></p>
         </div>

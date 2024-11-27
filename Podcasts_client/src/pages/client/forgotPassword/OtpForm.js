@@ -7,7 +7,7 @@ import { DialogService } from '../../../services/common/DialogService';
 
 const OTPForm = () => {
   const navigate = useNavigate();
-  const { control, handleSubmit, formState: { errors, isValid }, getValues } = useForm({
+  const { control, handleSubmit, formState: { errors, isValid }, getValues, setValue } = useForm({
     mode: 'onChange',
   });
 
@@ -23,7 +23,6 @@ const OTPForm = () => {
     const email = localStorage.getItem('email');
     const otp = getOTPValue();
   
-
     const value = {
       email,
       otp,
@@ -31,8 +30,6 @@ const OTPForm = () => {
 
     try {
       const response = await check(value);
-    
-      
       if (response.success) {
         DialogService.success(response.message);
         return true; 
@@ -55,6 +52,16 @@ const OTPForm = () => {
     } catch (error) {
       console.error("Submission failed: ", error);
     }
+  };
+
+  
+  const handlePaste = (e, index) => {
+    const pasteData = e.clipboardData.getData('Text');
+    const otpValues = pasteData.slice(0, 5).split('');
+    
+    otpValues.forEach((value, idx) => {
+      setValue(`otp[${idx}]`, otpValues[idx] || ''); 
+    });
   };
 
   return (
@@ -84,6 +91,7 @@ const OTPForm = () => {
                       maxLength="1"
                       tabIndex={index + 1}
                       autoFocus={index === 0}
+                      onPaste={(e) => handlePaste(e, index)} 
                     />
                   )}
                 />
@@ -96,7 +104,6 @@ const OTPForm = () => {
           <button type="submit" style={{background: 'linear-gradient( #FF8C00, #FFD700 )'}} className="mb-3 w-100 btn btn-primary" disabled={!isValid}>
             Gửi OTP
           </button>
-          
         </form>
       </section>
     </>

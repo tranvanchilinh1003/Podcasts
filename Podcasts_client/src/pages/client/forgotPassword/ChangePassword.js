@@ -75,7 +75,7 @@ const ChangePassword = () => {
           {errors.confirm_password && <span className="text-danger messages">{errors.confirm_password.message}</span>}
         </div>
         <input
-          className="login-button"
+          className="login-button mt-4"
           type="submit"
           value="Xác nhận"
           aria-label="Xác nhận"

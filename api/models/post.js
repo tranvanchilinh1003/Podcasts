@@ -224,7 +224,31 @@ ORDER BY
   // getUsername
   static async search(key) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT post.*, categories.id AS categories_id, categories.name AS category_name, customers.id AS customers_id, customers.username, customers.images AS images_customers, (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments FROM post JOIN categories ON post.categories_id = categories.id JOIN customers ON post.customers_id = customers.id WHERE LOWER(post.title) LIKE ?`;
+      let sql = `SELECT 
+    post.*, 
+    categories.id AS categories_id, 
+    categories.name AS category_name, 
+    customers.id AS customers_id, 
+    customers.username, 
+    customers.images AS images_customers,     
+    COALESCE(AVG(cm.rating), 0) AS average_comment_rating,
+    COUNT(DISTINCT l.id) AS total_likes, 
+    (SELECT COUNT(*) FROM comments WHERE post_id = post.id) AS total_comments 
+FROM 
+    post 
+JOIN 
+    categories ON post.categories_id = categories.id 
+JOIN 
+    customers ON post.customers_id = customers.id 
+LEFT JOIN 
+    comments AS cm ON post.id = cm.post_id 
+LEFT JOIN
+    \`like\` AS l ON post.id = l.post_id
+WHERE 
+    LOWER(post.title) LIKE ? 
+GROUP BY 
+    post.id, categories.id, customers.id;
+`;
       connect.query(sql, [`%${key}%`], function (err, data) {
         if (err) {
           reject(err);
