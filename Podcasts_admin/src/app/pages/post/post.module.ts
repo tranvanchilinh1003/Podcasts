@@ -12,6 +12,8 @@ import { EditComponent } from './edit/edit.component';
 // import{CreateComponent} from './create/create.component';
 import { PaginatorModule } from '../../@theme/components/paginator/paginator.module';
 import { TinymceModule } from 'app/@theme/components/tinymce/tinymce.module';
+import { CommentComponent } from './comment/comment.component';
+import { RatingComponent } from './comment/rating.component';
 @NgModule({
   imports: [
     NbCardModule,
@@ -31,6 +33,8 @@ import { TinymceModule } from 'app/@theme/components/tinymce/tinymce.module';
     ...routedComponents,
     ListComponent,
     EditComponent,
+    CommentComponent,
+    RatingComponent
     // CreateComponent
   ],
 })

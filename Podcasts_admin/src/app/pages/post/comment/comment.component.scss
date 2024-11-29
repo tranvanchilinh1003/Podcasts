@@ -1,0 +1,36 @@
+.comments-section {
+    .comment-item {
+      border-bottom: 1px solid #f1f1f1;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+  
+    .replies {
+      border-left: 2px solid #e0e0e0;
+      padding-left: 10px;
+    }
+  
+    .comment-avatar,
+    .reply-avatar {
+      object-fit: cover;
+    }
+  
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+    }
+  
+    .reply-avatar {
+      width: 30px;
+      height: 30px;
+    }
+    .btn-link{
+        text-decoration: none;
+        cursor: pointer
+    }
+    .text-reply{
+      color: rgb(101, 103, 107);
+    
+    }
+  }
+  

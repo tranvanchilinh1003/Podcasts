@@ -1,0 +1,63 @@
+<div class="comments-section">
+  <h4 class="mb-3 mt-5">Danh sách bình luận</h4>
+
+  <!-- Kiểm tra nếu không có bình luận -->
+  <div *ngIf="comments.length === 0" class="no-comments">
+    <div class="no-comments-message text-center">
+      <p>Chưa có bình luận nào</p>
+    </div>
+  </div>
+
+  <!-- Danh sách bình luận gốc -->
+  <div *ngFor="let comment of comments" class="comment-item mb-3">
+    <div class="d-flex align-items-center">
+      <!-- Avatar -->
+      <img
+        [src]="getFirebaseImageURL(comment.images)"
+        class="comment-avatar img-fluid rounded-circle"
+        style="max-width: 40px; height: 40px"
+        alt="Avatar"
+      />
+      <!-- Nội dung bình luận -->
+      <div class="comment-content ms-3">
+        <p class="mb-1">
+          <strong>{{ comment.username }}</strong> -
+          <small>{{ comment.date | date : "dd/MM/yyyy HH:mm" }}</small>
+        </p>
+        <app-rating [value]="comment.rating"></app-rating>
+        <p>{{ comment.contents }}</p>
+        <button
+          *ngIf="comment.totalReplies > 0"
+          (click)="toggleReplies(comment)"
+          class="btn btn-link p-0 text-reply"
+        >
+          Xem {{ comment.totalReplies }} phản hồi
+        </button>
+      </div>
+    </div>
+
+    <!-- Danh sách trả lời -->
+    <div *ngIf="comment.isRepliesVisible && comment.replies?.length" class="replies ms-5 mt-2">
+      <div *ngFor="let reply of comment.replies" class="reply-item d-flex align-items-start">
+        <img
+          [src]="getFirebaseImageURL(reply.images)"
+          class="reply-avatar img-fluid rounded-circle"
+          style="max-width: 30px; height: 30px"
+          alt="Avatar"
+        />
+        <div class="reply-content ms-2">
+          <p class="mb-1">
+            <strong>{{ reply.username }}</strong> -
+            <small>{{ reply.date | date : "dd/MM/yyyy HH:mm" }}</small>
+          </p>
+          <p>{{ reply.contents }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nút xem thêm bình luận -->
+  <div *ngIf="hasMoreComments" class="text-center mt-3">
+    <button (click)="loadMoreComments()" class="btn btn-text">Xem thêm bình luận</button>
+  </div>
+</div>

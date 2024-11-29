@@ -71,12 +71,8 @@ function Header() {
       try {
         // Fetch dữ liệu từ Firebase
         await fetchNotification((notifications) => {
-          console.log("Fetched notifications:", notifications);
-    
           // Kiểm tra việc sắp xếp trước khi set lại state
           const sortedNotifications = sortNotifications(notifications);
-          console.log("Sorted notifications:", sortedNotifications);
-    
           // Set lại notifications sau khi sắp xếp
           setNotifications(sortedNotifications);
         }, setLoading);
