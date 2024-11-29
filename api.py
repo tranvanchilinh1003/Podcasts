@@ -18,14 +18,16 @@ print(f"Using device: {device}")
 model = whisper.load_model("medium", device=device)
 
 def load_banned_words():
-    try:
-        badwords_path = r'C:\Ampps\www\frontend1\Podcasts\listbadword.json'
-        with open(badwords_path, 'r', encoding='utf-8') as f:
-            bad_words = json.load(f)  # Giả sử badwords.json là danh sách các từ cấm
-        return bad_words
-    except Exception as e:
-        print(f"Không thể tải danh sách từ cấm: {str(e)}")
-        return {"en": [], "vi": []}  # Trả về danh sách trống nếu không tải được
+
+    banned_words_file = os.path.join(os.getcwd(), 'listbadword.json')
+    
+    if not os.path.exists(banned_words_file):
+        raise Exception(f"File {banned_words_file} không tồn tại.")
+    
+    with open(banned_words_file, 'r', encoding='utf-8') as f:
+        banned_words = json.load(f)
+    
+    return banned_words
 
 def transcribe_audio(file_path, language='vi'):
     result = model.transcribe(file_path, language=language)  
@@ -44,21 +46,23 @@ def transcribe():
         audio_file.save(wav_file_path)
         transcription = transcribe_audio(wav_file_path, language='vi')
         print("Transcription:", transcription)
+
+        # Lấy danh sách từ cấm từ một tệp hoặc database
         banned_words = load_banned_words()
         banned_count = sum(1 for word in banned_words['vi'] if word in transcription.lower())
         banned_count_en = sum(1 for word in banned_words['en'] if word in transcription.lower())
+
         if banned_count + banned_count_en > 1:
             return jsonify({'error': 'Số lượng từ cấm vượt quá 1'}), 400
 
-        return jsonify({'transcription': transcription})
+        
+        return jsonify({'transcription': transcription, 'banned_words': banned_words})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 400
     finally:
-
         if os.path.exists(wav_file_path):
             os.remove(wav_file_path)
-
 def fetch_and_save_data():
     url = 'http://localhost:8080/api/get_All'
     response = requests.get(url)

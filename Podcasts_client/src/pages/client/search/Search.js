@@ -20,6 +20,7 @@ function Search() {
 
             fetchSuggestions();
         } else {
+    
             setSuggestions([]);
         }
     }, [query]);

@@ -84,6 +84,8 @@ export class DialogService {
       confirmButtonText: 'Gửi lý do',
       inputAttributes: {
         'aria-label': 'Nhập lý do xóa tài khoản',
+        style: 'width: auto; height: 150px; font-size: 14px;'
+        
       },
       showLoaderOnConfirm: true,
       preConfirm: async () => {

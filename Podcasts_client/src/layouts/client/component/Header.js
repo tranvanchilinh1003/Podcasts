@@ -199,7 +199,7 @@ function Header() {
   };
 
   const handleSearchSubmit = async (event) => {
-    event.preventDefault();
+  
     if (searchTerm.trim() !== "") {
       navigate(`/post_search?messages=${searchTerm}`);
       setSearchTerm("");
@@ -209,40 +209,43 @@ function Header() {
   const handleSearchIconClick = () => {
     handleSearchSubmit(new Event("submit"));
   };
+
   const startVoiceSearch = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
-
+  
     if (!SpeechRecognition) {
       alert("Trình duyệt của bạn không hỗ trợ tìm kiếm bằng giọng nói.");
       return;
     }
-
+  
     const recognition = new SpeechRecognition();
     recognition.lang = "vi-VN";
     recognition.continuous = false;
-
+  
     recognition.start();
-
+  
     recognition.onstart = () => {
       setIsListening(true);
     };
-
+  
     recognition.onresult = (event) => {
       const result = event.results[0][0].transcript;
       setSearchTerm(result);
-      recognition.stop();
+      recognition.stop();  
     };
-
+  
     recognition.onerror = (event) => {
       console.error("Lỗi nhận diện giọng nói: ", event.error);
       setIsListening(false);
     };
-
+  
     recognition.onend = () => {
       setIsListening(false);
+  
     };
   };
+
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -394,6 +397,7 @@ function Header() {
               method="get"
               className="custom-form search-form flex-fill"
               role="search"
+              id='searchForm'
             >
               <div className="searchbar">
                 <div className="searchbar-wrapper">

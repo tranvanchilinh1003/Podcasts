@@ -128,10 +128,9 @@ function PostUser({ fetchPost }) {
           },
         }
       );
-
+      
       if (response.data.transcription) {
-        console.log("Kết quả transcribe:", response.data.transcription); // Ghi log kết quả
-        return response.data.transcription;
+        return response.data;
       } else if (response.data.error) {
         console.error("Lỗi khi transcribe:", response.data.error);
         return "";
@@ -143,65 +142,62 @@ function PostUser({ fetchPost }) {
   };
   const onSubmit = async (formData) => {
     try {
-        // Kiểm tra và tải lên hình ảnh
-        if (fileImg) {
-            const imgExtension = fileImg.name.split('.').pop();
-            const imgFileName = `${Date.now()}.${imgExtension}`;
-            const imgPath = `upload/${imgFileName}`;
-            formData.images = await uploadFile(fileImg, imgPath, setImgUploadProgress);
-        }
-
-        // Kiểm tra và tải lên file âm thanh
-        if (fileAudio) {
-            const audioExtension = fileAudio.name.split('.').pop();
-            const audioFileName = `${Date.now()}.${audioExtension}`;
-            const audioPath = `audio/${audioFileName}`;
-            formData.audio = await uploadFile(fileAudio, audioPath, setAudioUploadProgress);
-        }
-
-        formData.description = editorContent;
-        formData.customers_id = userId;
-
       
-        const response = await axiosInstance.post('/api/post', formData);
-        DialogService.success('Thêm thành công');
-        await fetchPost();
-        reset();
-        setShowModal(false);
-        
-        const postId = response.data.data.insertId; 
-        if (fileAudio) {
-            const transcription = await transcribeAudio(fileAudio);
-
-          
-            const forbiddenWords = [
-                'sex', 'kill', 'hate', 'drugs', 'fuck', 'fuckyou',
-                'chết', 'sát thủ', 'khủng bố',
-            ];
-
-            const containsForbiddenWords = forbiddenWords.some(word => transcription.includes(word));
-            if (containsForbiddenWords) {
+      if (fileImg) {
+        const imgExtension = fileImg.name.split('.').pop();
+        const imgFileName = `${Date.now()}.${imgExtension}`;
+        const imgPath = `upload/${imgFileName}`;
+        formData.images = await uploadFile(fileImg, imgPath, setImgUploadProgress);
+      }
+      if (fileAudio) {
+        const audioExtension = fileAudio.name.split('.').pop();
+        const audioFileName = `${Date.now()}.${audioExtension}`;
+        const audioPath = `audio/${audioFileName}`;
+        formData.audio = await uploadFile(fileAudio, audioPath, setAudioUploadProgress);
+      }
+  
+      formData.description = editorContent;
+      formData.customers_id = userId;
+  
+      const response = await axiosInstance.post('/api/post', formData);
+      DialogService.success('Thêm thành công');
+      await fetchPost();
+      reset();
+      setShowModal(false);
+      const postId = response.data.data.insertId;
+      if (fileAudio) {
+      
+        const transcription = await transcribeAudio(fileAudio);
+        const bannedWords = transcription.banned_words;
+        const forbiddenWords = [...bannedWords.vi, ...bannedWords.en];      
+        const transcriptionText = transcription.transcription.toLowerCase();
+        const containsForbiddenWords = forbiddenWords.some(word => 
+          transcriptionText.includes(word.toLowerCase()) 
+        );
+  
+        if (containsForbiddenWords) {
           
               
-                const a =  await axios.delete(`${API_ENDPOINT.auth.base}/post/${postId}`);            
-                await sendEmailNotification(getUserFromLocalStorage()?.email, 'Bài đăng của bạn đã bị xóa vì chứa từ cấm.');
-                await fetchPost();
-            }else{
-              await axios.patch(`${API_ENDPOINT.auth.base}/update_action/${postId}`); 
-              await   DialogService.success('Bài viết đã được duyệt');
-              await fetchPost();
-            }
-        }
+          await axios.delete(`${API_ENDPOINT.auth.base}/post/${postId}`);            
+          await sendEmailNotification(getUserFromLocalStorage()?.email, 'Bài đăng của bạn đã bị xóa vì chứa từ cấm.');
+          await fetchPost();
+      }else{
+        await axios.patch(`${API_ENDPOINT.auth.base}/update_action/${postId}`); 
+        await DialogService.success('Bài viết đã được duyệt');
         await fetchPost();
-        reset();
-        setImgUploadProgress(0);
-        setAudioUploadProgress(0);
-        setShowModal(false); // Đóng modal
-    } catch (error) {
-        console.error('Upload failed:', error);
-        // DialogService.error('Thêm thất bại');
+      }
     }
-};
+      await fetchPost();
+      reset();
+      setImgUploadProgress(0);
+      setAudioUploadProgress(0);
+      setShowModal(false); // Đóng modal
+    } catch (error) {
+      console.error('Upload failed:', error);
+      // DialogService.error('Thêm thất bại');
+    }
+  };
+  
 
   const sendEmailNotification = async (email, message) => {
     // Gửi email thông báo cho người dùng
@@ -235,7 +231,7 @@ function PostUser({ fetchPost }) {
                 onClick={() => setShowModal(true)}
               />
               <button
-                className="button--submit col-md-12 col-12 col-lg-2"
+                className="button--submit col-md-12 col-12 col-lg-2 btn-danger"
                 type="button"
                 onClick={() => setShowModal(true)}
               >
@@ -333,7 +329,7 @@ function PostUser({ fetchPost }) {
                 >
                   Hủy
                 </Button>
-                <Button variant="primary" type="submit" className="mt-1">
+                <Button variant="primary" type="submit" className="mt-1 btn-danger">
                   Thêm
                 </Button>
               </div>

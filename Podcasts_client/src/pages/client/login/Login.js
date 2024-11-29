@@ -40,6 +40,7 @@ function Login() {
             <div className="form-group">
               <input
                 type="text"
+                tabIndex={1}
                 name="username"
                 id="username"
                 className="input"
@@ -70,6 +71,7 @@ function Login() {
             <div className="form-group">
               <input
                 type="password"
+                tabIndex={2}
                 name="password"
                 id="password"
                 className="input"
@@ -101,6 +103,7 @@ function Login() {
             </p>
             <input
               className="login-button"
+              tabIndex={3}
               type="submit"
               value="Xác nhận"
               aria-label="Xác nhận"
