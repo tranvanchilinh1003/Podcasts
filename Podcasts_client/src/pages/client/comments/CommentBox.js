@@ -70,7 +70,7 @@ const CommentBox = ({
       // Reset edit state after successful edit
       setCommentToEdit(null);
     } else {
-      error("Vui lòng nhập nội dung bình luận!");
+      console.log("Vui lòng nhập nội dung bình luận!");
     }
   };
 

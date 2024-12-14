@@ -46,8 +46,6 @@ def transcribe():
         audio_file.save(wav_file_path)
         transcription = transcribe_audio(wav_file_path, language='vi')
         print("Transcription:", transcription)
-
-        # Lấy danh sách từ cấm từ một tệp hoặc database
         banned_words = load_banned_words()
         banned_count = sum(1 for word in banned_words['vi'] if word in transcription.lower())
         banned_count_en = sum(1 for word in banned_words['en'] if word in transcription.lower())
@@ -70,8 +68,6 @@ def fetch_and_save_data():
     if response.status_code == 200:
         data = response.json()['data']
         df = pd.DataFrame(data)
-
-        # Filter posts with action == 1
         df = df[df['action'] == 1]
 
         def calculate_score(row, comment_weight=0.5, share_weight=0.3, rating_weight=0.2):
