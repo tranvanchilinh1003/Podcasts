@@ -89,10 +89,11 @@ export class DialogService {
       },
       showLoaderOnConfirm: true,
       preConfirm: async () => {
-        const reason = Swal.getInput().value;
+        const input = Swal.getPopup().querySelector('textarea') as HTMLTextAreaElement;
+        const reason = input?.value;
         if (!reason || reason.trim() === '') {
           Swal.showValidationMessage('Lý do xóa tài khoản là bắt buộc');
-          return false;
+          return null;
         }
   
         try {
@@ -108,7 +109,7 @@ export class DialogService {
             title: 'Tài khoản đã được xóa!',
             text: `Lý do xóa tài khoản: ${reason}`,
           });
-          return true; 
+          return reason; 
         } catch (error) {
           console.error("Lỗi khi gọi API:", error);
           Swal.showValidationMessage(`Lỗi: ${error.message}`);
@@ -117,6 +118,14 @@ export class DialogService {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
+    if (reason) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Tài khoản đã được xóa!',
+        text: `Lý do xóa tài khoản: ${reason}`,
+      });
+      return true;
+    }
   
     return false; 
   }
@@ -125,5 +134,4 @@ export class DialogService {
     return this.httpService.delete<any>(`${API_BASE_URL}${item}/${id}`);
   }
 
-  
 }
