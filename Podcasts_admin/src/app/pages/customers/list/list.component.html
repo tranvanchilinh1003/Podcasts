@@ -115,11 +115,11 @@
                                     {{item.role}}</td>
                                 <td
                                     class="nb-tree-grid-header-cell nb-header-cell cdk-header-cell cdk-column-size nb-column-size ng-star-inserted text-center">
-                                    <button nbButton
+                                    <button *ngIf="item.role == 'user' || inforAdmin[0].id == item.id" nbButton
                                         class="mat-ripple status-success appearance-outline size-medium shape-rectangle ng-star-inserted nb-transition"
                                         routerLink="../edit/{{item.id}}">
                                         <nb-icon icon="edit-2-outline" pack="eva" class="fs-3"></nb-icon></button>
-                                    <button nbButton (click)="onDelete(item.id)"
+                                    <button nbButton *ngIf="item.role == 'user' || inforAdmin[0].id == item.id" (click)="onDelete(item.id)"
                                         class="mat-ripple size-medium shape-rectangle appearance-hero status-danger ng-star-inserted nb-transition mx-2">
                                         <nb-icon icon="trash-2" pack="eva" class="fs-3"></nb-icon></button>
                                 </td>
