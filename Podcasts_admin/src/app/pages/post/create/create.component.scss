@@ -40,4 +40,32 @@ nb-checkbox {
   .demo-items {
     flex: 1 0 33%;
   }
+  .input {
+    max-width: 190px;
+    display: none;
+  }
+  
+  .labelFile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 250px;
+    height: 190px;
+    border: 2px dashed #ccc;
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    color: #404040;
+    cursor: pointer;
+  }
+  
+  .labelFile svg {
+    margin-bottom: 10px;
+  }
+  
+  .labelFile p {
+    margin: 0;
+    font-size: 14px;
+    color: #404040;
+  }
   

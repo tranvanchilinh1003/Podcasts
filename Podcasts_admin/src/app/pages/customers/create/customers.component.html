@@ -65,8 +65,7 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label class="fw-bold col-form-label">Vai trò</label>
-                                    <nb-card class="checkbox-radio status-basic shape-rectangle nb-transition " nbInput>
-                                        <div class="demo-items ">
+             
                                             <nb-radio-group class="d-flex mx-3" name="role" formControlName="role"
                                                 [(ngModel)]="newCustomers.role">
                                                 <nb-radio value="user">
@@ -76,13 +75,10 @@
                                                     Admin
                                                 </nb-radio>
                                             </nb-radio-group>
-                                        </div>
-                                    </nb-card>
+
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="fw-bold col-form-label">Giới tính</label>
-                                    <nb-card class="checkbox-radio status-basic shape-rectangle nb-transition " nbInput>
-                                        <div class=" ">
+                                    <label class="fw-bold col-form-label">Giới tính</label>                        
                                             <nb-radio-group class="d-flex mx-3" name="gender" formControlName="gender"
                                                 [(ngModel)]="newCustomers.gender">
                                                 <nb-radio value="0">
@@ -91,9 +87,7 @@
                                                 <nb-radio value="1">
                                                     Nữ
                                                 </nb-radio>
-                                            </nb-radio-group>
-                                        </div>
-                                    </nb-card>
+                                            </nb-radio-group>                               
                                 </div>
 
                             </div>
@@ -138,36 +132,29 @@
                         </div>
                         <div class="col-sm-4">
                             <label for="img" class="fw-bold col-form-label">Hình ảnh</label>
-                            <input (change)="OnFileChange($event)" type="file" formControlName="images"
-                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                nbInput fullWidth id="img" accept="image/*" name="image">
-                            <img *ngIf="imgUpload" [src]="imgUpload" style="width: auto; height: 175px;"
-                                alt="Image preview" class="img-thumbnail mt-2">
-                            <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressImage}}"
-                                max="100"></progress>
-                            <div
-                                *ngIf="validateForm.get('images').invalid && (validateForm.get('images').dirty || validateForm.get('images').touched)">
-                                <small *ngIf="validateForm.get('images').hasError('required')">
-                                    <i class="text-danger">Vui lòng chọn hình ảnh.</i>
-                                </small>
+                            <div class=" position-relative mb-3">
+                                <input type="file" id="img" accept="image/*" (change)="OnFileChange($event)" class="hidden-input ">
+                                <img [src]="imgUpload || 'https://i.pinimg.com/736x/34/0d/0a/340d0a8eb7896e54a5d25a7f3faa05f3.jpg'" 
+                                     alt="Image preview" 
+                                     class="img-thumbnail img-preview" 
+                                     (click)="triggerFileInput('img')">
+                                <!-- Thanh Progress -->
+                                <progress *ngIf="isUploading" class="w-100 mt-2" [value]="uploadProgressImage" max="100"></progress>
                             </div>
-                            <br>
+                        
+                            <!-- Ảnh bìa -->
                             <label for="background" class="fw-bold col-form-label">Ảnh bìa</label>
-                            <input (change)="OnBackgroundFileChange($event)" type="file" formControlName="background"
-                                class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
-                                nbInput fullWidth id="background" accept="image/*" name="background">
-                            <img *ngIf="backgroundUpload" [src]="backgroundUpload" style="width: auto; height: 175px;"
-                                alt="Background preview" class="img-thumbnail mt-2">
-                            <progress class="w-100" *ngIf="isUploading" value="{{uploadProgressBackground}}"
-                                max="100"></progress>
-                            <div
-                                *ngIf="validateForm.get('background').invalid && (validateForm.get('background').dirty || validateForm.get('background').touched)">
-                                <small *ngIf="validateForm.get('background').hasError('required')">
-                                    <i class="text-danger">Vui lòng chọn ảnh bìa.</i>
-                                </small>
+                            <div class=" position-relative">
+                                <input type="file" id="background" accept="image/*" (change)="OnBackgroundFileChange($event)" class="hidden-input">
+                                <img [src]="backgroundUpload || 'https://via.placeholder.com/300x150/eeeeee/007bff?text=Background'" 
+                                     alt="Background preview" 
+                                     class="img-thumbnail img-preview" 
+                                     (click)="triggerFileInput('background')">
+                                <!-- Thanh Progress -->
+                                <progress *ngIf="isUploading" class="w-100 mt-2" [value]="uploadProgressBackground" max="100"></progress>
                             </div>
                         </div>
-                        
+                              
                     </div>
                     <div class="text-end">
                         <button type="submit" id="btn" nbButton [disabled]="!validateForm.valid"

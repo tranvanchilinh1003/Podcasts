@@ -74,19 +74,19 @@ export class ListComponent implements OnInit {
     return category ? category.name : 'Chưa chọn loại';
   }
 
-  deletePost(postId: string) {
-    if (confirm('Bạn có chắc chắn muốn xóa?')) {
-      this.postService.deletePost(postId).subscribe({
-        next: (response: { message: string }) => {
-          console.log(response.message);
-          this.getAll();
-        },
-        error: error => {
-          console.error('Error deleting post', error);
-        }
-      });
-    }
-  }
+  // deletePost(postId: string) {
+  //   if (confirm('Bạn có chắc chắn muốn xóa?')) {
+  //     this.postService.deletePost(postId).subscribe({
+  //       next: (response: { message: string }) => {
+  //         console.log(response.message);
+  //         this.getAll();
+  //       },
+  //       error: error => {
+  //         console.error('Error deleting post', error);
+  //       }
+  //     });
+  //   }
+  // }
   onDelete(postId: string): void {
     this.dialog.showConfirmationDialog(API_ENDPOINT.post.post, postId).then((result) => {
       if (result) {
