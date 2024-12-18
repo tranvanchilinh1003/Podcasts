@@ -195,11 +195,11 @@ function Header() {
   };
 
   const handleSearchSubmit = async (event) => {
-  
+    event.preventDefault();
     if (searchTerm.trim() !== "") {
-      navigate(`/post_search?messages=${searchTerm}`);
+      navigate(`/post_search?messages=${encodeURIComponent(searchTerm)}`);
       setSearchTerm("");
-      setSuggestions("");
+      setSuggestions([]);
     }
   };
   const handleSearchIconClick = () => {
@@ -229,6 +229,13 @@ function Header() {
       const result = event.results[0][0].transcript;
       setSearchTerm(result);
       recognition.stop();  
+      const form = document.getElementById('searchForm');
+      form.submit();
+   setTimeout(() => {
+      const form = document.getElementById('searchForm');
+      form.submit();  
+      // handleSearchSubmit(new Event("submit"))
+    }, 1);
     };
   
     recognition.onerror = (event) => {
@@ -308,8 +315,7 @@ function Header() {
       });
 
       await update(ref(database), updates);
-      // Cập nhật giao diện bằng cách gọi lại `fetchNotification` hoặc cập nhật state trực tiếp
-      fetNotification(); // Gọi lại để cập nhật danh sách thông báo
+      fetNotification(); 
     } catch (error) {
       console.error("Failed to mark all notifications as read:", error);
     }
@@ -319,9 +325,8 @@ function Header() {
 
   const handleDelete = async (notificationId) => {
     try {
-      // Khởi tạo Firebase Database
+      
       const database = getDatabase();
-      // Gọi hàm deleteNotification
       await deleteNotification(notificationId, database, setNotifications);
     } catch (error) {
       console.error("Error deleting notification:", error.message);
@@ -389,6 +394,7 @@ function Header() {
         >
           <div className="custom-search">
             <form
+              action="/post_search"
               onSubmit={handleSearchSubmit}
               method="get"
               className="custom-form search-form flex-fill"
@@ -420,7 +426,7 @@ function Header() {
                       type="text"
                       className="searchbar-input"
                       maxlength="2048"
-                      name="q"
+                      name="messages"
                       autocapitalize="off"
                       autocomplete="off"
                       title="Search"

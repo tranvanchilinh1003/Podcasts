@@ -807,11 +807,11 @@ function Account() {
                     role="tabpanel"
                     aria-labelledby="info-tab"
                   >
-                    <div className="row gutters">
+                    <div className="row gutters ml-1">
                       {/* info */}
-                      <div className="row gutters">
-                        <div className="col-md-12">
-                          <div className="card border shadow-sm ml-3">
+                      <div className="row gutters p-0 ">
+                        <div className="col-md-12 p-0">
+                          <div className="card border mb-5 mt-4 shadow-sm ml-3">
                             <div className="card-body">
                               <div className="row">
                                 <InFoUser />
@@ -847,7 +847,7 @@ function Account() {
                                 id="profile-post"
                               >
                                 {/* bắt đầu timeline */}
-                                <ul className="timeline">
+                                <ul className="timeline mb-5 mt-4">
                                   <PostUser fetchPost={fetchPost} />
                                   {data.length > 0 ? (
                                     data.map((post) => (

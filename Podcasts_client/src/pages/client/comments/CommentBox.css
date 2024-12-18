@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 0px -34px 0px -34px !important;
+    /* margin: 0px -34px 0px -34px !important; */
 }
 
 .custom-timeline-comment-box {

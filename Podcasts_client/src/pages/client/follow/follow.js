@@ -773,11 +773,10 @@ function Follow() {
                     </ul>
                   </div>
                   <div
-                    className="tab-pane fade"
+                    className="tab-pane fade mb-5 mt-4"
                     id="info"
                     role="tabpanel"
-                    aria-labelledby="info-tab"
-                  >
+                    aria-labelledby="info-tab">
                     <table className="table table-light table-striped ">
                       <tbody>
                         <tr>

@@ -230,13 +230,15 @@ function PostUser({ fetchPost }) {
                 placeholder="Thêm một bài viết..."
                 onClick={() => setShowModal(true)}
               />
-              <button
-                className="button--submit col-md-12 col-12 col-lg-2 btn-danger"
+              <input
+                className="button--submit col-md-12 col-12 col-lg-2 btn-danger "
+                style={{borderRadius: "0px  5px 5px 0px"}}
                 type="button"
+                value="Thêm bài viết"
                 onClick={() => setShowModal(true)}
-              >
-                Thêm bài viết
-              </button>
+              />
+              
+              
             </div>
           </form>
         </div>

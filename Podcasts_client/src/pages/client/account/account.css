@@ -221,10 +221,7 @@
     color: #242a30
 }
 
-.profile-content {
-    padding: 25px;
-    border-radius: 4px
-}
+
 
 .profile-content:after,
 .profile-content:before {
@@ -655,7 +652,8 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .profile-content {
-    padding: 25px;
+    margin: auto;
+    padding: 0 auto;
     border-radius: 4px
 }
 
@@ -962,7 +960,7 @@ select.form-control:not([size]):not([multiple]) {
     /* margin-right: 17%; */
     background: #fff;
     position: relative;
-    padding:0px 33px;
+    padding:0px 25px;
     border-radius: 6px
 }
 
@@ -981,7 +979,6 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .timeline .timeline-body>div+div:last-child {
-    margin-bottom: -20px;
     padding-bottom: 20px;
     border-radius: 0 0 6px 6px
 }

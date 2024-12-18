@@ -118,7 +118,7 @@ function InfoUser() {
     if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="col-md-6 ">
+        <div className="col-md-6">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Tên Người Dùng:</label>

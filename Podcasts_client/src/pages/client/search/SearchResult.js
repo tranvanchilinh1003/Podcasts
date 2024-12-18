@@ -53,12 +53,13 @@ function SearchResults() {
     const [songTitle, setSongTitle] = useState('');
     const [artist, setArtist] = useState('');
     const audioRef = useRef(null);
-    const location = useLocation();
     const navigate = useNavigate();
     const [customer, setCustomer] = useState(null);
     const [commentBoxVisibility, setCommentBoxVisibility] = useState({});
     const [expandedPostId, setExpandedPostId] = useState(null);
-    const query = new URLSearchParams(location.search).get('messages');
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const query = searchParams.get('messages');
     const fetchResults = async () => {
       try {
         const customer = getUserFromLocalStorage();

@@ -265,7 +265,7 @@ function Shares() {
 
     return (
         <>
-            <div className="container">
+            <div className="container p-0">
                 <div className="row">
                     <div className="col-md-12">
                         <div id="content" className="content content-full-width">
