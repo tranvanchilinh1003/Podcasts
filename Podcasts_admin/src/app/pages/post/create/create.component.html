@@ -1,83 +1,240 @@
 <div class="row">
-    <div class="col-lg-12">
-      <nb-card>
-        <nb-card-header>Thêm bài viết</nb-card-header>
-        <nb-card-body>
-          <form class="form" enctype="multipart/form-data" (ngSubmit)="onCreate()" [formGroup]="postForm">
-            <div class="row">
-              <!-- Cột Bên Trái (Tiêu đề và Mô tả) -->
-              <div class="col-md-9">
-                <div class="row">
-                  <div class="col-12">
-                    <label for="title" class="fw-bold col-form-label">Tiêu đề</label>
-                    <input type="text"
-                           class="input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                           fullWidth id="title" name="title" placeholder="Tiêu đề..." formControlName="title"
-                           [(ngModel)]="postnew.title">
-                    <div *ngIf="postForm.get('title')!.invalid && (postForm.get('title')!.dirty || postForm.get('title')!.touched)">
-                      <small *ngIf="postForm.get('title').hasError('required')">
-                        <i class="text-danger">Vui lòng nhập tiêu đề!</i>
-                      </small>
-                      <small *ngIf="postForm.get('title').hasError('minlength')">
-                        <i class="text-danger">Tiêu đề quá ngắn, vui lòng nhập đầy đủ tiêu đề!</i>
-                      </small>
-                    </div>
-                  </div>
-                  <div class="col-12 mt-2">
-                    <label for="description" class="fw-bold col-form-label">Mô tả</label>
-                    <app-tinymce-editor id="description" name="description" formControlName="description"></app-tinymce-editor>
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-header>Thêm bài viết</nb-card-header>
+      <nb-card-body>
+        <form
+          class="form"
+          enctype="multipart/form-data"
+          (ngSubmit)="onCreate()"
+          [formGroup]="postForm"
+        >
+          <div class="row">
+            <!-- Cột Bên Trái (Tiêu đề và Mô tả) -->
+            <div class="col-md-9">
+              <div class="row">
+                <div class="col-12">
+                  <label for="title" class="fw-bold col-form-label"
+                    >Tiêu đề</label
+                  >
+                  <input
+                    type="text"
+                    class="input-full-width size-medium status-basic shape-rectangle nb-transition"
+                    nbInput
+                    fullWidth
+                    id="title"
+                    name="title"
+                    placeholder="Tiêu đề..."
+                    formControlName="title"
+                    [(ngModel)]="postnew.title"
+                  />
+                  <div
+                    *ngIf="
+                      postForm.get('title')!.invalid &&
+                      (postForm.get('title')!.dirty ||
+                        postForm.get('title')!.touched)
+                    "
+                  >
+                    <small *ngIf="postForm.get('title').hasError('required')">
+                      <i class="text-danger">Vui lòng nhập tiêu đề!</i>
+                    </small>
+                    <small *ngIf="postForm.get('title').hasError('minlength')">
+                      <i class="text-danger"
+                        >Tiêu đề quá ngắn, vui lòng nhập đầy đủ tiêu đề!</i
+                      >
+                    </small>
                   </div>
                 </div>
-              </div>
-  
-              <!-- Cột Bên Phải (Audio, Hình ảnh và Thể loại) -->
-              <div class="col-md-3">
-                <div class="row">
-                    <div class="col-12">
-                        <label for="categories_id" class="fw-bold col-form-label">Thể loại</label>
-                        <nb-select class="col-12" name="categories_id" id="categories_id"
-                                   formControlName="categories_id" [(ngModel)]="postnew.categories_id" required>
-                          <nb-option value="" disabled>Vui lòng chọn loại</nb-option>
-                          <nb-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</nb-option>
-                        </nb-select>
-                        <small *ngIf="postForm.get('categories_id')!.errors?.required && (postForm.get('categories_id')!.dirty || postForm.get('categories_id')!.touched)"
-                               class="text-danger"><i class="text-danger">Vui lòng chọn một thể loại!</i></small>
-                      </div>
-                      <div class="col-12 mt-3">
-                        <label for="audio" class="fw-bold col-form-label">Audio</label>
-                        <input type="file" class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition"
-                               nbInput fullWidth id="audio" accept="audio/*" (change)="onFileChange($event, 'audio')"
-                               name="audio" formControlName="audio">
-                        <progress class="w-100" *ngIf="isUploading" [value]="uploadProgressAudio" max="100"></progress>
-                        <div *ngIf="postForm.get('audio').invalid && (postForm.get('audio').dirty || postForm.get('audio').touched)">
-                          <small *ngIf="postForm.get('audio').hasError('required')">
-                            <i class="text-danger">Vui lòng chọn audio!</i>
-                          </small>
-                        </div>
-                      </div>
-                  <div class="col-12 mt-3">
-                    <label for="images" class="fw-bold col-form-label">Hình ảnh</label>
-                    <input (change)="onFileChange($event, 'image')" type="file" formControlName="images"
-                           class="p-1 input-full-width size-medium status-basic shape-rectangle nb-transition" nbInput
-                           fullWidth id="img" accept="image/*" name="images">
-                    <img *ngIf="imgPreview" [src]="imgPreview" style="width: auto; height: 120px;" alt="Image preview" class="img-thumbnail mt-2">
-                  </div>
-  
-                  
-  
-                  
+                <div class="col-12 mt-2">
+                  <label for="description" class="fw-bold col-form-label"
+                    >Mô tả</label
+                  >
+                  <app-tinymce-editor
+                    id="description"
+                    name="description"
+                    formControlName="description"
+                  ></app-tinymce-editor>
                 </div>
               </div>
             </div>
-  
-            <div class="text-end mt-4">
-              <button type="submit" id="btn" nbButton
-                      class="mat-ripple size-medium shape-rectangle appearance-hero status-primary nb-transition"
-                      [disabled]="!postForm.valid"><i class="nb-plus"></i>Thêm mới</button>
+
+            <!-- Cột Bên Phải (Audio, Hình ảnh và Thể loại) -->
+            <div class="col-md-3">
+              <div class="row">
+                <div class="col-12">
+                  <label for="categories_id" class="fw-bold col-form-label"
+                    >Thể loại</label
+                  >
+                  <nb-select
+                    class="col-12"
+                    name="categories_id"
+                    id="categories_id"
+                    formControlName="categories_id"
+                    [(ngModel)]="postnew.categories_id"
+                    required
+                  >
+                    <nb-option value="" disabled>Vui lòng chọn loại</nb-option>
+                    <nb-option
+                      *ngFor="let category of categories"
+                      [value]="category.id"
+                      >{{ category.name }}</nb-option
+                    >
+                  </nb-select>
+                  <small
+                    *ngIf="
+                      postForm.get('categories_id')!.errors?.required &&
+                      (postForm.get('categories_id')!.dirty ||
+                        postForm.get('categories_id')!.touched)
+                    "
+                    class="text-danger"
+                    ><i class="text-danger"
+                      >Vui lòng chọn một thể loại!</i
+                    ></small
+                  >
+                </div>
+                
+                
+                <div class="col-12 mt-3">
+                  <!-- Nếu chưa có ảnh, hiển thị vùng chọn file -->
+                  <label *ngIf="!imgPreview" for="file" class="labelFile">
+                    <span>
+                      <svg
+                        xml:space="preserve"
+                        viewBox="0 0 184.69 184.69"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        xmlns="http://www.w3.org/2000/svg"
+                        id="Capa_1"
+                        version="1.1"
+                        width="60px"
+                        height="60px"
+                      >
+                        <g>
+                          <g>
+                            <g>
+                              <path
+                                d="M149.968,50.186c-8.017-14.308-23.796-22.515-40.717-19.813
+                                C102.609,16.43,88.713,7.576,73.087,7.576c-22.117,0-40.112,17.994-40.112,40.115c0,0.913,0.036,1.854,0.118,2.834
+                                C14.004,54.875,0,72.11,0,91.959c0,23.456,19.082,42.535,42.538,42.535h33.623v-7.025H42.538
+                                c-19.583,0-35.509-15.929-35.509-35.509c0-17.526,13.084-32.621,30.442-35.105c0.931-0.132,1.768-0.633,2.326-1.392
+                                c0.555-0.755,0.795-1.704,0.644-2.63c-0.297-1.904-0.447-3.582-0.447-5.139c0-18.249,14.852-33.094,33.094-33.094
+                                c13.703,0,25.789,8.26,30.803,21.04c0.63,1.621,2.351,2.534,4.058,2.14c15.425-3.568,29.919,3.883,36.604,17.168
+                                c0.508,1.027,1.503,1.736,2.641,1.897c17.368,2.473,30.481,17.569,30.481,35.112c0,19.58-15.937,35.509-35.52,35.509H97.391
+                                v7.025h44.761c23.459,0,42.538-19.079,42.538-42.535C184.69,71.545,169.884,53.901,149.968,50.186z"
+                                style="fill:#010002;"
+                              ></path>
+                            </g>
+                            <g>
+                              <path
+                                d="M108.586,90.201c1.406-1.403,1.406-3.672,0-5.075L88.541,65.078
+                                c-0.701-0.698-1.614-1.045-2.534-1.045l-0.064,0.011c-0.018,0-0.036-0.011-0.054-0.011c-0.931,0-1.85,0.361-2.534,1.045
+                                L63.31,85.127c-1.403,1.403-1.403,3.672,0,5.075c1.403,1.406,3.672,1.406,5.075,0L82.296,76.29v97.227
+                                c0,1.99,1.603,3.597,3.593,3.597c1.979,0,3.59-1.607,3.59-3.597V76.165l14.033,14.036
+                                C104.91,91.608,107.183,91.608,108.586,90.201z"
+                                style="fill:#010002;"
+                              ></path>
+                            </g>
+                          </g>
+                        </g>
+                      </svg>
+                    </span>
+                    Hình ảnh
+                  </label>
+                
+                  <!-- Input file luôn hiện nhưng ẩn để click được từ vùng label -->
+                  <input
+                    class="input"
+                    (change)="onFileChange($event, 'image')"
+                    name="text"
+                    id="file"
+                    type="file"
+                    accept="image/*"
+                    formControlName="images"
+                  
+                  />
+                
+                  <!-- Nếu đã có ảnh, hiển thị ảnh -->
+                  <img
+                    *ngIf="imgPreview"
+                    [src]="imgPreview"
+                    style="width: auto; height: 190px; border: 2px dashed #ccc; padding: 5px"
+                    alt="Image preview"
+                    class="img-thumbnail mt-2"
+                    (click)="triggerFileInput('file')"
+                  />
+                  
+                <progress
+                class="w-100"
+                *ngIf="isUploading"
+                [value]="uploadProgressImage"
+                max="100"
+              ></progress>
+                </div>
+                <div class="col-12 mt-3">
+                  <label for="audio" class="fw-bold col-form-label">Audio</label>
+                  <!-- Vùng hiển thị Wavesurfer -->
+                  <div id="waveform" class="mb-2"></div>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="playPauseAudio()"
+                    [title]="isPlaying ? 'Tạm dừng' : 'Phát'"
+                  >
+                    <nb-icon [icon]="isPlaying ? 'pause-circle-outline' : 'play-circle-outline'"></nb-icon>
+                    <!-- Icon thay đổi giữa Play và Pause -->
+                  </button>
+                  <!-- Ẩn input chọn file -->
+                  <input
+                    type="file"
+                    class="d-none"
+                    id="audio"
+                    accept="audio/*"
+                    (change)="onFileChange($event, 'audio')"
+                    name="audio"
+                    formControlName="audio"
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-secondary mx-3"
+                    (click)="triggerFileInput('audio')"
+                    title="Thêm audio"
+                  >
+                    <nb-icon icon="music-outline"></nb-icon> <!-- Icon Thêm Audio -->
+                  </button>
+                  <progress
+                    class="w-100"
+                    *ngIf="isUploading"
+                    [value]="uploadProgressAudio"
+                    max="100"
+                  ></progress>
+                  <div
+                    *ngIf="
+                      postForm.get('audio').invalid &&
+                      (postForm.get('audio').dirty || postForm.get('audio').touched)
+                    "
+                  >
+                    <small *ngIf="postForm.get('audio').hasError('required')">
+                      <i class="text-danger">Vui lòng chọn audio!</i>
+                    </small>
+                  </div>
+                </div>
+                
+              </div>
             </div>
-          </form>
-        </nb-card-body>
-      </nb-card>
-    </div>
+          </div>
+
+          <div class="text-end mt-4">
+            <button
+              type="submit"
+              id="btn"
+              nbButton
+              class="mat-ripple size-medium shape-rectangle appearance-hero status-primary nb-transition"
+              [disabled]="!postForm.valid"
+            >
+              <i class="nb-plus"></i>Thêm mới
+            </button>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
   </div>
-  
+</div>

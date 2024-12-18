@@ -41,3 +41,62 @@ nb-checkbox {
     flex: 1 0 33%;
   }
  
+  .custom-file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 1.5rem; /* Khoảng cách dưới */
+  }
+  
+  .hidden-input {
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; 
+    cursor: pointer;
+  }
+  
+  
+  .upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%; /* Bo tròn thành hình tròn */
+    width: 60px;
+    height: 60px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .upload-label:hover {
+    background-color: #0056b3;
+  }
+  
+  .nb-icon {
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  .img-preview {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: border-color 0.3s ease;
+  }
+  
+  .img-preview:hover {
+    border-color: #007bff;
+  }
+  
